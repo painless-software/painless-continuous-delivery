@@ -1,0 +1,27 @@
+# Painless deployment with Shippable.
+# Visit the docs at http://docs.shippable.com/ci/shippableyml/
+
+language: python
+python:
+  - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+  - "pypy"
+
+env:
+  - "TOX_ENV=${TRAVIS_PYTHON_VERSION/[0-9].[0-9]/py${TRAVIS_PYTHON_VERSION/.}}"
+
+build:
+  ci:
+    - pip install tox
+    - tox -e $TOX_ENV
+  on_success:
+    - # command
+
+integrations:
+  notifications:
+    - integrationName:
+      type:
+      recipients:
+        - # recipient

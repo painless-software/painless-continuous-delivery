@@ -1,0 +1,28 @@
+{
+    "full_name": "Your name",
+    "email": "your.name@example.com",
+    "project_name": "Name of the project",
+    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
+    "project_description": "A short description of the project",
+    "license": [
+        "Proprietary",
+        "Apache-2",
+        "BSD-3",
+        "GPL-3",
+        "MIT",
+        "MPL-2"
+    ],
+    "vcs_platform": [
+        "Bitbucket.org",
+        "GitHub.com",
+        "GitLab.com"
+    ],
+    "vcs_account": "company-or-username",
+    "ci_service": [
+        ".travis.yml",
+        ".gitlab-ci.yml",
+        "codeship-steps.yml",
+        "shippable.yml",
+        "vexor.yml"
+    ]
+}

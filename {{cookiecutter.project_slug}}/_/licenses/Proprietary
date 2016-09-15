@@ -1,0 +1,2 @@
+Copyright (c) {{ cookiecutter.full_name }} <{{ cookiecutter.email }}>
+All rights reserved.

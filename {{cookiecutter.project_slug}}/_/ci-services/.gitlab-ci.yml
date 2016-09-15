@@ -1,0 +1,20 @@
+# Painless deployment with GitLab CI.
+# Visit the docs at https://docs.gitlab.com/ce/ci/
+
+test:
+  script:
+  - ### LOCAL DEPLOYMENT AND TEST EXECUTION STEPS ###
+
+staging:
+  type: deploy
+  script:
+  - ### DEPLOYMENT STEPS STAGING ###
+  only:
+  - master
+
+production:
+  type: deploy
+  script:
+  - ### DEPLOYMENT STEPS PRODUCTION ###
+  only:
+  - tags

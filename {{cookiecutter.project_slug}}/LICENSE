@@ -1,0 +1,1 @@
+{%- include '_/licenses/%s' % cookiecutter.license -%}

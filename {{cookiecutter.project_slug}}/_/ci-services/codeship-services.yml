@@ -1,0 +1,16 @@
+# Painless deployment with Codeship.
+# Visit the docs at https://documentation.codeship.com/docker/services/
+
+app:
+  build:
+    image: codeship/app
+    path: app
+    dockerfile_path: Dockerfile
+  env_file: # see https://github.com/docker/docker/issues/13490
+  volumes_from:
+    - data
+
+data:
+  image: busybox
+  volumes:
+    - ./tmp/data:/data
