@@ -1,16 +1,23 @@
 """Post-generate hook for cookiecutter."""
+from subprocess import CalledProcessError, check_call, check_output, STDOUT
+
 import logging
-import os
 import shutil
 import sys
 
 
-def shell(command):
+def shell(command, capture=False):
     """Portable system call that aborts generation in case of failure."""
-    exit_code = os.system(command)
-    if exit_code:
+    try:
+        if capture:
+            stdout = check_output(command, shell=True, stderr=STDOUT,
+                                  universal_newlines=True)
+            return str(stdout)
+        else:
+            check_call(command, shell=True)
+    except CalledProcessError as err:
         LOG.error('Project generation failed.')
-        sys.exit(exit_code)
+        sys.exit(err.returncode)
 
 
 def remove_temporary_files():
@@ -35,6 +42,17 @@ def init_version_control():
     LOG.info('Initializing version control ...')
     shell('git init --quiet')
     shell('git add .')
+
+    output = shell('git config --list', capture=True)
+    if 'user.email=' not in output:
+        LOG.warning('I need to add user.email. BEWARE! Check with:'
+                    ' git config --list')
+        shell('git config user.email "{{ cookiecutter.email }}"')
+    if 'user.name=' not in output:
+        LOG.warning('I need to add user.name. BEWARE! Check with:'
+                    ' git config --list')
+        shell('git config user.name "{{ cookiecutter.full_name }}"')
+
     shell('git commit --quiet '
           '-m "Initial commit by Painless Continuous Delivery"')
     shell('git remote add origin {remote_uri}'.format(**vcs_info))
