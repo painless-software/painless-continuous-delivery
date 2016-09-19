@@ -8,6 +8,8 @@ python: 3.5
 env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
     - TOXENV=flake8
+    - TOXENV=prospector
+    - TOXENV=pylint
     - TOXENV=py27
     - TOXENV=py33
     - TOXENV=py34
