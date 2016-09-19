@@ -2,20 +2,25 @@
 # Visit the docs at http://docs.shippable.com/ci/shippableyml/
 
 language: python
-python:
-  - "2.7"
-  - "3.3"
-  - "3.4"
-  - "3.5"
-  - "pypy"
+python: 3.5
 
 env:
-  - "TOX_ENV=${TRAVIS_PYTHON_VERSION/[0-9].[0-9]/py${TRAVIS_PYTHON_VERSION/.}}"
+  matrix:  # $ tox -l | sort | xargs -I ARG echo '  - TOXENV=ARG'
+    - TOXENV=flake8
+    - TOXENV=py27
+    - TOXENV=py33
+    - TOXENV=py34
+    - TOXENV=py35
+    - TOXENV=pypy
 
 build:
+  cache: true
+  cache_dir_list:
+    - $HOME/.cache/pip
   ci:
+    - rm -rf $HOME/.cache/pip/log
     - pip install tox
-    - tox -e $TOX_ENV
+    - tox
   on_success:
     - # command
 
