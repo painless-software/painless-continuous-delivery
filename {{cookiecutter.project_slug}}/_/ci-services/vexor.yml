@@ -2,17 +2,16 @@
 # Visit the docs at https://vexor.io/help/#config-file
 
 language: python
-python:
-  - "2.7"
-  - "3.3"
-  - "3.4"
-  - "3.5"
-  - "pypy"
+python: 3.5
 
-install:
-  - pip install tox
-  - "TOX_ENV=${TRAVIS_PYTHON_VERSION/[0-9].[0-9]/py${TRAVIS_PYTHON_VERSION/.}}"
-script: tox -e $TOX_ENV
+env:
+  matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
+    {%- for env in cookiecutter.tests.split(',') %}
+    - TOXENV={{ env }}
+    {%- endfor %}
+
+install: pip install tox
+script: tox
 
 before_cache:
   - rm -rf $HOME/.cache/pip/log

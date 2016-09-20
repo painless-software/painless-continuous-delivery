@@ -7,15 +7,11 @@ python: 3.5
 
 env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
-    - TOXENV=flake8
-    - TOXENV=py27
-    - TOXENV=py33
-    - TOXENV=py34
-    - TOXENV=py35
-    - TOXENV=pypy
+    {%- for env in cookiecutter.tests.split(',') %}
+    - TOXENV={{ env }}
+    {%- endfor %}
 
-install:
-  - pip install tox
+install: pip install tox
 script: tox
 
 before_cache:
