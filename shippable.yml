@@ -7,9 +7,14 @@ python:
 
 env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
-    {%- for env in cookiecutter.tests.split(',') %}
-    - TOXENV={{ env }}
-    {%- endfor %}
+    - TOXENV=flake8
+    - TOXENV=prospector
+    - TOXENV=pylint
+    - TOXENV=py27
+    - TOXENV=py33
+    - TOXENV=py34
+    - TOXENV=py35
+    - TOXENV=pypy
 
 build:
   cache: true

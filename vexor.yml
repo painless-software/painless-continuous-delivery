@@ -1,0 +1,25 @@
+# Painless deployment with VEXOR.
+# Visit the docs at https://vexor.io/help/#config-file
+
+language: python
+python: 3.5
+
+env:
+  matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
+    - TOXENV=flake8
+    - TOXENV=prospector
+    - TOXENV=pylint
+    - TOXENV=py27
+    - TOXENV=py33
+    - TOXENV=py34
+    - TOXENV=py35
+    - TOXENV=pypy
+
+install: pip install tox
+script: tox
+
+before_cache:
+  - rm -rf $HOME/.cache/pip/log
+cache:
+  directories:
+    - $HOME/.cache/pip
