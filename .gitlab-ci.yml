@@ -1,7 +1,10 @@
 # Painless deployment with GitLab CI.
 # Visit the docs at https://docs.gitlab.com/ce/ci/
 
+image: python:3.5
+
 test:
+  before_script: pip install tox
   script: tox
 
 staging:
