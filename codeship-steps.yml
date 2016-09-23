@@ -1,4 +1,14 @@
 # Painless deployment with Codeship.
 # Visit the docs at https://documentation.codeship.com/docker/steps/
 
-- script: tox
+- name: run_tests
+  service: app
+  command: tox
+- name: deploy_staging
+  service: app
+  command: echo 'This build would deploy to Staging now.'
+  tag: master
+- name: deploy_master
+  service: app
+  command: echo 'This build would deploy to Production now.'
+  tag: ^v[0-9]+\.[0-9]+\.[0-9]+$
