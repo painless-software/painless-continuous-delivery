@@ -4,7 +4,8 @@
 image: python:3.5
 
 test:
-  before_script: pip install tox
+  before_script:
+  - pip install tox
   script: tox
 
 staging:
