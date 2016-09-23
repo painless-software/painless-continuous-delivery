@@ -7,13 +7,13 @@ test:
 staging:
   type: deploy
   script:
-  - ### DEPLOYMENT STEPS STAGING ###
+  - echo 'This build would deploy to Staging now.'
   only:
   - master
 
 production:
   type: deploy
   script:
-  - ### DEPLOYMENT STEPS PRODUCTION ###
+  - echo 'This build would deploy to Production now.'
   only:
   - tags
