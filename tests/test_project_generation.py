@@ -115,7 +115,8 @@ class TestCookiecutterScenarios(object):
         assert ci_testcommand in ci_service_conf
 
         # ensure this project itself stays up-to-date with the template
-        for filename in ['.gitignore', ci_service, 'tox.ini']:
+        file_list = ['.gitignore', 'docker-compose.yml', 'tox.ini', ci_service]
+        for filename in file_list:
             mother_file = join(REPO_ROOT, filename)
             generated_file = result.project.join(filename).strpath
             assert compare_files(mother_file, generated_file), \
