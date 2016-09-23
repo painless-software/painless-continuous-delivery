@@ -1,12 +1,21 @@
 # Painless deployment with GitLab CI.
 # Visit the docs at https://docs.gitlab.com/ce/ci/
 
-image: python:3.5
-
-test:
+.test: &test_template
   before_script:
   - pip install tox
   script: tox
+{% for env in cookiecutter.tests.split(",") %}
+test-{{ env }}:
+  {% if env in ["flake8", "prospector", "pylint"] -%}
+  image: python:3.5
+  {%- elif env|truncate(2, end="") == "py" -%}
+  image: {{ env|replace("py", "python:", 1)|replace(":py", ":pypy")|replace("27", "2.7")|replace("33", "3.3")|replace("34", "3.4")|replace("35", "3.5") }}
+  {%- endif %}
+  variables:
+    TOXENV: {{ env }}
+  <<: *test_template
+{%- endfor %}
 
 staging:
   type: deploy

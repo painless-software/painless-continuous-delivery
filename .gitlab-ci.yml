@@ -1,12 +1,51 @@
 # Painless deployment with GitLab CI.
 # Visit the docs at https://docs.gitlab.com/ce/ci/
 
-image: python:3.5
-
-test:
+.test: &test_template
   before_script:
   - pip install tox
   script: tox
+
+test-flake8:
+  image: python:3.5
+  variables:
+    TOXENV: flake8
+  <<: *test_template
+test-prospector:
+  image: python:3.5
+  variables:
+    TOXENV: prospector
+  <<: *test_template
+test-pylint:
+  image: python:3.5
+  variables:
+    TOXENV: pylint
+  <<: *test_template
+test-py27:
+  image: python:2.7
+  variables:
+    TOXENV: py27
+  <<: *test_template
+test-py33:
+  image: python:3.3
+  variables:
+    TOXENV: py33
+  <<: *test_template
+test-py34:
+  image: python:3.4
+  variables:
+    TOXENV: py34
+  <<: *test_template
+test-py35:
+  image: python:3.5
+  variables:
+    TOXENV: py35
+  <<: *test_template
+test-pypy:
+  image: python:pypy
+  variables:
+    TOXENV: pypy
+  <<: *test_template
 
 staging:
   type: deploy

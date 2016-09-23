@@ -19,8 +19,8 @@
     ],
     "vcs_account": "company-or-username",
     "ci_service": [
-        ".travis.yml",
         ".gitlab-ci.yml",
+        ".travis.yml",
         "codeship-steps.yml",
         "shippable.yml",
         "vexor.yml"
