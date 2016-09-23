@@ -42,7 +42,7 @@ test-py35:
     TOXENV: py35
   <<: *test_template
 test-pypy:
-  image: pypy
+  image: pypy:2
   variables:
     TOXENV: pypy
   <<: *test_template
