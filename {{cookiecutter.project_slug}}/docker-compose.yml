@@ -2,7 +2,5 @@
 # Visit the docs at https://docs.docker.com/compose/
 # Codeship specific docs: https://documentation.codeship.com/docker/services/
 
-version: '2'
-services:
-  app:
-    image: frolvlad/alpine-python3
+app:
+  image: frolvlad/alpine-python3
