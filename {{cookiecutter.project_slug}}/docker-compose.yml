@@ -3,4 +3,7 @@
 # Codeship specific docs: https://documentation.codeship.com/docker/services/
 
 app:
-  image: frolvlad/alpine-python3
+  image: themattrix/tox
+  volumes:
+    - .:/app
+  command: 'tox -e flake8,prospector,pylint,py33,py34,py35,pypy'
