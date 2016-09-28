@@ -6,4 +6,3 @@ app:
   image: themattrix/tox
   volumes:
     - .:/app
-  command: 'tox -e flake8,prospector,pylint,py33,py34,py35,pypy'

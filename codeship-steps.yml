@@ -1,13 +1,38 @@
 # Painless deployment with Codeship.
 # Visit the docs at https://documentation.codeship.com/docker/steps/
 
-- name: run_tests
-  service: app
-  command: tox
+- type: parallel
+  steps:
+    - name: flake8
+      service: app
+      command: tox -e flake8
+    - name: prospector
+      service: app
+      command: tox -e prospector
+    - name: pylint
+      service: app
+      command: tox -e pylint
+    - name: py27
+      service: app
+      command: tox -e py27
+    - name: py33
+      service: app
+      command: tox -e py33
+    - name: py34
+      service: app
+      command: tox -e py34
+    - name: py35
+      service: app
+      command: tox -e py35
+    - name: pypy
+      service: app
+      command: tox -e pypy
+
 - name: deploy_staging
   service: app
   command: echo 'This build would deploy to Staging now.'
   tag: master
+
 - name: deploy_master
   service: app
   command: echo 'This build would deploy to Production now.'

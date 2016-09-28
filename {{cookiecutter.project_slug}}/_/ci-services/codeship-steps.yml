@@ -1,13 +1,19 @@
 # Painless deployment with Codeship.
 # Visit the docs at https://documentation.codeship.com/docker/steps/
 
-- name: run_tests
-  service: app
-  command: tox
+- type: parallel
+  steps:
+    {%- for env in cookiecutter.tests.split(',') %}
+    - name: {{ env }}
+      service: app
+      command: tox -e {{ env }}
+    {%- endfor %}
+
 - name: deploy_staging
   service: app
   command: echo 'This build would deploy to Staging now.'
   tag: master
+
 - name: deploy_master
   service: app
   command: echo 'This build would deploy to Production now.'

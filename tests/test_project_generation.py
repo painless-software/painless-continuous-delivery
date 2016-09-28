@@ -34,7 +34,7 @@ class TestCookiecutterScenarios(object):
             'vcs_platform': 'Bitbucket.org',
             'vcs_remote': 'git@bitbucket.org:painless-software/myproject.git',
             'ci_service': 'codeship-steps.yml',
-            'ci_testcommand': '  command: tox',
+            'ci_testcommand': '  service: app',
             'tests': 'flake8,prospector,pylint,py27,py33,py34,py35,pypy',
         }),
         ('gitlab', {
