@@ -34,7 +34,7 @@ Supported Technologies and Services
    :target: https://codeship.com/projects/174831
 .. |gitlab-ci| image:: https://gitlab.com/painless-software/painless-continuous-delivery/badges/master/build.svg
    :alt: GitLab CI
-   :target: https://gitlab.com/painless-software/painless-continuous-delivery/pipelines
+   :target: https://gitlab.com/painless-software/painless-continuous-delivery
 .. |shippable| image:: https://img.shields.io/shippable/57e164fc6356081000190caa/master.svg
    :alt: Shippable
    :target: https://app.shippable.com/projects/57e164fc6356081000190caa/
