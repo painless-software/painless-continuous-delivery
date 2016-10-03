@@ -1,4 +1,6 @@
 """Post-generate hook for cookiecutter."""
+from os import listdir
+from os.path import join
 from subprocess import CalledProcessError, check_call, check_output, STDOUT
 
 import logging
@@ -18,6 +20,17 @@ def shell(command, capture=False):
     except CalledProcessError as err:
         LOG.error('Project generation failed.')
         sys.exit(err.returncode)
+
+
+def set_up_framework():
+    """If a framework project was created move it to project root."""
+    framework = '{{ cookiecutter.framework }}'
+    if framework != '(none)':
+        LOG.info('Moving files for {} project ...'.format(framework))
+
+        framework_folder = join('_', 'frameworks', framework)
+        for file_or_folder in listdir(framework_folder):
+            shutil.move(join(framework_folder, file_or_folder), '.')
 
 
 def remove_temporary_files():
@@ -65,5 +78,6 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(message)s')
     LOG = logging.getLogger('post_gen_project')
 
+    set_up_framework()
     remove_temporary_files()
     init_version_control()

@@ -2,8 +2,9 @@
     "full_name": "Your name",
     "email": "your.name@example.com",
     "project_name": "Name of the project",
-    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
     "project_description": "A short description of the project",
+    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
+    "main_module": "{{ cookiecutter.project_slug.replace('-', '_') }}",
     "license": [
         "Proprietary",
         "Apache-2",
@@ -19,11 +20,15 @@
     ],
     "vcs_account": "company-or-username",
     "ci_service": [
-        ".gitlab-ci.yml",
-        ".travis.yml",
         "codeship-steps.yml",
+        ".gitlab-ci.yml",
         "shippable.yml",
+        ".travis.yml",
         "vexor.yml"
     ],
-    "tests": "flake8,py27,py33,py34,py35,pypy"
+    "tests": "flake8,py27,py33,py34,py35,pypy",
+    "framework": [
+        "(none)",
+        "Flask"
+    ]
 }
