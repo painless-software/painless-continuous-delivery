@@ -6,9 +6,6 @@
     - name: flake8
       service: app
       command: tox -e flake8
-    - name: prospector
-      service: app
-      command: tox -e prospector
     - name: pylint
       service: app
       command: tox -e pylint

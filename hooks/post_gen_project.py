@@ -26,7 +26,7 @@ def set_up_framework():
     """If a framework project was created move it to project root."""
     framework = '{{ cookiecutter.framework }}'
     if framework != '(none)':
-        LOG.info('Moving files for {} project ...'.format(framework))
+        LOG.info('Moving files for %s project ...', framework)
 
         framework_folder = join('_', 'frameworks', framework)
         for file_or_folder in listdir(framework_folder):

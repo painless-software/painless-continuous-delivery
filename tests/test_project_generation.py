@@ -35,7 +35,8 @@ class TestCookiecutterScenarios(object):
             'vcs_remote': 'git@bitbucket.org:painless-software/myproject.git',
             'ci_service': 'codeship-steps.yml',
             'ci_testcommand': '  service: app',
-            'tests': 'flake8,prospector,pylint,py27,py33,py34,py35,pypy',
+            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
+            'framework': '(none)',
         }),
         ('gitlab', {
             'project_slug': 'myproject',
@@ -44,7 +45,8 @@ class TestCookiecutterScenarios(object):
             'vcs_remote': 'git@gitlab.com:painless-software/myproject.git',
             'ci_service': '.gitlab-ci.yml',
             'ci_testcommand': '  script: tox',
-            'tests': 'flake8,prospector,pylint,py27,py33,py34,py35,pypy',
+            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
+            'framework': '(none)',
         }),
         ('shippable', {
             'project_slug': 'myproject',
@@ -53,7 +55,8 @@ class TestCookiecutterScenarios(object):
             'vcs_remote': 'git@bitbucket.org:painless-software/myproject.git',
             'ci_service': 'shippable.yml',
             'ci_testcommand': '    - tox',
-            'tests': 'flake8,prospector,pylint,py27,py33,py34,py35,pypy',
+            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
+            'framework': '(none)',
         }),
         ('travis', {
             'project_slug': 'myproject',
@@ -62,7 +65,8 @@ class TestCookiecutterScenarios(object):
             'vcs_remote': 'git@github.com:painless-software/myproject.git',
             'ci_service': '.travis.yml',
             'ci_testcommand': 'script: tox',
-            'tests': 'flake8,prospector,pylint,py27,py33,py34,py35,pypy',
+            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
+            'framework': '(none)',
         }),
         ('vexor', {
             'project_slug': 'myproject',
@@ -71,14 +75,25 @@ class TestCookiecutterScenarios(object):
             'vcs_remote': 'git@github.com:painless-software/myproject.git',
             'ci_service': 'vexor.yml',
             'ci_testcommand': 'script: tox',
-            'tests': 'flake8,prospector,pylint,py27,py33,py34,py35,pypy',
+            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
+            'framework': '(none)',
+        }),
+        ('flask', {
+            'project_slug': 'flask-project',
+            'vcs_account': 'painless-software',
+            'vcs_platform': 'GitHub.com',
+            'vcs_remote': 'git@github.com:painless-software/flask-project.git',
+            'ci_service': '.travis.yml',
+            'ci_testcommand': 'script: tox',
+            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
+            'framework': 'Flask',
         }),
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
     def test_generate_project(self, cookies, project_slug,
                               vcs_account, vcs_platform, vcs_remote,
-                              ci_service, ci_testcommand, tests):
+                              ci_service, ci_testcommand, tests, framework):
         """
         Generate a project with specific settings and verify it is complete.
         """
@@ -88,6 +103,7 @@ class TestCookiecutterScenarios(object):
             'vcs_account': vcs_account,
             'ci_service': ci_service,
             'tests': tests,
+            'framework': framework,
         })
 
         assert result.exit_code == 0
@@ -108,7 +124,6 @@ class TestCookiecutterScenarios(object):
         assert 'envlist = {}'.format(tests) in tox_ini
         assert '[testenv]' in tox_ini
         assert '[testenv:flake8]' in tox_ini
-        assert '[testenv:prospector]' in tox_ini
         assert '[testenv:pylint]' in tox_ini
 
         ci_service_conf = result.project.join(ci_service).readlines(cr=False)

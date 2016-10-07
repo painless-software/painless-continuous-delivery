@@ -11,11 +11,6 @@ test-flake8:
   variables:
     TOXENV: flake8
   <<: *test_template
-test-prospector:
-  image: python:3.5
-  variables:
-    TOXENV: prospector
-  <<: *test_template
 test-pylint:
   image: python:3.5
   variables:
