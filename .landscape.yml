@@ -1,5 +1,5 @@
-ignore-paths:
-  - {{cookiecutter.project_slug}}/_/frameworks
+ignore-patterns:
+  - ^.*cookiecutter.*/_/frameworks$
 python-targets:
   - 2
   - 3
