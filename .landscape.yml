@@ -1,5 +1,5 @@
 ignore-patterns:
-  - ^.*cookiecutter.*/_/frameworks$
+  - (^|/).*/_/frameworks(/|$)
 python-targets:
   - 2
   - 3
