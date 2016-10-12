@@ -1,4 +1,5 @@
 """Test generating a project."""
+from os import system
 from os.path import dirname, join
 from filecmp import cmp as compare_files
 
@@ -23,9 +24,10 @@ def pytest_generate_tests(metafunc):
 
 
 # pylint: disable=too-few-public-methods
-class TestCookiecutterScenarios(object):
+class TestCISetup(object):
     """
-    Tests for this cookiecutter, executed several times with different values.
+    Tests for verifying generated CI setups of this cookiecutter,
+    executed several times with different values (test scenarios).
     """
     scenarios = [
         ('codeship', {
@@ -36,7 +38,6 @@ class TestCookiecutterScenarios(object):
             'ci_service': 'codeship-steps.yml',
             'ci_testcommand': '  service: app',
             'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
-            'framework': '(none)',
         }),
         ('gitlab', {
             'project_slug': 'myproject',
@@ -46,7 +47,6 @@ class TestCookiecutterScenarios(object):
             'ci_service': '.gitlab-ci.yml',
             'ci_testcommand': '  script: tox',
             'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
-            'framework': '(none)',
         }),
         ('shippable', {
             'project_slug': 'myproject',
@@ -56,7 +56,6 @@ class TestCookiecutterScenarios(object):
             'ci_service': 'shippable.yml',
             'ci_testcommand': '    - tox',
             'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
-            'framework': '(none)',
         }),
         ('travis', {
             'project_slug': 'myproject',
@@ -66,7 +65,6 @@ class TestCookiecutterScenarios(object):
             'ci_service': '.travis.yml',
             'ci_testcommand': 'script: tox',
             'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
-            'framework': '(none)',
         }),
         ('vexor', {
             'project_slug': 'myproject',
@@ -76,26 +74,15 @@ class TestCookiecutterScenarios(object):
             'ci_service': 'vexor.yml',
             'ci_testcommand': 'script: tox',
             'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
-            'framework': '(none)',
-        }),
-        ('flask', {
-            'project_slug': 'flask-project',
-            'vcs_account': 'painless-software',
-            'vcs_platform': 'GitHub.com',
-            'vcs_remote': 'git@github.com:painless-software/flask-project.git',
-            'ci_service': '.travis.yml',
-            'ci_testcommand': 'script: tox',
-            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
-            'framework': 'Flask',
         }),
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
-    def test_generate_project(self, cookies, project_slug,
-                              vcs_account, vcs_platform, vcs_remote,
-                              ci_service, ci_testcommand, tests, framework):
+    def test_ci_setup(self, cookies, project_slug,
+                      vcs_account, vcs_platform, vcs_remote,
+                      ci_service, ci_testcommand, tests):
         """
-        Generate a project with specific settings and verify it is complete.
+        Generate a CI setup with specific settings and verify it is complete.
         """
         result = cookies.bake(extra_context={
             'project_slug': project_slug,
@@ -103,7 +90,6 @@ class TestCookiecutterScenarios(object):
             'vcs_account': vcs_account,
             'ci_service': ci_service,
             'tests': tests,
-            'framework': framework,
         })
 
         assert result.exit_code == 0
@@ -137,3 +123,41 @@ class TestCookiecutterScenarios(object):
             assert compare_files(mother_file, generated_file), \
                 "Mother project '{}' not matching template.\n {} != {}".format(
                     filename, mother_file, generated_file)
+
+
+# pylint: disable=too-few-public-methods
+class TestFramework(object):
+    """
+    Tests for verifying generated projects using specific Web frameworks.
+    """
+    scenarios = [
+        ('flask', {
+            'project_slug': 'flask-project',
+            'vcs_account': 'painless-software',
+            'vcs_platform': 'GitHub.com',
+            'ci_service': '.travis.yml',
+            'framework': 'Flask',
+        }),
+    ]
+
+    # pylint: disable=too-many-arguments,too-many-locals,no-self-use
+    def test_framework(self, cookies, project_slug, vcs_account, vcs_platform,
+                       ci_service, framework):
+        """
+        Generate a framework project and verify it is complete and working.
+        """
+        result = cookies.bake(extra_context={
+            'project_slug': project_slug,
+            'vcs_platform': vcs_platform,
+            'vcs_account': vcs_account,
+            'ci_service': ci_service,
+            'framework': framework,
+        })
+
+        assert result.exit_code == 0
+        assert result.exception is None
+
+        requirements_file = result.project.join('requirements.txt')
+        assert requirements_file.isfile()
+        exit_code = system('pip install -r %s' % requirements_file.realpath())
+        assert exit_code == 0, 'Installing requirements failed.'
