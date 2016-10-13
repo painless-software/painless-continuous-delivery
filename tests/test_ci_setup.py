@@ -1,26 +1,8 @@
-"""Test generating a project."""
-from os import system
-from os.path import dirname, join
+"""Tests for generating a continuous integration setup."""
 from filecmp import cmp as compare_files
 
-REPO_ROOT = dirname(dirname(__file__))
-
-
-def pytest_generate_tests(metafunc):
-    """
-    A test scenarios implementation for py.test, as found at
-    http://docs.pytest.org/en/latest/example/parametrize.html
-    #a-quick-port-of-testscenarios.  Picks up a ``scenarios`` class variable
-    to parametrize all test function calls.
-    """
-    idlist = []
-    argvalues = []
-    for scenario in metafunc.cls.scenarios:
-        idlist.append(scenario[0])
-        items = scenario[1].items()
-        argnames = [x[0] for x in items]
-        argvalues.append(([x[1] for x in items]))
-    metafunc.parametrize(argnames, argvalues, ids=idlist, scope="class")
+from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
+from . import REPO_ROOT_PATH
 
 
 # pylint: disable=too-few-public-methods
@@ -98,6 +80,7 @@ class TestCISetup(object):
         assert result.project.basename == project_slug
         assert result.project.isdir()
         assert result.project.join('README.rst').isfile()
+        assert result.project.join('tests', 'requirements.txt').isfile()
 
         assert result.project.join('.git').isdir()
         assert result.project.join('.gitignore').isfile()
@@ -118,46 +101,8 @@ class TestCISetup(object):
         # ensure this project itself stays up-to-date with the template
         file_list = ['.gitignore', 'docker-compose.yml', 'tox.ini', ci_service]
         for filename in file_list:
-            mother_file = join(REPO_ROOT, filename)
+            mother_file = REPO_ROOT_PATH.join(filename).strpath
             generated_file = result.project.join(filename).strpath
             assert compare_files(mother_file, generated_file), \
                 "Mother project '{}' not matching template.\n {} != {}".format(
                     filename, mother_file, generated_file)
-
-
-# pylint: disable=too-few-public-methods
-class TestFramework(object):
-    """
-    Tests for verifying generated projects using specific Web frameworks.
-    """
-    scenarios = [
-        ('flask', {
-            'project_slug': 'flask-project',
-            'vcs_account': 'painless-software',
-            'vcs_platform': 'GitHub.com',
-            'ci_service': '.travis.yml',
-            'framework': 'Flask',
-        }),
-    ]
-
-    # pylint: disable=too-many-arguments,too-many-locals,no-self-use
-    def test_framework(self, cookies, project_slug, vcs_account, vcs_platform,
-                       ci_service, framework):
-        """
-        Generate a framework project and verify it is complete and working.
-        """
-        result = cookies.bake(extra_context={
-            'project_slug': project_slug,
-            'vcs_platform': vcs_platform,
-            'vcs_account': vcs_account,
-            'ci_service': ci_service,
-            'framework': framework,
-        })
-
-        assert result.exit_code == 0
-        assert result.exception is None
-
-        requirements_file = result.project.join('requirements.txt')
-        assert requirements_file.isfile()
-        exit_code = system('pip install -r %s' % requirements_file.realpath())
-        assert exit_code == 0, 'Installing requirements failed.'
