@@ -5,7 +5,8 @@
   service: app
   steps:
     {%- for env in cookiecutter.tests.split(',') %}
-    - command: tox -e {{ env }}
+    - name: {{ env }}
+      command: tox -e {{ env }}
     {%- endfor %}
 
 - name: deploy_staging
