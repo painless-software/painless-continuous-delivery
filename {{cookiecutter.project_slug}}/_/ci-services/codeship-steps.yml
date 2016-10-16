@@ -2,11 +2,10 @@
 # Visit the docs at https://documentation.codeship.com/docker/steps/
 
 - type: parallel
+  service: app
   steps:
     {%- for env in cookiecutter.tests.split(',') %}
-    - name: {{ env }}
-      service: app
-      command: tox -e {{ env }}
+    - command: tox -e {{ env }}
     {%- endfor %}
 
 - name: deploy_staging

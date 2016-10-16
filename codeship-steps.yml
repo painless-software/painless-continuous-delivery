@@ -2,28 +2,15 @@
 # Visit the docs at https://documentation.codeship.com/docker/steps/
 
 - type: parallel
+  service: app
   steps:
-    - name: flake8
-      service: app
-      command: tox -e flake8
-    - name: pylint
-      service: app
-      command: tox -e pylint
-    - name: py27
-      service: app
-      command: tox -e py27
-    - name: py33
-      service: app
-      command: tox -e py33
-    - name: py34
-      service: app
-      command: tox -e py34
-    - name: py35
-      service: app
-      command: tox -e py35
-    - name: pypy
-      service: app
-      command: tox -e pypy
+    - command: tox -e flake8
+    - command: tox -e pylint
+    - command: tox -e py27
+    - command: tox -e py33
+    - command: tox -e py34
+    - command: tox -e py35
+    - command: tox -e pypy
 
 - name: deploy_staging
   service: app
