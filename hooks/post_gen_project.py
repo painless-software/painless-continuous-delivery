@@ -22,9 +22,20 @@ def shell(command, capture=False):
         sys.exit(err.returncode)
 
 
+def set_up_ci_service():
+    """If a framework project was created move it to project root."""
+    ci_service = '{{ cookiecutter.ci_service }}'
+
+    if ci_service == 'codeship-steps.yml':
+        LOG.info('Adding additional files for this CI setup ...')
+        ci_services_folder = join('_', 'ci-services')
+        shutil.move(join(ci_services_folder, 'codeship-services.yml'), '.')
+
+
 def set_up_framework():
     """If a framework project was created move it to project root."""
     framework = '{{ cookiecutter.framework }}'
+
     if framework != '(none)':
         LOG.info('Moving files for %s project ...', framework)
 
@@ -78,6 +89,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(message)s')
     LOG = logging.getLogger('post_gen_project')
 
+    set_up_ci_service()
     set_up_framework()
     remove_temporary_files()
     init_version_control()
