@@ -29,6 +29,7 @@
     "tests": "flake8,py27,py33,py34,py35,pypy",
     "framework": [
         "(none)",
+        "Django",
         "Flask"
     ]
 }

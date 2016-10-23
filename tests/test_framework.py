@@ -17,6 +17,13 @@ class TestFramework(object):
             'ci_service': '.travis.yml',
             'framework': 'Flask',
         }),
+        ('django', {
+            'project_slug': 'django-project',
+            'vcs_account': 'painless-software',
+            'vcs_platform': 'GitHub.com',
+            'ci_service': '.travis.yml',
+            'framework': 'Django',
+        }),
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
