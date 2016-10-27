@@ -1,0 +1,34 @@
+# Painless development and deployment with Docker.
+# Visit the docs at https://docs.docker.com/compose/
+
+version: "2"
+
+volumes:
+  database_data: {}
+  application_data: {}
+
+services:
+  webserver:
+    build: ./config/webserver
+    ports:
+      - "80:80"
+    depends_on:
+      - application
+    volumes_from:
+      - application
+
+  application:
+    build:
+      context: .
+      dockerfile: ./config/application/Dockerfile
+    user: application
+    volumes:
+      - .:/opt/{{ cookiecutter.project_slug }}
+      - application_data:/tmp
+    depends_on:
+      - database
+
+  database:
+    image: postgres
+    volumes:
+      - database_data:/var/lib/postgresql/data

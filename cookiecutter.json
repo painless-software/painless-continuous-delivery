@@ -4,7 +4,6 @@
     "project_name": "Name of the project",
     "project_description": "A short description of the project",
     "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
-    "main_module": "{{ cookiecutter.project_slug.replace('-', '_') }}",
     "license": [
         "Proprietary",
         "Apache-2",
@@ -26,7 +25,7 @@
         ".travis.yml",
         "vexor.yml"
     ],
-    "tests": "flake8,py27,py33,py34,py35,pypy",
+    "tests": "flake8,py27,py35",
     "framework": [
         "(none)",
         "Django",
