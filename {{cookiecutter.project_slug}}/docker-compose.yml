@@ -24,7 +24,7 @@ services:
     user: application
     volumes:
       - .:/opt/{{ cookiecutter.project_slug }}
-      - application_data:/tmp
+      - application_data:/run/{{ cookiecutter.project_slug }}
     depends_on:
       - database
 
