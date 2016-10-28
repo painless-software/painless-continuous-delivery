@@ -21,7 +21,7 @@ Supported Technologies and Services
 **Repo Services**    Bitbucket
 ..                   GitHub
 ..                   GitLab
-**CI Services**      Bitbucket Pipelines
+**CI Services**      Bitbucket Pipelines_
 ..                   Codeship   - |codeship|
 ..                   GitLab CI  - |gitlab-ci|
 ..                   Shippable  - |shippable|
@@ -30,6 +30,7 @@ Supported Technologies and Services
 ==================== =========================================================
 
 
+.. _Pipelines: https://bitbucket.org/painless-software/painless-continuous-delivery/addon/pipelines/home
 .. |codeship| image:: https://img.shields.io/codeship/64f85000-617f-0134-d666-52056d8a95f1/master.svg
    :alt: Codeship
    :target: https://codeship.com/projects/174831

@@ -9,4 +9,5 @@ Examples of files using this folder
 -----------------------------------
 
 - License file ``/LICENSE``
+- Web development frameworks (e.g. ``Django``)
 - CI service configuration file (e.g. ``.travis.yml``)
