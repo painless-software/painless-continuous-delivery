@@ -12,6 +12,15 @@ class TestCISetup(object):
     executed several times with different values (test scenarios).
     """
     scenarios = [
+        ('bitbucket', {
+            'project_slug': 'myproject',
+            'vcs_account': 'painless-software',
+            'vcs_platform': 'Bitbucket.org',
+            'vcs_remote': 'git@bitbucket.org:painless-software/myproject.git',
+            'ci_service': 'bitbucket-pipelines.yml',
+            'ci_testcommand': '          - tox',
+            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy',
+        }),
         ('codeship', {
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',

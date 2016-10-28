@@ -21,7 +21,8 @@ Supported Technologies and Services
 **Repo Services**    Bitbucket
 ..                   GitHub
 ..                   GitLab
-**CI Services**      Codeship   - |codeship|
+**CI Services**      Bitbucket Pipelines
+..                   Codeship   - |codeship|
 ..                   GitLab CI  - |gitlab-ci|
 ..                   Shippable  - |shippable|
 ..                   Travis CI  - |travis-ci|

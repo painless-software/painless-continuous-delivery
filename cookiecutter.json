@@ -19,6 +19,7 @@
     ],
     "vcs_account": "company-or-username",
     "ci_service": [
+        "bitbucket-pipelines.yml",
         "codeship-steps.yml",
         ".gitlab-ci.yml",
         "shippable.yml",
