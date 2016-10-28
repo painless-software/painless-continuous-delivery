@@ -1,10 +1,9 @@
 # Painless deployment with Bitbucket Pipelines.
 # Visit the docs at https://confluence.atlassian.com/x/VYk8Lw
 
-image: python:3.5
+image: themattrix/tox
 pipelines:
   default:
     - step:
         script:
-          - pip install tox
           - tox
