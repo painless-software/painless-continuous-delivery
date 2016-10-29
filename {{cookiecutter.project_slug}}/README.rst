@@ -3,16 +3,18 @@
 
 {{ cookiecutter.project_description }}
 
-Developing
-----------
+Getting Started
+---------------
 
 .. code-block:: bash
 
     docker-compose build    # build the containers
     docker-compose up       # start all containers
 
-Then visit http://localhost to see your application.  Log output will be
-displayed in the terminal, as usual.
+Open your web browser at http://localhost (on a Linux host) or
+http://<docker-machine-ip-address> (on OS X and Windows), usually the
+IP address of the VirtualBox VM called ``default``, to see the application
+you're developing.  Log output will be displayed in the terminal, as usual.
 
 Working with Docker
 ^^^^^^^^^^^^^^^^^^^
