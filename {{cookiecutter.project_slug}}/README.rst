@@ -6,10 +6,11 @@
 Getting Started
 ---------------
 
+To start developing on this project simply bring up the Docker setup:
+
 .. code-block:: bash
 
-    docker-compose build    # build the containers
-    docker-compose up       # start all containers
+    docker-compose up --build
 
 Open your web browser at http://localhost (on a Linux host) or
 http://<docker-machine-ip-address> (on OS X and Windows), usually the

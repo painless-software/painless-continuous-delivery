@@ -5,16 +5,15 @@ version: "2"
 
 volumes:
   database_data: {}
-  application_data: {}
 
 services:
   webserver:
     build: ./config/webserver
     ports:
       - "80:80"
-    depends_on:
-      - application
     volumes_from:
+      - application
+    depends_on:
       - application
 
   application:
@@ -22,9 +21,6 @@ services:
       context: .
       dockerfile: ./config/application/Dockerfile
     user: application
-    volumes:
-      - .:/opt/{{ cookiecutter.project_slug }}
-      - application_data:/run/{{ cookiecutter.project_slug }}
     depends_on:
       - database
 

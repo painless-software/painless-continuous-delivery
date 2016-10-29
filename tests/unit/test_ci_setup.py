@@ -112,7 +112,7 @@ class TestCISetup(object):
                 codeship_services.isfile()) or not codeship_services.exists()
 
         # ensure this project itself stays up-to-date with the template
-        file_list = ['.gitignore', 'tox.ini', ci_service]
+        file_list = ['.gitignore', ci_service, 'tests/README.rst']
         for filename in file_list:
             mother_file = REPO_ROOT_PATH.join(filename).strpath
             generated_file = result.project.join(filename).strpath
