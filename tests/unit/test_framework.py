@@ -10,25 +10,35 @@ class TestFramework(object):
     Tests for verifying generated projects using specific Web frameworks.
     """
     scenarios = [
-        ('flask', {
-            'project_slug': 'flask-project',
-            'vcs_account': 'painless-software',
-            'vcs_platform': 'GitHub.com',
-            'ci_service': '.travis.yml',
-            'framework': 'Flask',
-        }),
         ('django', {
             'project_slug': 'django-project',
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitHub.com',
             'ci_service': '.travis.yml',
             'framework': 'Django',
+            'required_files': [
+                'requirements.txt',
+                'manage.py',
+                'application/wsgi.py',
+            ],
+        }),
+        ('flask', {
+            'project_slug': 'flask-project',
+            'vcs_account': 'painless-software',
+            'vcs_platform': 'GitHub.com',
+            'ci_service': '.travis.yml',
+            'framework': 'Flask',
+            'required_files': [
+                'requirements.txt',
+                'runserver.py',
+                'application/wsgi.py',
+            ],
         }),
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
     def test_framework(self, cookies, project_slug, vcs_account, vcs_platform,
-                       ci_service, framework):
+                       ci_service, framework, required_files):
         """
         Generate a framework project and verify it is complete and working.
         """
@@ -42,6 +52,11 @@ class TestFramework(object):
 
         assert result.exit_code == 0
         assert result.exception is None
+
+        for filename in required_files:
+            thefile = result.project.join(filename)
+            assert thefile.isfile(), \
+                'File %s missing in generated project.' % filename
 
         requirements_file = result.project.join('requirements.txt')
         assert requirements_file.isfile()

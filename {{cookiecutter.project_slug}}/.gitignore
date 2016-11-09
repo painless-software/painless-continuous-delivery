@@ -45,6 +45,7 @@ htmlcov/
 coverage.xml
 nosetests.xml
 unittests.xml
+tests/reports/
 
 # Translations
 *.mo
