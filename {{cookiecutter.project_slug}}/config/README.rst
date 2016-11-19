@@ -13,5 +13,4 @@ See Also
 --------
 
 Application (framework) specific settings are located in the project's
-`application module <../application/>__ (e.g. ``application/settings.py`` for
-Django).
+``application`` module (e.g. ``application/settings.py`` for Django).
