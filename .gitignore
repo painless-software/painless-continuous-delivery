@@ -54,6 +54,8 @@ tests/reports/
 # Django stuff:
 *.log
 local_settings.py
+/media/
+/static/
 
 # Flask instance folder
 instance/
