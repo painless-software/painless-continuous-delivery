@@ -1,7 +1,8 @@
 FROM python:3.5
 WORKDIR /opt/{{ cookiecutter.project_slug }}
-COPY . .
+COPY requirements.txt requirements.txt
 RUN pip install uwsgi -r requirements.txt
+COPY . .
 RUN groupadd -r -g 999 application && \
     useradd -r -g application application && \
     chown -R application:application .
