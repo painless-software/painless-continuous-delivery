@@ -51,7 +51,8 @@ tests/reports/
 *.mo
 *.pot
 
-# Django stuff:
+# Django stuff
+.env
 *.log
 local_settings.py
 /media/

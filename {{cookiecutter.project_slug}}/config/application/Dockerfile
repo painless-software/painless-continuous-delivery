@@ -10,4 +10,4 @@ RUN mkdir /run/{{ cookiecutter.project_slug }} && \
     chown application:application /run/{{ cookiecutter.project_slug }}
 VOLUME /opt/{{ cookiecutter.project_slug }} \
        /run/{{ cookiecutter.project_slug }}
-CMD uwsgi --master --ini config/application/uwsgi.ini
+CMD uwsgi config/application/uwsgi.ini
