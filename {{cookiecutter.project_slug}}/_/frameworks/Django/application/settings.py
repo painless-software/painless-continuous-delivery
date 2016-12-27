@@ -1,8 +1,7 @@
 """
 Django settings for application project.
 """
-
-from os.path import abspath, dirname, join
+from os.path import abspath, dirname{% if cookiecutter.database == '(none)' %}, join{% endif %}
 
 BASE_DIR = dirname(dirname(abspath(__file__)))
 
@@ -58,8 +57,22 @@ WSGI_APPLICATION = 'application.wsgi.application'
 
 DATABASES = {
     'default': {
+{%- if cookiecutter.database == '(none)' %}
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': join(BASE_DIR, 'db.sqlite3'),
+{%- elif cookiecutter.database == 'Postgres' %}
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'database',
+        'PORT': 5432,
+{%- elif cookiecutter.database == 'MySQL/MariaDB' %}
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'mysql',
+        'USER': 'mysql',
+        'HOST': 'database',
+        'PORT': 3306,
+{%- endif %}
     }
 }
 

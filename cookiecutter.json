@@ -31,5 +31,10 @@
         "(none)",
         "Django",
         "Flask"
+    ],
+    "database": [
+        "(none)",
+        "Postgres",
+        "MySQL/MariaDB"
     ]
 }
