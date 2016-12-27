@@ -2,17 +2,18 @@
 # Visit the docs at https://vexor.io/help/#config-file
 
 language: python
-python: 3.5
+python:
+  - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+  - "pypy"
 
 env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
     - TOXENV=flake8
     - TOXENV=pylint
-    - TOXENV=py27
-    - TOXENV=py33
-    - TOXENV=py34
-    - TOXENV=py35
-    - TOXENV=pypy
+    - TOXENV=$(echo $TRAVIS_PYTHON_VERSION | sed 's/^\([23]\)\.\([34567]\)/py\1\2/')
 
 install: pip install tox
 script: tox

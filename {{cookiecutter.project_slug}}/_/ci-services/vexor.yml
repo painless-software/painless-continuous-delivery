@@ -2,13 +2,17 @@
 # Visit the docs at https://vexor.io/help/#config-file
 
 language: python
-python: 3.5
+python:
+  {%- for env in cookiecutter.tests.split(',') if env != "flake8" and env != "pylint" %}
+  - "{{ env|replace('py27','2.7')|replace('py33','3.3')|replace('py34','3.4')|replace('py35','3.5') }}"
+  {%- endfor %}
 
 env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
-    {%- for env in cookiecutter.tests.split(',') %}
+    {%- for env in cookiecutter.tests.split(',') if env == "flake8" or env == "pylint" %}
     - TOXENV={{ env }}
     {%- endfor %}
+    - TOXENV=$(echo $TRAVIS_PYTHON_VERSION | sed 's/^\([23]\)\.\([34567]\)/py\1\2/')
 
 install: pip install tox
 script: tox
