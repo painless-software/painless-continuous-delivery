@@ -40,7 +40,12 @@ services:
       - database_data:/var/lib/postgresql/data
 {%- elif cookiecutter.database == 'MySQL/MariaDB' %}
   database:
-    image: mysql
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: mysql
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
     # Make database accessible on localhost during development
     # # NOTE: on OS X and Windows you need to configure port forwarding in addition,
     # # ----  if you use VirtualBox and docker-machine; see
