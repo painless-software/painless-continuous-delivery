@@ -41,6 +41,11 @@ test-pypy:
   variables:
     TOXENV: pypy
   <<: *test_template
+test-behave:
+  image: python:3.5
+  variables:
+    TOXENV: behave
+  <<: *test_template
 
 staging:
   type: deploy

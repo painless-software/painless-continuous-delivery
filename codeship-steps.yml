@@ -18,6 +18,8 @@
       command: tox -e py35
     - name: pypy
       command: tox -e pypy
+    - name: behave
+      command: tox -e behave
 
 - name: deploy_staging
   service: app

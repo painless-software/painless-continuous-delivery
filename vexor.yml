@@ -13,6 +13,7 @@ env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
     - TOXENV=flake8
     - TOXENV=pylint
+    - TOXENV=behave
     - TOXENV=$(echo $TRAVIS_PYTHON_VERSION | sed 's/^\([23]\)\.\([34567]\)/py\1\2/')
 
 install: pip install tox

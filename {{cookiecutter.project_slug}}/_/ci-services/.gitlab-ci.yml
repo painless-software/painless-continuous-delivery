@@ -7,7 +7,7 @@
   script: tox
 {% for env in cookiecutter.tests.split(",") %}
 test-{{ env }}:
-  {% if env in ["flake8", "pylint"] -%}
+  {% if env in ["flake8", "pylint", "behave"] -%}
   image: python:3.5
   {%- elif env|truncate(2, end="") == "py" -%}
   image: {{ env|replace("py", "python:", 1)|replace("27", "2.7")|replace("33", "3.3")|replace("34", "3.4")|replace("35", "3.5")|replace("python:py", "pypy:2") }}
