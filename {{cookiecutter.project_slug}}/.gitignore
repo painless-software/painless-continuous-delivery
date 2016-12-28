@@ -72,3 +72,9 @@ target/
 
 # pyenv
 .python-version
+
+# npm
+node_modules/
+
+# Compass
+.sass-cache
