@@ -21,10 +21,33 @@ services:
       context: .
       dockerfile: ./config/application/Dockerfile
     user: application
+{%- if cookiecutter.database in ['Postgres', 'MySQL/MariaDB'] %}
     depends_on:
       - database
+{% endif %}
 
+{%- if cookiecutter.database == 'Postgres' %}
   database:
     image: postgres
+    # Make database accessible on localhost during development
+    # # NOTE: on OS X and Windows you need to configure port forwarding in addition,
+    # # ----  if you use VirtualBox and docker-machine; see
+    # #     https://jihedamine.github.io/docker-liferay-virtualbox#setup-port-forwarding
+    # #     https://docs.docker.com/engine/installation/#/on-macos-and-windows
+    # ports:
+    #   - "5432:5432"
     volumes:
       - database_data:/var/lib/postgresql/data
+{%- elif cookiecutter.database == 'MySQL/MariaDB' %}
+  database:
+    image: mysql
+    # Make database accessible on localhost during development
+    # # NOTE: on OS X and Windows you need to configure port forwarding in addition,
+    # # ----  if you use VirtualBox and docker-machine; see
+    # #     https://jihedamine.github.io/docker-liferay-virtualbox#setup-port-forwarding
+    # #     https://docs.docker.com/engine/installation/#/on-macos-and-windows
+    # ports:
+    #   - "3306:3306"
+    volumes:
+      - database_data:/var/lib/mysql/data
+{%- endif %}
