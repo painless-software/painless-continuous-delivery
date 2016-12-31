@@ -1,9 +1,9 @@
 Skeleton Generator Scripts
 ==========================
 
-This folder contains scrips or configurations for generating skeletons used
-in the cookiecutter project. This functionality is used for the cookiecutter
-development only.
+This folder contains scrips or configurations for generating skeletons used in
+the cookiecutter project. This functionality is used for development of the
+cookiecutter only.
 
 We use Tox, which will install all necessary dependencies for generating the
 skeletons in isolated virtual environments. The only thing you need to install
@@ -23,12 +23,17 @@ General Usage
 
 .. code-block:: bash
 
-    # generate project skeleton for a specific Django version
-    $ tox -e django18
+    # generate all skeletons in the ./.tox/<target>/_/ folder
+    $ tox
 
 .. code-block:: bash
 
-    # remove build files and folders
+    # list all generated, sanitized skeletons
+    $ ls -l .tox/*/_/
+
+.. code-block:: bash
+
+    # remove skeletons, build files and folders
     $ tox -e clean
 
 Django Project Skeletons
@@ -36,13 +41,5 @@ Django Project Skeletons
 
 .. code-block:: bash
 
-    # generate default Django project skeletons
-    $ tox
-
-will generate the default Django project skeleton for all supported Django
-versions. They will be created in the ``.tox/<django-version>/_`` folder.
-
-.. code-block:: bash
-
-    # list all generated, sanitized Django project skeletons
-    $ ls -l .tox/*/_/
+    # generate skeleton for a specific Django version
+    $ tox -e django18
