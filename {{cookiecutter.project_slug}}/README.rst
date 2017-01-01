@@ -9,9 +9,13 @@ Getting Started
 To start developing on this project simply bring up the Docker setup:
 
 .. code-block:: bash
-
+{% if cookiecutter.framework == 'Django' %}
+    docker-compose build
+    docker-compose run application python manage.py migrate
+    docker-compose up
+{% else %}
     docker-compose up --build
-
+{% endif %}
 Open your web browser at http://localhost (on a Linux host) or
 http://<docker-machine-ip-address> (on OS X and Windows), usually the
 IP address of the VirtualBox VM called ``default``, to see the application

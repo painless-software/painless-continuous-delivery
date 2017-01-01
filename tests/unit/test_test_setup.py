@@ -1,5 +1,6 @@
 """Tests for correctly generated, working setup."""
 from os import system
+from sys import version_info
 
 from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
 
@@ -26,10 +27,11 @@ class TestTestSetup(object):
         """
         Generate a project and verify the test setup executes successfully.
         """
+        py_version = 'py%s%s' % version_info[:2]
         result = cookies.bake(extra_context={
             'project_slug': project_slug,
             'framework': framework,
-            'tests': 'flake8,pylint,py35,behave',
+            'tests': 'flake8,pylint,%s,behave' % py_version,
         })
 
         assert result.exit_code == 0
