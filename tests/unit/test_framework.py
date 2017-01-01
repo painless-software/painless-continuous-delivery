@@ -58,7 +58,7 @@ class TestFramework(object):
             assert thefile.isfile(), \
                 'File %s missing in generated project.' % filename
 
-        requirements_file = result.project.join('requirements.txt')
-        assert requirements_file.isfile()
-        exit_code = system('pip install -r %s' % requirements_file.realpath())
-        assert exit_code == 0, 'Installing requirements failed.'
+        requirements_txt = result.project.join('requirements.txt')
+        assert requirements_txt.isfile()
+        exit_code = system('pip install -r %s' % requirements_txt)
+        assert exit_code == 0, 'Installing requirements fails.'
