@@ -1,3 +1,4 @@
-Django>=1.8
+Django>=1.10,<1.11
+django-environ
 {% if cookiecutter.database == 'Postgres' %}psycopg2{% endif -%}
 {% if cookiecutter.database == 'MySQL/MariaDB' %}mysqlclient{% endif -%}

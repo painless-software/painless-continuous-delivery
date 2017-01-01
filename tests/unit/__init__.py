@@ -20,3 +20,17 @@ def pytest_generate_tests(metafunc):
         argnames = [x[0] for x in items]
         argvalues.append(([x[1] for x in items]))
     metafunc.parametrize(argnames, argvalues, ids=idlist, scope="class")
+
+
+def slice_dict_from(dict_name, thelist):
+    """
+    Extract a Python dict definition in Python code such as the settings file
+    read as a list of strings.  Return an empty list if not found.
+    """
+    try:
+        start = thelist.index('%s = {' % dict_name)
+        stop = thelist.index('}', start)
+        dict_lines = thelist[start:stop + 1]
+        return [line.strip() for line in dict_lines]
+    except ValueError:
+        return []

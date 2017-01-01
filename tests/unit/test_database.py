@@ -2,6 +2,7 @@
 from os import system
 
 from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
+from . import slice_dict_from
 
 
 # pylint: disable=too-few-public-methods
@@ -15,22 +16,27 @@ class TestDatabase(object):
             'framework': 'Django',
             'database': '(none)',
             'required_settings': {
-                'ENGINE': 'django.db.backends.sqlite3',
+                'ENGINE': "'django.db.backends.sqlite3'",
+                'NAME': "join(BASE_DIR, 'db.sqlite3')",
             },
-            'required_packages': [],
+            'required_packages': [
+                'django-environ',
+            ],
         }),
         ('Postgres', {
             'project_slug': 'django-project-postgres',
             'framework': 'Django',
             'database': 'Postgres',
             'required_settings': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME': 'postgres',
-                'USER': 'postgres',
-                'HOST': 'database',
-                'PORT': 5432,
+                'ENGINE': "'django.db.backends.postgresql'",
+                'NAME': "env('POSTGRES_DATABASE', default='postgres')",
+                'USER': "env('POSTGRES_USER', default='postgres')",
+                'PASSWORD': "env('POSTGRES_PASSWORD', default=None)",
+                'HOST': "env('POSTGRES_HOST', default='database')",
+                'PORT': "env.int('POSTGRES_PORT', default=5432)",
             },
             'required_packages': [
+                'django-environ',
                 'psycopg2',
             ],
         }),
@@ -39,13 +45,15 @@ class TestDatabase(object):
             'framework': 'Django',
             'database': 'MySQL/MariaDB',
             'required_settings': {
-                'ENGINE': 'django.db.backends.mysql',
-                'NAME': 'mysql',
-                'USER': 'mysql',
-                'HOST': 'database',
-                'PORT': 3306,
+                'ENGINE': "'django.db.backends.mysql'",
+                'NAME': "env('MYSQL_DATABASE', default='mysql')",
+                'USER': "env('MYSQL_USER', default='mysql')",
+                'PASSWORD': "env('MYSQL_PASSWORD', default='mysql')",
+                'HOST': "env('MYSQL_HOST', default='database')",
+                'PORT': "env.int('MYSQL_PORT', default=3306)",
             },
             'required_packages': [
+                'django-environ',
                 'mysqlclient',
             ],
         }),
@@ -66,11 +74,12 @@ class TestDatabase(object):
         assert result.exit_code == 0
         assert result.exception is None
 
-        settings_file = result.project.join('application', 'settings.py')
-        settings = settings_file.pyimport(str(settings_file.pypkgpath()))
-        db_settings = settings.DATABASES['default']
+        settings = result.project.join(
+            'application', 'settings.py').readlines(cr=False)
+        db_settings = slice_dict_from('DATABASES', settings)
         for key, value in required_settings.items():
-            assert db_settings[key] == value
+            key_value_pair = "'%s': %s," % (key, value)
+            assert key_value_pair in db_settings
 
         requirements_txt = \
             result.project.join('requirements.txt').readlines(cr=False)

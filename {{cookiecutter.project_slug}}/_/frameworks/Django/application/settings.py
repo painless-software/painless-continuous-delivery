@@ -1,37 +1,42 @@
 """
 Django settings for application project.
 """
-from os.path import abspath, dirname{% if cookiecutter.database == '(none)' %}, join{% endif %}
+from os.path import abspath, dirname, join
+from environ import Env
 
 BASE_DIR = dirname(dirname(abspath(__file__)))
 
-SECRET_KEY = '_+2iqrkdd6rl4)!fxl_9x*^sj&7k4o#^bwdes%3-#s*5r(-^^&'
+env = Env()  # pylint: disable=invalid-name
+Env.read_env(join(BASE_DIR, '.env'))
 
-DEBUG = True
+DEBUG = env.bool('DJANGO_DEBUG', default=True)
 
-ALLOWED_HOSTS = []
+SECRET_KEY = 'dummy-secret' if DEBUG else env('DJANGO_SECRET_KEY')
+
+ALLOWED_HOSTS = [] if DEBUG else [
+    'example.com',
+]
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-)
+]
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-)
+]
 
 ROOT_URLCONF = 'application.urls'
 
@@ -61,34 +66,54 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': join(BASE_DIR, 'db.sqlite3'),
 {%- elif cookiecutter.database == 'Postgres' %}
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'database',
-        'PORT': 5432,
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('POSTGRES_DATABASE', default='postgres'),
+        'USER': env('POSTGRES_USER', default='postgres'),
+        'PASSWORD': env('POSTGRES_PASSWORD', default=None),
+        'HOST': env('POSTGRES_HOST', default='database'),
+        'PORT': env.int('POSTGRES_PORT', default=5432),
 {%- elif cookiecutter.database == 'MySQL/MariaDB' %}
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysql',
-        'USER': 'mysql',
-        'PASSWORD': 'mysql',
-        'HOST': 'database',
-        'PORT': 3306,
+        'NAME': env('MYSQL_DATABASE', default='mysql'),
+        'USER': env('MYSQL_USER', default='mysql'),
+        'PASSWORD': env('MYSQL_PASSWORD', default='mysql'),
+        'HOST': env('MYSQL_HOST', default='database'),
+        'PORT': env.int('MYSQL_PORT', default=3306),
 {%- endif %}
     }
 }
+
+# Password validation
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.'
+                'UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.'
+                'MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.'
+                'CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.'
+                'NumericPasswordValidator',
+    },
+]
 
 # Internationalization
 
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 
+STATIC_ROOT = join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
