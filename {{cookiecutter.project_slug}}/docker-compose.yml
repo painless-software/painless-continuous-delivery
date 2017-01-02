@@ -30,8 +30,8 @@ services:
   database:
     image: postgres
     # Make database accessible on localhost during development
-    # # NOTE: on OS X and Windows you need to configure port forwarding in addition,
-    # # ----  if you use VirtualBox and docker-machine; see
+    # # NOTE: on OS X and Windows, if you use docker-machine and VirtualBox,
+    # # ----  you need to configure port forwarding in addition; see
     # #     https://jihedamine.github.io/docker-liferay-virtualbox#setup-port-forwarding
     # #     https://docs.docker.com/engine/installation/#/on-macos-and-windows
     # ports:
@@ -47,8 +47,8 @@ services:
       MYSQL_USER: mysql
       MYSQL_PASSWORD: mysql
     # Make database accessible on localhost during development
-    # # NOTE: on OS X and Windows you need to configure port forwarding in addition,
-    # # ----  if you use VirtualBox and docker-machine; see
+    # # NOTE: on OS X and Windows, if you use docker-machine and VirtualBox,
+    # # ----  you need to configure port forwarding in addition; see
     # #     https://jihedamine.github.io/docker-liferay-virtualbox#setup-port-forwarding
     # #     https://docs.docker.com/engine/installation/#/on-macos-and-windows
     # ports:

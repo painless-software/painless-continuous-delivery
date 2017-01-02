@@ -10,9 +10,9 @@ To start developing on this project simply bring up the Docker setup:
 
 .. code-block:: bash
 {% if cookiecutter.framework == 'Django' %}
-    docker-compose build
+    docker-compose up --build -d
     docker-compose run application python manage.py migrate
-    docker-compose up
+    docker-compose logs -f
 {% else %}
     docker-compose up --build
 {% endif %}
