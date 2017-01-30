@@ -2,8 +2,11 @@
 Django settings for application project.
 """
 from os.path import abspath, dirname, join
+{%- if cookiecutter.monitoring == 'Sentry' %}, pardir{% endif %}
 from environ import Env
-
+{% if cookiecutter.monitoring == 'Sentry' %}
+import raven
+{% endif %}
 BASE_DIR = dirname(dirname(abspath(__file__)))
 
 env = Env()  # pylint: disable=invalid-name
@@ -26,6 +29,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    {%- if cookiecutter.monitoring == 'Sentry' %}
+    'raven.contrib.django.raven_compat',
+    {%- endif %}
 ]
 
 MIDDLEWARE = [
@@ -117,3 +123,11 @@ USE_TZ = True
 
 STATIC_ROOT = join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+{%- if cookiecutter.monitoring == 'Sentry' %}
+
+RAVEN_CONFIG = {
+    'dsn': env('SENTRY_DSN', default=None),
+    # Automatically configure the release based on information from Git
+    'release': raven.fetch_git_sha(dirname(pardir)),
+}
+{%- endif %}

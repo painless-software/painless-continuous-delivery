@@ -3,3 +3,5 @@ django-environ
 {% if cookiecutter.database == 'Postgres' %}psycopg2
 {% elif cookiecutter.database == 'MySQL/MariaDB' %}mysqlclient
 {% endif -%}
+{% if cookiecutter.monitoring == 'Sentry' %}raven
+{% endif -%}

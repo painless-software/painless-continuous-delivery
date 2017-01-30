@@ -36,5 +36,9 @@
         "(none)",
         "Postgres",
         "MySQL/MariaDB"
+    ],
+    "monitoring": [
+        "(none)",
+        "Sentry"
     ]
 }
