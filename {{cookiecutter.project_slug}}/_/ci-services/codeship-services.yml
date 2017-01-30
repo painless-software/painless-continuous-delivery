@@ -1,8 +1,10 @@
-# Painless development and deployment with Docker.
-# Visit the docs at https://docs.docker.com/compose/
-# Codeship specific docs: https://documentation.codeship.com/docker/services/
+# Painless deployment with Codeship.
+# Visit the docs at https://documentation.codeship.com/pro/getting-started/services/#services-file-setup--configuration
 
-app:
-  image: themattrix/tox
-  volumes:
-    - .:/app
+version: '2'
+
+services:
+  app:
+    image: themattrix/tox
+    volumes:
+      - .:/app
