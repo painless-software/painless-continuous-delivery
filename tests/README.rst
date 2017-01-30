@@ -46,3 +46,15 @@ Use the ``tox`` command in the terminal to run your tests locally:
 
     # remove all environments, build files and folders
     $ tox -e clean
+
+If you need to use command line arguments for a command separate them with a
+double-dash, like so::
+
+     $ tox <tox args> -- <command args>
+
+Examples:
+
+.. code-block:: bash
+
+    $ tox -e behave -- --format=pretty
+    $ tox -e flake8 -- --help
