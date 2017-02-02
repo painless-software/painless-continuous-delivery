@@ -1,7 +1,7 @@
 # Painless deployment with Bitbucket Pipelines.
 # Visit the docs at https://confluence.atlassian.com/x/VYk8Lw
 
-image: themattrix/tox
+image: painless/tox
 pipelines:
   default:
     - step:
