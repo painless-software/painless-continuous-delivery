@@ -5,6 +5,6 @@ version: '2'
 
 services:
   app:
-    image: themattrix/tox
+    image: painless/tox
     volumes:
       - .:/app
