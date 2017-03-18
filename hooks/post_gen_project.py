@@ -44,6 +44,29 @@ def set_up_framework():
             shutil.move(join(framework_folder, file_or_folder), '.')
 
 
+def set_up_deployment():
+    """
+    If a framework project was created also move deployment configuration
+    to project root.
+    """
+    framework_technology = {
+        'Django': 'python',
+        'Flask': 'python',
+    }
+    framework = '{{ cookiecutter.framework }}'
+
+    try:
+        technology = framework_technology[framework]
+    except KeyError:
+        LOG.warning('Skipping deployment configuration: '
+                    'No framework specified.')
+        return
+
+    LOG.info('Moving deployment configuration for %s project ...', framework)
+    config_folder = join('_', 'config', technology)
+    shutil.move(config_folder, 'config')
+
+
 def remove_temporary_files():
     """Remove files and folders only needed as input for generation."""
     LOG.info('Removing input data folder ...')
@@ -91,5 +114,6 @@ if __name__ == "__main__":
 
     set_up_ci_service()
     set_up_framework()
+    set_up_deployment()
     remove_temporary_files()
     init_version_control()
