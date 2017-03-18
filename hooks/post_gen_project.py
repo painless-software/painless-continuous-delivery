@@ -35,13 +35,13 @@ def set_up_ci_service():
 def set_up_framework():
     """If a framework project was created move it to project root."""
     framework = '{{ cookiecutter.framework }}'
+    if framework == '(none)':
+        return
 
-    if framework != '(none)':
-        LOG.info('Moving files for %s project ...', framework)
-
-        framework_folder = join('_', 'frameworks', framework)
-        for file_or_folder in listdir(framework_folder):
-            shutil.move(join(framework_folder, file_or_folder), '.')
+    LOG.info('Moving files for %s project ...', framework)
+    framework_folder = join('_', 'frameworks', framework)
+    for file_or_folder in listdir(framework_folder):
+        shutil.move(join(framework_folder, file_or_folder), '.')
 
 
 def set_up_deployment():
@@ -52,6 +52,7 @@ def set_up_deployment():
     framework_technology = {
         'Django': 'python',
         'Flask': 'python',
+        'PHP-generic': 'php',
     }
     framework = '{{ cookiecutter.framework }}'
 
@@ -63,8 +64,9 @@ def set_up_deployment():
         return
 
     LOG.info('Moving deployment configuration for %s project ...', framework)
-    config_folder = join('_', 'config', technology)
-    shutil.move(config_folder, 'config')
+    deployment_folder = join('_', 'deployment', technology)
+    for file_or_folder in listdir(deployment_folder):
+        shutil.move(join(deployment_folder, file_or_folder), '.')
 
 
 def remove_temporary_files():
