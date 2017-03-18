@@ -20,6 +20,13 @@ class TestFramework(object):
                 'requirements.txt',
                 'manage.py',
                 'application/wsgi.py',
+                'config/application/Dockerfile',
+                'config/application/uwsgi.ini',
+                'config/webserver/Dockerfile',
+                'config/webserver/nginx.conf',
+            ],
+            'install_commands': [
+                ('pip install -r %s', 'requirements.txt'),
             ],
         }),
         ('flask', {
@@ -32,13 +39,21 @@ class TestFramework(object):
                 'requirements.txt',
                 'runserver.py',
                 'application/wsgi.py',
+                'config/application/Dockerfile',
+                'config/application/uwsgi.ini',
+                'config/webserver/Dockerfile',
+                'config/webserver/nginx.conf',
+            ],
+            'install_commands': [
+                ('pip install -r %s', 'requirements.txt'),
             ],
         }),
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
     def test_framework(self, cookies, project_slug, vcs_account, vcs_platform,
-                       ci_service, framework, required_files):
+                       ci_service, framework, required_files,
+                       install_commands):
         """
         Generate a framework project and verify it is complete and working.
         """
@@ -58,7 +73,9 @@ class TestFramework(object):
             assert thefile.isfile(), \
                 'File %s missing in generated project.' % filename
 
-        requirements_txt = result.project.join('requirements.txt')
-        assert requirements_txt.isfile()
-        exit_code = system('pip install -r %s' % requirements_txt)
-        assert exit_code == 0, 'Installing requirements fails.'
+        for cmd_pattern, project_file in install_commands:
+            input_file = result.project.join(project_file)
+            command = cmd_pattern % input_file
+            assert input_file.isfile()
+            exit_code = system(command)
+            assert exit_code == 0, 'Command fails: %s' % command
