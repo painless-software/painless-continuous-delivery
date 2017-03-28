@@ -17,6 +17,7 @@ Supported Technologies and Services
 ==================== =========================================================
 **Languages**        Python (and Python frameworks)
 ..                   Frontend Web technologies (JavaScript, CSS, Sass/SCSS)
+..                   PHP (experimental)
 **Version Control**  Git
 **Repo Services**    Bitbucket
 ..                   GitHub
