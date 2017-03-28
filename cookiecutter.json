@@ -30,7 +30,8 @@
     "framework": [
         "(none)",
         "Django",
-        "Flask"
+        "Flask",
+        "PHP-generic"
     ],
     "database": [
         "(none)",

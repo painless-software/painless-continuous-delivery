@@ -48,6 +48,19 @@ class TestFramework(object):
                 ('pip install -r %s', 'requirements.txt'),
             ],
         }),
+        ('php-generic', {
+            'project_slug': 'php-project',
+            'vcs_account': 'painless-software',
+            'vcs_platform': 'GitHub.com',
+            'ci_service': '.travis.yml',
+            'framework': 'PHP-generic',
+            'required_files': [
+                'config/webserver/Dockerfile',
+                'config/webserver/php.ini',
+            ],
+            'install_commands': [
+            ],
+        }),
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use

@@ -1,0 +1,8 @@
+.*
+!.env
+!.ssh
+
+Dockerfile
+docker-compose.yml
+tests/
+tox.ini
