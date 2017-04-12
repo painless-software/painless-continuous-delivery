@@ -5,13 +5,27 @@ This folder contains scrips or configurations for generating skeletons used in
 the cookiecutter project. This functionality is used for development of the
 cookiecutter only.
 
-We use Tox, which will install all necessary dependencies for generating the
-skeletons in isolated virtual environments. The only thing you need to install
-on your cookiecutter development machine is Tox itself:
+Philosophy
+----------
 
-.. code-block:: bash
+:LTS versions:
 
-    $ pip install tox
+    We focus on LTS versions and try to cover stable versions for any framework
+    if this is feasible to do.  *Read:* The skeleton we generate should work
+    with all versions from the last LTS up to the current stable version.
+
+:Tox:
+
+    We use Tox, which will install all necessary dependencies for generating the
+    skeletons in isolated virtual environments. The only thing you need to
+    install on your cookiecutter development machine should be Tox itself:
+
+    .. code-block:: bash
+
+        $ pip install tox
+
+    Technologies other than Python need software installed systemwide, outside
+    of virtual environments created by Tox.
 
 General Usage
 -------------
