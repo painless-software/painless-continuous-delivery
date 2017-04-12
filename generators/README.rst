@@ -34,11 +34,17 @@ General Usage
 
     # list all available skeleton targets (= Tox targets)
     $ tox -l
+    # list all skeleton targets for Django
+    $ tox -l -c tox-django.ini
 
 .. code-block:: bash
 
     # generate all skeletons in the ./.tox/<target>/_/ folder
     $ tox
+    # generate only skeletons for Django
+    $ tox -e django
+    # generate only the skeleton for Django 1.11
+    $ tox -e django111 -c tox-django.ini
 
 .. code-block:: bash
 
@@ -49,11 +55,3 @@ General Usage
 
     # remove skeletons, build files and folders
     $ tox -e clean
-
-Django Project Skeletons
-------------------------
-
-.. code-block:: bash
-
-    # generate skeleton for a specific Django version
-    $ tox -e django18
