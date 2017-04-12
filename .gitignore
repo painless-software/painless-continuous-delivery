@@ -78,6 +78,3 @@ node_modules/
 
 # Compass
 .sass-cache
-
-# PHP
-.php_cs.cache
