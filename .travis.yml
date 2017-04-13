@@ -10,9 +10,9 @@ env:
     - TOXENV=flake8
     - TOXENV=pylint
     - TOXENV=py27
-    - TOXENV=py33
     - TOXENV=py34
     - TOXENV=py35
+    - TOXENV=py36
     - TOXENV=pypy
     - TOXENV=behave
 

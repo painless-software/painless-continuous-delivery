@@ -19,7 +19,7 @@ class TestCISetup(object):
             'vcs_remote': 'git@bitbucket.org:painless-software/myproject.git',
             'ci_service': 'bitbucket-pipelines.yml',
             'ci_testcommand': '          - tox',
-            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy,behave',
+            'tests': 'flake8,pylint,py27,py34,py35,py36,pypy,behave',
         }),
         ('codeship', {
             'project_slug': 'myproject',
@@ -28,7 +28,7 @@ class TestCISetup(object):
             'vcs_remote': 'git@bitbucket.org:painless-software/myproject.git',
             'ci_service': 'codeship-steps.yml',
             'ci_testcommand': '  service: app',
-            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy,behave',
+            'tests': 'flake8,pylint,py27,py34,py35,py36,pypy,behave',
         }),
         ('gitlab', {
             'project_slug': 'myproject',
@@ -37,7 +37,7 @@ class TestCISetup(object):
             'vcs_remote': 'git@gitlab.com:painless-software/myproject.git',
             'ci_service': '.gitlab-ci.yml',
             'ci_testcommand': '  script: tox',
-            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy,behave',
+            'tests': 'flake8,pylint,py27,py34,py35,py36,pypy,behave',
         }),
         ('shippable', {
             'project_slug': 'myproject',
@@ -46,7 +46,7 @@ class TestCISetup(object):
             'vcs_remote': 'git@bitbucket.org:painless-software/myproject.git',
             'ci_service': 'shippable.yml',
             'ci_testcommand': '    - tox',
-            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy,behave',
+            'tests': 'flake8,pylint,py27,py34,py35,py36,pypy,behave',
         }),
         ('travis', {
             'project_slug': 'myproject',
@@ -55,7 +55,7 @@ class TestCISetup(object):
             'vcs_remote': 'git@github.com:painless-software/myproject.git',
             'ci_service': '.travis.yml',
             'ci_testcommand': 'script: tox',
-            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy,behave',
+            'tests': 'flake8,pylint,py27,py34,py35,py36,pypy,behave',
         }),
         ('vexor', {
             'project_slug': 'myproject',
@@ -64,7 +64,7 @@ class TestCISetup(object):
             'vcs_remote': 'git@github.com:painless-software/myproject.git',
             'ci_service': 'vexor.yml',
             'ci_testcommand': 'script: tox',
-            'tests': 'flake8,pylint,py27,py33,py34,py35,pypy,behave',
+            'tests': 'flake8,pylint,py27,py34,py35,py36,pypy,behave',
         }),
     ]
 

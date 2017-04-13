@@ -10,12 +10,12 @@
       command: tox -e pylint
     - name: py27
       command: tox -e py27
-    - name: py33
-      command: tox -e py33
     - name: py34
       command: tox -e py34
     - name: py35
       command: tox -e py35
+    - name: py36
+      command: tox -e py36
     - name: pypy
       command: tox -e pypy
     - name: behave
