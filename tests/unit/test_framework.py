@@ -17,6 +17,7 @@ class TestFramework(object):
             'ci_service': '.travis.yml',
             'framework': 'Django',
             'required_files': [
+                '.gitignore',
                 'requirements.txt',
                 'manage.py',
                 'application/wsgi.py',
@@ -36,6 +37,7 @@ class TestFramework(object):
             'ci_service': '.travis.yml',
             'framework': 'Flask',
             'required_files': [
+                '.gitignore',
                 'requirements.txt',
                 'runserver.py',
                 'application/wsgi.py',
@@ -55,6 +57,7 @@ class TestFramework(object):
             'ci_service': '.travis.yml',
             'framework': 'Symfony',
             'required_files': [
+                '.gitignore',
                 'composer.json',
                 'composer.lock',
                 'config/webserver/Dockerfile',

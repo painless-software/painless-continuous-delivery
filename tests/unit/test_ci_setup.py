@@ -92,7 +92,6 @@ class TestCISetup(object):
         assert result.project.join('tests', 'requirements.txt').isfile()
 
         assert result.project.join('.git').isdir()
-        assert result.project.join('.gitignore').isfile()
         git_config = result.project.join('.git', 'config').readlines(cr=False)
         assert '[remote "origin"]' in git_config
         assert '\turl = {}'.format(vcs_remote) in git_config
@@ -112,7 +111,7 @@ class TestCISetup(object):
                 codeship_services.isfile()) or not codeship_services.exists()
 
         # ensure this project itself stays up-to-date with the template
-        file_list = ['.gitignore', ci_service, 'tests/README.rst']
+        file_list = [ci_service, 'tests/README.rst']
         for filename in file_list:
             mother_file = REPO_ROOT_PATH.join(filename).strpath
             generated_file = result.project.join(filename).strpath
