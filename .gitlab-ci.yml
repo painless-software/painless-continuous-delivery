@@ -21,11 +21,6 @@ test-py27:
   variables:
     TOXENV: py27
   <<: *test_template
-test-py33:
-  image: python:3.3
-  variables:
-    TOXENV: py33
-  <<: *test_template
 test-py34:
   image: python:3.4
   variables:
@@ -35,6 +30,11 @@ test-py35:
   image: python:3.5
   variables:
     TOXENV: py35
+  <<: *test_template
+test-py36:
+  image: python:3.6
+  variables:
+    TOXENV: py36
   <<: *test_template
 test-pypy:
   image: pypy:2
