@@ -31,7 +31,7 @@
         "(none)",
         "Django",
         "Flask",
-        "PHP-generic"
+        "Symfony"
     ],
     "database": [
         "(none)",
@@ -41,5 +41,9 @@
     "monitoring": [
         "(none)",
         "Sentry"
+    ],
+    "_copy_without_render": [
+        "_/frameworks/Flask",
+        "_/frameworks/Symfony"
     ]
 }
