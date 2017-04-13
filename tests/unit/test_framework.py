@@ -48,15 +48,21 @@ class TestFramework(object):
                 ('pip install -r %s', 'requirements.txt'),
             ],
         }),
-        ('php-generic', {
-            'project_slug': 'php-project',
+        ('symfony', {
+            'project_slug': 'symfony-project',
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitHub.com',
             'ci_service': '.travis.yml',
-            'framework': 'PHP-generic',
+            'framework': 'Symfony',
             'required_files': [
+                'composer.json',
+                'composer.lock',
                 'config/webserver/Dockerfile',
                 'config/webserver/php.ini',
+                'src/.htaccess',
+                'src/AppBundle/AppBundle.php',
+                'web/.htaccess',
+                'web/app.php',
             ],
             'install_commands': [
             ],
