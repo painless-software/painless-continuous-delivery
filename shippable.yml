@@ -3,7 +3,7 @@
 
 language: python
 python:
-  - 3.6
+  - 3.5
 
 env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
@@ -24,4 +24,4 @@ build:
     - rm -rf $HOME/.cache/pip/log
     - pip install tox
     - tox
-    - mv -v unittests.xml shippable/testresults/ || true
+    - mv -v tests/reports/* shippable/testresults/
