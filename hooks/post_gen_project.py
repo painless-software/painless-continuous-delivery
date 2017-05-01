@@ -1,7 +1,8 @@
 """Post-generate hook for cookiecutter."""
-from os import listdir
+from os import listdir, getcwd
 from os.path import join
 from subprocess import CalledProcessError, check_call, check_output, STDOUT
+from distutils.version import LooseVersion
 
 import logging
 import shutil
@@ -112,8 +113,19 @@ def init_version_control():
 
 def set_git_hook_dir():
     """ Sets the directory for the git hooks."""
-    shell('git config core.hooksPath .githooks')
-    LOG.info('Setting the git hook dir to .githooks')
+    basedir = getcwd()
+    git_version = shell('git --version', True).split()[-1]
+    if LooseVersion(git_version) < LooseVersion('2.9'):
+        # core.hooksPath is supported since version 2.9
+        shell('ln -s {0} {1}'.format(
+            join(basedir, '.githooks/post-commit'),
+            join(basedir, '.git/hooks/post-commit')
+            )
+        )
+        LOG.info('Setting symbolic link to post-commit hook')
+    else:
+        shell('git config core.hooksPath .githooks')
+        LOG.info('Setting the git hook dir to .githooks')
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(message)s')

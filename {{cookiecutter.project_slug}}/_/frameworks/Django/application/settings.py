@@ -128,6 +128,6 @@ STATIC_URL = '/static/'
 RAVEN_CONFIG = {
     'dsn': env('SENTRY_DSN', default=None),
     # Automatically configure the release based on information from Git
-    'release': raven.fetch_git_sha(dirname(pardir)),
+    'release': env('REVISION', default=None),
 }
 {%- endif %}
