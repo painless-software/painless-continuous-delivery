@@ -110,6 +110,11 @@ def init_version_control():
     LOG.info('Then push the code to it: $ git push -u origin --all')
 
 
+def set_git_hook_dir():
+    """ Sets the directory for the git hooks."""
+    shell('git config core.hooksPath .githooks')
+    LOG.info('Setting the git hook dir to .githooks')
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(message)s')
     LOG = logging.getLogger('post_gen_project')
@@ -119,3 +124,4 @@ if __name__ == "__main__":
     set_up_deployment()
     remove_temporary_files()
     init_version_control()
+    set_git_hook_dir()

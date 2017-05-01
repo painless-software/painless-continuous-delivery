@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+
+BASEDIR=$(dirname "$0")
+ENV_FILE=$BASEDIR/../../.env
+
+GIT_SHA=$(git rev-parse HEAD)
+sed -e '/^REVISION=/d' -i $ENV_FILE
+echo REVISION=$GIT_SHA >> $ENV_FILE
