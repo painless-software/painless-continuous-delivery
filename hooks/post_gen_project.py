@@ -119,4 +119,3 @@ if __name__ == "__main__":
     set_up_deployment()
     remove_temporary_files()
     init_version_control()
-
