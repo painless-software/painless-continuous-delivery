@@ -17,7 +17,7 @@ class TestMonitoring(object):
             'monitoring': 'Sentry',
             'required_settings': {
                 'dsn': "env('SENTRY_DSN', default=None)",
-                'release': "raven.fetch_git_sha(dirname(pardir))",
+                'release': "env('REVISION', default=None)",
             },
             'required_packages': [
                 'raven',
