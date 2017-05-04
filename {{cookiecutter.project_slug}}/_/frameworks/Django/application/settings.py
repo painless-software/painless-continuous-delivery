@@ -2,11 +2,7 @@
 Django settings for application project.
 """
 from os.path import abspath, dirname, join
-{%- if cookiecutter.monitoring == 'Sentry' %}, pardir{% endif %}
 from environ import Env
-{% if cookiecutter.monitoring == 'Sentry' %}
-import raven
-{% endif %}
 BASE_DIR = dirname(dirname(abspath(__file__)))
 
 env = Env()  # pylint: disable=invalid-name
