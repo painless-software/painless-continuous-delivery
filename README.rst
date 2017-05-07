@@ -65,6 +65,18 @@ Generate a new Cookiecutter template layout:
 
     cookiecutter gh:painless-software/painless-continuous-delivery
 
+Under The Hood
+==============
+
+The underscore folder, ``{{cookiecutter.project_slug}}/_``, contains files
+that are integrated by the post generate hook, ``hooks/post_gen_project.py``,
+according to the choices made during the cookiecutter execution.
+
+The ``generators`` folder contains scripts to pre-generate code skeletons
+that are integrated manually in this coockiecutter (e.g. framework setups).
+
+Please refer to the README files in those folders for additional details.
+
 Credits
 =======
 
