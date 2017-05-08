@@ -1,9 +1,10 @@
 # Painless deployment with Travis CI.
 # Visit the docs at https://docs.travis-ci.com/
 
+dist: trusty
 sudo: false
 language: python
-python: 3.5
+python: 3.6
 
 env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
@@ -16,6 +17,8 @@ env:
     - TOXENV=pypy
     - TOXENV=behave
 
+before_install:  # temporary fix for https://github.com/travis-ci/travis-ci/issues/4990#issuecomment-297863117
+  - if [[ $TOXENV = py35 && -f ~/virtualenv/python3.5/bin/activate ]]; then source ~/virtualenv/python3.5/bin/activate; fi
 install: pip install tox
 script: tox
 
