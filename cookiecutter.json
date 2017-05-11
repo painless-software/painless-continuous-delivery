@@ -31,7 +31,8 @@
         "(none)",
         "Django",
         "Flask",
-        "Symfony"
+        "Symfony",
+        "TYPO3"
     ],
     "database": [
         "(none)",
@@ -44,6 +45,7 @@
     ],
     "_copy_without_render": [
         "_/frameworks/Flask",
-        "_/frameworks/Symfony"
+        "_/frameworks/Symfony",
+        "_/frameworks/TYPO3"
     ]
 }

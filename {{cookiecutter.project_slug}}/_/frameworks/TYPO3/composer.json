@@ -1,0 +1,18 @@
+{
+	"repositories": [
+		{ "type": "composer", "url": "https://composer.typo3.org/" }
+	],
+	"name": "typo3/cms-base-distribution",
+	"description" : "TYPO3 CMS Base Distribution",
+	"license": "GPL-2.0+",
+	"require": {
+		"typo3/cms": "^8.7",
+		"helhum/typo3-console": "^4.4"
+	},
+	"extra": {
+		"typo3/cms": {
+			"cms-package-dir": "{$vendor-dir}/typo3/cms",
+			"web-dir": "web"
+		}
+	}
+}
