@@ -70,6 +70,24 @@ class TestFramework(object):
             'install_commands': [
             ],
         }),
+        ('typo3', {
+            'project_slug': 'typo3-project',
+            'vcs_account': 'painless-software',
+            'vcs_platform': 'GitHub.com',
+            'ci_service': '.travis.yml',
+            'framework': 'TYPO3',
+            'required_files': [
+                '.gitignore',
+                'composer.json',
+                'composer.lock',
+                'config/webserver/Dockerfile',
+                'config/webserver/php.ini',
+                'web/typo3conf/ext/typo3_console/ext_emconf.php',
+                'web/typo3conf/ext/typo3_console/ext_icon.png',
+            ],
+            'install_commands': [
+            ],
+        }),
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
