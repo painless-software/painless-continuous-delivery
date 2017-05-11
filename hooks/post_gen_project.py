@@ -53,6 +53,7 @@ def set_up_deployment():
         'Django': 'python',
         'Flask': 'python',
         'Symfony': 'php',
+        'TYPO3': 'php',
     }
     framework = '{{ cookiecutter.framework }}'
 

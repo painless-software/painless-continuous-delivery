@@ -13,6 +13,9 @@ To start developing on this project simply bring up the Docker setup:
     docker-compose up --build -d
     docker-compose run application python manage.py migrate
     docker-compose logs -f
+{% elif cookiecutter.framework in ['Symfony', 'TYPO3'] %}
+    composer install
+    docker-compose up --build
 {% else %}
     docker-compose up --build
 {% endif %}
