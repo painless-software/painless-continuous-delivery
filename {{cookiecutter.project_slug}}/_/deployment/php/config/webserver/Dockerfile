@@ -3,3 +3,4 @@ RUN docker-php-ext-install mysqli
 COPY config/webserver/php.ini /usr/local/etc/php/
 COPY . /var/www/html/
 RUN rm -r /var/www/html/config
+COPY ./config/webserver/000-default.conf /etc/apache2/sites-available/
