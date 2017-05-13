@@ -9,8 +9,6 @@ volumes:
 services:
   webserver:
     build: ./config/webserver
-    ports:
-      - "80:80"
     volumes_from:
       - application
     depends_on:

@@ -11,8 +11,6 @@ services:
     build:
       context: .
       dockerfile: ./config/webserver/Dockerfile
-    ports:
-      - "80:80"
 {%- if cookiecutter.database in ['Postgres', 'MySQL/MariaDB'] %}
     depends_on:
       - database
