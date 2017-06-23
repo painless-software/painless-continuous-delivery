@@ -25,12 +25,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    {%- if cookiecutter.monitoring == 'Sentry' %}
+    {%- if cookiecutter.monitoring == 'Datadog' %}
+    'django_datadog',
+    {%- elif cookiecutter.monitoring == 'Sentry' %}
     'raven.contrib.django.raven_compat',
     {%- endif %}
 ]
 
 MIDDLEWARE = [
+{%- if cookiecutter.monitoring == 'Datadog' %}
+    'django_datadog.middleware.DatadogMiddleware',
+{%- endif %}
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -119,7 +124,12 @@ USE_TZ = True
 
 STATIC_ROOT = join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
-{%- if cookiecutter.monitoring == 'Sentry' %}
+{%- if cookiecutter.monitoring == 'Datadog' %}
+
+DATADOG_API_KEY = env('DATADOG_API_KEY', default=None)
+DATADOG_APP_KEY = env('DATADOG_APP_KEY', default=None)
+DATADOG_APP_NAME = env('DATADOG_APP_NAME', default=None)
+{%- elif cookiecutter.monitoring == 'Sentry' %}
 
 RAVEN_CONFIG = {
     'dsn': env('SENTRY_DSN', default=None),

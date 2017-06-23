@@ -41,6 +41,7 @@
     ],
     "monitoring": [
         "(none)",
+        "Datadog",
         "Sentry"
     ],
     "_copy_without_render": [
