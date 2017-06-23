@@ -45,6 +45,18 @@ def get_lines_for(identifier, module_lines, block_type):
         return []
 
 
+def not_found_pretty(needle, lines):
+    """
+    Returns a pretty-print assert message.
+    """
+    return 'Not found in settings: %(needle)s\n' \
+           '---------------\n' \
+           '%(lines)s' % {
+               'needle': needle,
+               'lines': '\n'.join(lines)
+           }
+
+
 def verify_required_settings(required_settings, settings):
     """
     Assert that the required settings are included in the generated ones.
@@ -52,13 +64,16 @@ def verify_required_settings(required_settings, settings):
     for key, value in required_settings.items():
         if isinstance(value, str):
             key_value_pair = '%s = %s' % (key, value)
-            assert key_value_pair in settings
+            assert key_value_pair in settings, \
+                not_found_pretty(key_value_pair, settings)
         else:
             lines = get_lines_for(key, settings, block_type=type(value))
             if isinstance(value, dict):
                 for dict_key, dict_value in value.items():
                     key_value_pair = "'%s': %s," % (dict_key, dict_value)
-                    assert key_value_pair in lines
+                    assert key_value_pair in lines, \
+                        not_found_pretty(key_value_pair, lines)
             else:  # list or tuple
                 for item in value:
-                    assert item in lines
+                    assert item in lines, \
+                        not_found_pretty(item, lines)

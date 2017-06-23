@@ -2,7 +2,7 @@
 from os import system
 
 from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
-from . import get_lines_for
+from . import verify_required_settings
 
 
 # pylint: disable=too-few-public-methods
@@ -16,8 +16,10 @@ class TestDatabase(object):
             'framework': 'Django',
             'database': '(none)',
             'required_settings': {
-                'ENGINE': "'django.db.backends.sqlite3'",
-                'NAME': "join(BASE_DIR, 'db.sqlite3')",
+                'DATABASES': {
+                    'ENGINE': "'django.db.backends.sqlite3'",
+                    'NAME': "join(BASE_DIR, 'db.sqlite3')",
+                }
             },
             'required_packages': [
                 'django-environ',
@@ -28,12 +30,14 @@ class TestDatabase(object):
             'framework': 'Django',
             'database': 'Postgres',
             'required_settings': {
-                'ENGINE': "'django.db.backends.postgresql'",
-                'NAME': "env('POSTGRES_DATABASE', default='postgres')",
-                'USER': "env('POSTGRES_USER', default='postgres')",
-                'PASSWORD': "env('POSTGRES_PASSWORD', default=None)",
-                'HOST': "env('POSTGRES_HOST', default='database')",
-                'PORT': "env.int('POSTGRES_PORT', default=5432)",
+                'DATABASES': {
+                    'ENGINE': "'django.db.backends.postgresql'",
+                    'NAME': "env('POSTGRES_DATABASE', default='postgres')",
+                    'USER': "env('POSTGRES_USER', default='postgres')",
+                    'PASSWORD': "env('POSTGRES_PASSWORD', default=None)",
+                    'HOST': "env('POSTGRES_HOST', default='database')",
+                    'PORT': "env.int('POSTGRES_PORT', default=5432)",
+                },
             },
             'required_packages': [
                 'django-environ',
@@ -45,12 +49,14 @@ class TestDatabase(object):
             'framework': 'Django',
             'database': 'MySQL/MariaDB',
             'required_settings': {
-                'ENGINE': "'django.db.backends.mysql'",
-                'NAME': "env('MYSQL_DATABASE', default='mysql')",
-                'USER': "env('MYSQL_USER', default='mysql')",
-                'PASSWORD': "env('MYSQL_PASSWORD', default='mysql')",
-                'HOST': "env('MYSQL_HOST', default='database')",
-                'PORT': "env.int('MYSQL_PORT', default=3306)",
+                'DATABASES': {
+                    'ENGINE': "'django.db.backends.mysql'",
+                    'NAME': "env('MYSQL_DATABASE', default='mysql')",
+                    'USER': "env('MYSQL_USER', default='mysql')",
+                    'PASSWORD': "env('MYSQL_PASSWORD', default='mysql')",
+                    'HOST': "env('MYSQL_HOST', default='database')",
+                    'PORT': "env.int('MYSQL_PORT', default=3306)",
+                },
             },
             'required_packages': [
                 'django-environ',
@@ -76,10 +82,7 @@ class TestDatabase(object):
 
         settings = result.project.join(
             'application', 'settings.py').readlines(cr=False)
-        db_settings = get_lines_for('DATABASES', settings, block_type=dict)
-        for key, value in required_settings.items():
-            key_value_pair = "'%s': %s," % (key, value)
-            assert key_value_pair in db_settings
+        verify_required_settings(required_settings, settings)
 
         requirements_txt = \
             result.project.join('requirements.txt').readlines(cr=False)
