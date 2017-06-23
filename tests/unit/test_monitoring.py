@@ -2,7 +2,7 @@
 from os import system
 
 from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
-from . import slice_dict_from
+from . import verify_required_settings
 
 
 # pylint: disable=too-few-public-methods
@@ -11,13 +11,31 @@ class TestMonitoring(object):
     Tests for verifying monitoring configuration in generated projects.
     """
     scenarios = [
+        ('Datadog(django)', {
+            'project_slug': 'django-project',
+            'framework': 'Django',
+            'monitoring': 'Datadog',
+            'required_settings': {
+                'MIDDLEWARE': [
+                    "'django_datadog.middleware.DatadogMiddleware',",
+                ],
+                'DATADOG_API_KEY': "env('DATADOG_API_KEY', default=None)",
+                'DATADOG_APP_KEY': "env('DATADOG_APP_KEY', default=None)",
+                'DATADOG_APP_NAME': "env('DATADOG_APP_NAME', default=None)",
+            },
+            'required_packages': [
+                'django-datadog',
+            ],
+        }),
         ('Sentry(django)', {
             'project_slug': 'django-project',
             'framework': 'Django',
             'monitoring': 'Sentry',
             'required_settings': {
-                'dsn': "env('SENTRY_DSN', default=None)",
-                'release': "env('REVISION', default=None)",
+                'RAVEN_CONFIG': {
+                    'dsn': "env('SENTRY_DSN', default=None)",
+                    'release': "env('REVISION', default=None)",
+                },
             },
             'required_packages': [
                 'raven',
@@ -54,10 +72,7 @@ class TestMonitoring(object):
 
         settings = result.project.join(
             'application', 'settings.py').readlines(cr=False)
-        db_settings = slice_dict_from('RAVEN_CONFIG', settings)
-        for key, value in required_settings.items():
-            key_value_pair = "'%s': %s," % (key, value)
-            assert key_value_pair in db_settings
+        verify_required_settings(required_settings, settings)
 
         requirements_txt = \
             result.project.join('requirements.txt').readlines(cr=False)

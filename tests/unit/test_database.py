@@ -2,7 +2,7 @@
 from os import system
 
 from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
-from . import slice_dict_from
+from . import get_lines_for
 
 
 # pylint: disable=too-few-public-methods
@@ -76,7 +76,7 @@ class TestDatabase(object):
 
         settings = result.project.join(
             'application', 'settings.py').readlines(cr=False)
-        db_settings = slice_dict_from('DATABASES', settings)
+        db_settings = get_lines_for('DATABASES', settings, block_type=dict)
         for key, value in required_settings.items():
             key_value_pair = "'%s': %s," % (key, value)
             assert key_value_pair in db_settings

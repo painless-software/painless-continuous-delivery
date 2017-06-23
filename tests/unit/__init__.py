@@ -22,15 +22,43 @@ def pytest_generate_tests(metafunc):
     metafunc.parametrize(argnames, argvalues, ids=idlist, scope="class")
 
 
-def slice_dict_from(dict_name, thelist):
+def get_lines_for(identifier, module_lines, block_type):
     """
-    Extract a Python dict definition in Python code such as the settings file
-    read as a list of strings.  Return an empty list if not found.
+    Extract a Python value definition (list, tuple, dict) in Python code
+    (such as the settings file), and return its content as a list of strings.
+    Return an empty list if not found.
     """
+    delimiters_for = {
+        str: ('', '\n'),
+        list: ('[', ']'),
+        tuple: ('(', ')'),
+        dict: ('{', '}'),
+    }
+    start_symbol, stop_symbol = delimiters_for[block_type]
+
     try:
-        start = thelist.index('%s = {' % dict_name)
-        stop = thelist.index('}', start)
-        dict_lines = thelist[start:stop + 1]
-        return [line.strip() for line in dict_lines]
+        start = module_lines.index('%s = %s' % (identifier, start_symbol))
+        stop = module_lines.index(stop_symbol, start)
+        value_lines = module_lines[start:stop + 1]
+        return [line.strip() for line in value_lines]
     except ValueError:
         return []
+
+
+def verify_required_settings(required_settings, settings):
+    """
+    Assert that the required settings are included in the generated ones.
+    """
+    for key, value in required_settings.items():
+        if isinstance(value, str):
+            key_value_pair = '%s = %s' % (key, value)
+            assert key_value_pair in settings
+        else:
+            lines = get_lines_for(key, settings, block_type=type(value))
+            if isinstance(value, dict):
+                for dict_key, dict_value in value.items():
+                    key_value_pair = "'%s': %s," % (dict_key, dict_value)
+                    assert key_value_pair in lines
+            else:  # list or tuple
+                for item in value:
+                    assert item in lines
