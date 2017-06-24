@@ -27,14 +27,17 @@ class TestTestSetup(object):
         """
         Generate a project and verify the test setup executes successfully.
         """
-        py_version = 'py%s%s' % version_info[:2]
+        major, minor = version_info[:2]
+        py_version = 'py%s%s' % (major, minor)
         result = cookies.bake(extra_context={
             'project_slug': project_slug,
             'framework': framework,
             'tests': 'flake8,pylint,%s,behave' % py_version,
         })
 
-        assert result.exit_code == 0
+        assert result.exit_code == 0, \
+            'Cookiecutter exits with %(exit_code)s:' \
+            ' %(exception)s' % result.__dict__
         assert result.exception is None
 
         tox_ini = result.project.join('tox.ini')
