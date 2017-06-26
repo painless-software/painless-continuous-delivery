@@ -12,6 +12,7 @@ def step_impl(context, framework):
     major, minor = version_info[:2]
     py_version = 'py%s%s' % (major, minor)
     project_slug = 'painless-%s-%s-project' % (py_version, framework.lower())
+    context.logfile = join(context.temp_dir, project_slug + '.log')
 
     context.generated_dir = cookiecutter(
         template=context.project_dir,
