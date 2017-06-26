@@ -1,13 +1,12 @@
 """
 'Given' step implementations for acceptance tests.  Powered by behave.
 """
-from behave import given
 from cookiecutter.main import cookiecutter
 from os.path import join, isfile
 from sys import version_info
 
 
-@given(u'I have just created a {framework} project with this cookiecutter')
+@given(u'I have just created a {framework} project with this cookiecutter')  # noqa
 def step_impl(context, framework):
     major, minor = version_info[:2]
     py_version = 'py%s%s' % (major, minor)
@@ -25,7 +24,7 @@ def step_impl(context, framework):
         })
 
 
-@given(u'all the configuration files for the test setup are in place')
+@given(u'all the configuration files for the test setup are in place')  # noqa
 def step_impl(context):
     context.tox_ini = join(context.generated_dir, 'tox.ini')
     assert isfile(context.tox_ini)
