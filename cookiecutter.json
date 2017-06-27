@@ -26,7 +26,8 @@
         ".travis.yml",
         "vexor.yml"
     ],
-    "tests": "flake8,py27,py35",
+    "checks": "flake8",
+    "tests": "py27,py35",
     "framework": [
         "(none)",
         "Django",

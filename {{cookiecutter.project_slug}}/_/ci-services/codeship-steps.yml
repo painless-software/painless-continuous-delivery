@@ -4,6 +4,10 @@
 - type: parallel
   service: app
   steps:
+    {%- for env in cookiecutter.checks.split(',') %}
+    - name: {{ env }}
+      command: tox -e {{ env }}
+    {%- endfor %}
     {%- for env in cookiecutter.tests.split(',') %}
     - name: {{ env }}
       command: tox -e {{ env }}

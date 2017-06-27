@@ -1,61 +1,54 @@
 # Painless deployment with GitLab CI.
 # Visit the docs at https://docs.gitlab.com/ce/ci/
 
-.test: &test_template
-  before_script:
-  - pip install tox
-  script: tox
+image: painless/tox
 
-test-flake8:
-  image: python:3.5
-  variables:
-    TOXENV: flake8
-  <<: *test_template
-test-pylint:
-  image: python:3.5
-  variables:
-    TOXENV: pylint
-  <<: *test_template
-test-py27:
-  image: python:2.7
-  variables:
-    TOXENV: py27
-  <<: *test_template
-test-py34:
-  image: python:3.4
-  variables:
-    TOXENV: py34
-  <<: *test_template
-test-py35:
-  image: python:3.5
-  variables:
-    TOXENV: py35
-  <<: *test_template
-test-py36:
-  image: python:3.6
-  variables:
-    TOXENV: py36
-  <<: *test_template
-test-pypy:
-  image: pypy:2
-  variables:
-    TOXENV: pypy
-  <<: *test_template
-test-behave:
-  image: python:3.5
-  variables:
-    TOXENV: behave
-  <<: *test_template
+stages:
+- check
+- test
+- deploy
+
+flake8:
+  stage: check
+  script: tox -e flake8
+
+pylint:
+  stage: check
+  script: tox -e pylint
+
+py27:
+  stage: test
+  script: tox -e py27
+
+py34:
+  stage: test
+  script: tox -e py34
+
+py35:
+  stage: test
+  script: tox -e py35
+
+py36:
+  stage: test
+  script: tox -e py36
+
+pypy:
+  stage: test
+  script: tox -e pypy
+
+behave:
+  stage: test
+  script: tox -e behave
 
 staging:
-  type: deploy
+  stage: deploy
   script:
   - echo 'This build would deploy to Staging now.'
   only:
   - master
 
 production:
-  type: deploy
+  stage: deploy
   script:
   - echo 'This build would deploy to Production now.'
   only:

@@ -3,13 +3,16 @@
 
 language: python
 python:
-  {%- for env in cookiecutter.tests.split(',') if env not in ["flake8", "pylint", "behave"] %}
+  {%- for env in cookiecutter.tests.split(',') if env not in ["behave"] %}
   - "{{ env|replace('py27','2.7')|replace('py34','3.4')|replace('py35','3.5')|replace('py36','3.6') }}"
   {%- endfor %}
 
 env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
-    {%- for env in cookiecutter.tests.split(',') if env in ["flake8", "pylint", "behave"] %}
+    {%- for env in cookiecutter.checks.split(',') %}
+    - TOXENV={{ env }}
+    {%- endfor %}
+    {%- for env in cookiecutter.tests.split(',') if env in ["behave"] %}
     - TOXENV={{ env }}
     {%- endfor %}
     - TOXENV=$(echo $TRAVIS_PYTHON_VERSION | sed 's/^\([23]\)\.\([34567]\)/py\1\2/')

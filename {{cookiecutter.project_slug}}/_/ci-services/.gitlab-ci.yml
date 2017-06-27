@@ -1,31 +1,31 @@
 # Painless deployment with GitLab CI.
 # Visit the docs at https://docs.gitlab.com/ce/ci/
 
-.test: &test_template
-  before_script:
-  - pip install tox
-  script: tox
-{% for env in cookiecutter.tests.split(",") %}
-test-{{ env }}:
-  {% if env in ["flake8", "pylint", "behave"] -%}
-  image: python:3.5
-  {%- elif env|truncate(2, True, "", 0) == "py" -%}
-  image: {{ env|replace("py", "python:", 1)|replace("27", "2.7")|replace("34", "3.4")|replace("35", "3.5")|replace("36", "3.6")|replace("python:py", "pypy:2") }}
-  {%- endif %}
-  variables:
-    TOXENV: {{ env }}
-  <<: *test_template
-{%- endfor %}
+image: painless/tox
 
+stages:
+- check
+- test
+- deploy
+{% for env in cookiecutter.checks.split(",") %}
+{{ env }}:
+  stage: check
+  script: tox -e {{ env }}
+{% endfor %}
+{%- for env in cookiecutter.tests.split(",") %}
+{{ env }}:
+  stage: test
+  script: tox -e {{ env }}
+{% endfor %}
 staging:
-  type: deploy
+  stage: deploy
   script:
   - echo 'This build would deploy to Staging now.'
   only:
   - master
 
 production:
-  type: deploy
+  stage: deploy
   script:
   - echo 'This build would deploy to Production now.'
   only:
