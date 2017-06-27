@@ -7,6 +7,9 @@ python:
 
 env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
+    {%- for env in cookiecutter.checks.split(',') %}
+    - TOXENV={{ env }}
+    {%- endfor %}
     {%- for env in cookiecutter.tests.split(',') %}
     - TOXENV={{ env }}
     {%- endfor %}
