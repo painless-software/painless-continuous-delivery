@@ -19,10 +19,10 @@
         "incenteev/composer-parameter-handler": "~2.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2",
-        "phpunit/phpunit": "^6",
         "sensio/generator-bundle": "~3.0",
-        "symfony/phpunit-bridge": "~2.7"
+        "symfony/phpunit-bridge": "~2.7",
+        "phpunit/phpunit": "^6",
+        "friendsofphp/php-cs-fixer": "^2"
     },
     "scripts": {
         "check": [
