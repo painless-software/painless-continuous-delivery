@@ -3,7 +3,7 @@
 """
 from cookiecutter.main import cookiecutter
 from os import chdir, system
-from os.path import join, isfile
+from os.path import join
 from sys import version_info
 
 
@@ -32,19 +32,15 @@ def step_impl(context, framework, checks, tests):
         })
 
 
-@given('the test environment has been initialized with {setupcommand}')  # noqa
-def step_impl(context, setupcommand):
-    chdir(context.generated_dir)
-    system('{command} > {logfile} 2>&1'.format(
-        command=setupcommand,
-        logfile=context.logfile,
-    ))
+@given('system libraries have been installed for developing with PHP')  # noqa
+def step_impl(context):
+    assert system('php --version > /dev/null') == 0, 'PHP not installed.'
+    assert system('php --info | grep "Zend Multibyte Support '
+                  '=> provided by mbstring" > /dev/null') == 0, \
+        'mbstring missing. Try: apt-get install php7.0-mbstring'
 
+    chdir(context.generated_dir)
+    system('composer install > {logfile} 2>&1'.format(
+        logfile=context.logfile))
     with open(context.logfile) as logfile:
         context.log = logfile.read()
-
-
-@given('all the configuration files for the test setup are in place')  # noqa
-def step_impl(context):
-    tox_ini = join(context.generated_dir, 'tox.ini')
-    assert isfile(tox_ini)
