@@ -4,8 +4,8 @@ Visit the docs at
 https://behave.readthedocs.io/en/latest/tutorial.html#environmental-controls
 """
 from os.path import dirname
-from tempfile import mkdtemp
 from shutil import rmtree
+from tempfile import mkdtemp
 
 
 def before_all(context):

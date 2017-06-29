@@ -1,13 +1,14 @@
 """
 'When' step implementations for acceptance tests.  Powered by behave.
 """
-from os import system
+from os import chdir, system
 
 
-@when(u'I run the test suite')  # noqa
-def step_impl(context):
-    context.exit_code = system('tox -c {config} > {logfile}'.format(
-        config=context.tox_ini,
+@when('I run the test suite with {testsuite}')  # noqa
+def step_impl(context, testsuite):
+    chdir(context.generated_dir)
+    context.exit_code = system('{command} > {logfile} 2>&1'.format(
+        command=testsuite,
         logfile=context.logfile,
     ))
 

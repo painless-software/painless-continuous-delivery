@@ -19,10 +19,28 @@
         "incenteev/composer-parameter-handler": "~2.0"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2",
+        "phpunit/phpunit": "^6",
         "sensio/generator-bundle": "~3.0",
         "symfony/phpunit-bridge": "~2.7"
     },
     "scripts": {
+        "check": [
+            "@composer phpcs",
+            "@composer twig"
+        ],
+        "test": [
+            "@composer phpunit"
+        ],
+        "phpcs": [
+            "bin/php-cs-fixer fix --dry-run --using-cache=no --verbose src"
+        ],
+        "twig": [
+            "app/console lint:twig"
+        ],
+        "phpunit": [
+            "bin/phpunit --configuration app/phpunit.xml.dist src"
+        ],
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
