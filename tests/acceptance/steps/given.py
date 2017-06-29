@@ -34,10 +34,18 @@ def step_impl(context, framework, checks, tests):
 
 @given('system libraries have been installed for developing with PHP')  # noqa
 def step_impl(context):
-    assert system('php --version > /dev/null') == 0, 'PHP not installed.'
-    assert system('php --info | grep "Zend Multibyte Support '
-                  '=> provided by mbstring" > /dev/null') == 0, \
-        'mbstring missing. Try: apt-get install php7.0-mbstring'
+    php_installed = (system('php --version > /dev/null') == 0)
+    if not php_installed:
+        system('sudo apt-get install -y php7.0-cli')
+
+    mbstring_installed = (system('php --info | grep "Zend Multibyte Support '
+                                 '=> provided by mbstring" > /dev/null') == 0)
+    if not mbstring_installed:
+        system('sudo apt-get install -y php7.0-mbstring')
+
+    composer_installed = (system('composer --version > /dev/null') == 0)
+    if not composer_installed:
+        system('sudo apt-get install -y composer')
 
     chdir(context.generated_dir)
     system('composer install > {logfile} 2>&1'.format(
