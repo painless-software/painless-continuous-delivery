@@ -1,7 +1,7 @@
 # Painless deployment with GitLab CI.
 # Visit the docs at https://docs.gitlab.com/ce/ci/
 
-image: painless/tox
+image: painless/tox:multi
 
 stages:
 - check
