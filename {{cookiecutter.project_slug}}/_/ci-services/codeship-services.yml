@@ -5,6 +5,6 @@ version: '2'
 
 services:
   app:
-    image: painless/tox
+    image: painless/tox:multi
     volumes:
       - .:/app
