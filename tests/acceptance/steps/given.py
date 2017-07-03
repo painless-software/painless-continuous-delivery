@@ -34,8 +34,8 @@ def step_impl(context, framework, checks, tests):
 
 @given('system libraries have been installed for developing with PHP')  # noqa
 def step_impl(context):
-    php_installed = (system('php --version > /dev/null') == 0)
-    if not php_installed:
+    php7_installed = (system('php --version | grep "^PHP 7" > /dev/null') == 0)
+    if not php7_installed:
         system('sudo apt-get install -y php7.0-cli')
 
     mbstring_installed = (system('php --info | grep "Zend Multibyte Support '
@@ -48,7 +48,11 @@ def step_impl(context):
         system('sudo apt-get install -y composer')
 
     chdir(context.generated_dir)
-    system('composer install > {logfile} 2>&1'.format(
+    exit_code = system('composer install > {logfile} 2>&1'.format(
         logfile=context.logfile))
-    with open(context.logfile) as logfile:
-        context.log = logfile.read()
+    if exit_code != 0:
+        with open(context.logfile) as logfile:
+            context.log = logfile.read()
+        print(context.log)
+
+    system('composer install phpunit/phpunit')
