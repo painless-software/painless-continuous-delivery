@@ -1,5 +1,6 @@
 """Common helper functions and values for running tests with py.test."""
-from os.path import dirname
+from filecmp import cmp as compare_files
+from os.path import dirname, pathsep
 from py._path.local import LocalPath
 
 REPO_ROOT_PATH = LocalPath(dirname(dirname(dirname(__file__))))
@@ -77,3 +78,15 @@ def verify_required_settings(required_settings, settings):
                 for item in value:
                     assert item in lines, \
                         not_found_pretty(item, lines)
+
+
+def verify_file_matches_repo_root(result, *file):
+    """
+    Assert that a generated file matches the one with the identical name in
+    the project repository root.
+    """
+    mother_file = REPO_ROOT_PATH.join(*file).strpath
+    generated_file = result.project.join(*file).strpath
+    assert compare_files(mother_file, generated_file), \
+        "Mother project '{}' not matching template.\n {} != {}".format(
+            pathsep.join(file), mother_file, generated_file)

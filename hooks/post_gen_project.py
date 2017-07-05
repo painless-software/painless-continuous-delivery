@@ -32,7 +32,7 @@ def set_up_ci_service():
         shutil.move(join(ci_services_folder, 'codeship-services.yml'), '.')
 
 
-def set_up_framework():
+def set_up_framework_and_tests():
     """If a framework project was created move it to project root."""
     framework = '{{ cookiecutter.framework }}'
     if framework == '(none)':
@@ -42,6 +42,12 @@ def set_up_framework():
     framework_folder = join('_', 'frameworks', framework)
     for file_or_folder in listdir(framework_folder):
         shutil.move(join(framework_folder, file_or_folder), '.')
+
+    if framework in ['Django', 'Flask']:
+        LOG.info('Moving test setup for %s project ...', framework)
+        testing_folder = join('_', 'testing', 'python')
+        for file_or_folder in listdir(testing_folder):
+            shutil.move(join(testing_folder, file_or_folder), '.')
 
 
 def set_up_deployment():
@@ -116,7 +122,7 @@ if __name__ == "__main__":
     LOG = logging.getLogger('post_gen_project')
 
     set_up_ci_service()
-    set_up_framework()
+    set_up_framework_and_tests()
     set_up_deployment()
     remove_temporary_files()
     init_version_control()

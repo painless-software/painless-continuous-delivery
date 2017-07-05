@@ -1,8 +1,6 @@
 """Tests for generating a continuous integration setup."""
-from filecmp import cmp as compare_files
-
 from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
-from . import REPO_ROOT_PATH
+from . import verify_file_matches_repo_root
 
 
 # pylint: disable=too-few-public-methods
@@ -96,19 +94,11 @@ class TestCISetup(object):
         assert result.project.basename == project_slug
         assert result.project.isdir()
         assert result.project.join('README.rst').isfile()
-        assert result.project.join('tests', 'requirements.txt').isfile()
 
         assert result.project.join('.git').isdir()
         git_config = result.project.join('.git', 'config').readlines(cr=False)
         assert '[remote "origin"]' in git_config
         assert '\turl = {}'.format(vcs_remote) in git_config
-
-        tox_ini = result.project.join('tox.ini').readlines(cr=False)
-        assert '[tox]' in tox_ini
-        assert 'envlist = {}'.format(tests) in tox_ini
-        assert '[testenv]' in tox_ini
-        assert '[testenv:flake8]' in tox_ini
-        assert '[testenv:pylint]' in tox_ini
 
         ci_service_conf = result.project.join(ci_service).readlines(cr=False)
         assert ci_testcommand in ci_service_conf
@@ -118,10 +108,4 @@ class TestCISetup(object):
                 codeship_services.isfile()) or not codeship_services.exists()
 
         # ensure this project itself stays up-to-date with the template
-        file_list = [ci_service, 'tests/README.rst']
-        for filename in file_list:
-            mother_file = REPO_ROOT_PATH.join(filename).strpath
-            generated_file = result.project.join(filename).strpath
-            assert compare_files(mother_file, generated_file), \
-                "Mother project '{}' not matching template.\n {} != {}".format(
-                    filename, mother_file, generated_file)
+        verify_file_matches_repo_root(result, ci_service)
