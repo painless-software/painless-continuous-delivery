@@ -3,6 +3,7 @@ Feature: Painless Continuous Delivery project setup powered by Cookiecutter
   I want to run just a simple, single command
   So that I get a working best-practice setup for software development
 
+  @php
   Scenario Outline: Default tests pass after project generation
     Given I have just created a <framework> project checking <checks> and testing <tests>
     And system libraries have been installed for developing with PHP
@@ -13,6 +14,7 @@ Feature: Painless Continuous Delivery project setup powered by Cookiecutter
       | framework | checks            | tests          | testcommands                    |
       | Symfony   | phpcs,twig,jshint | phpunit,jsunit | composer check && composer test |
 
+  @php @docker
   Scenario Outline: Starting to develop is simple and quick
     Given my computer is set up for development with Docker
     And I want to work on a <framework> project

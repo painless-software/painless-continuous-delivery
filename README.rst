@@ -77,6 +77,11 @@ that are integrated manually in this cookiecutter (e.g. framework setups).
 
 Please refer to the README files in those folders for additional details.
 
+How Can I Contribute?
+=====================
+
+See our `contributing guide`_.
+
 Credits
 =======
 
@@ -84,4 +89,5 @@ This project is brought to you by `Painless Software`_, a best-practice
 consultancy in software development.  Less pain, more fun.
 
 
+.. _contributing guide: CONTRIBUTING.rst
 .. _Painless Software: https://painless.software/
