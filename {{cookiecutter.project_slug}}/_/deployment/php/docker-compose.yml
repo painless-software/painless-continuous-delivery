@@ -7,7 +7,7 @@ volumes:
   database_data: {}
 
 services:
-  webserver:
+  application:
     build:
       context: .
       dockerfile: ./config/webserver/Dockerfile
