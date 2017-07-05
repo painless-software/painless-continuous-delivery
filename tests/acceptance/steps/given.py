@@ -2,8 +2,7 @@
 'Given' step implementations for acceptance tests.  Powered by behave.
 """
 from cookiecutter.main import cookiecutter
-from os import chdir, system
-from os.path import join
+from os import system
 from sys import version_info
 
 
@@ -16,7 +15,7 @@ def step_impl(context, framework, checks, tests):
         tests = tests.replace('py_local_', py_version)
 
     project_slug = 'painless-%s-project' % framework.lower()
-    context.logfile = join(context.temp_dir, project_slug + '.log')
+    context.set_logfilename(project_slug)
 
     context.generated_dir = cookiecutter(
         template=context.project_dir,
@@ -27,6 +26,7 @@ def step_impl(context, framework, checks, tests):
             'framework': framework,
             'checks': checks,
             'tests': tests,
+            'database': 'MySQL/MariaDB',
             'vcs_platform': 'GitLab.com',
             'ci_service': '.gitlab-ci.yml',
         })
@@ -47,12 +47,32 @@ def step_impl(context):
     if not composer_installed:
         system('sudo apt-get install -y composer')
 
-    chdir(context.generated_dir)
-    exit_code = system('composer install > {logfile} 2>&1'.format(
-        logfile=context.logfile))
+    with context.safe_chdir(context.generated_dir):
+        exit_code = system('composer install > {logfile} 2>&1'.format(
+            logfile=context.logfile))
     if exit_code != 0:
         with open(context.logfile) as logfile:
             context.log = logfile.read()
         print(context.log)
 
-    system('composer install phpunit/phpunit')
+
+@given('my computer is set up for development with Docker')  # noqa
+def step_impl(context):
+    assert system('docker --version > /dev/null') == 0, \
+        'Docker not found.'
+    assert system('docker-compose --version > /dev/null') == 0, \
+        'Docker Compose not found.'
+
+
+@given('I want to work on a {framework} project')  # noqa
+def step_impl(context, framework, checks='phpcs', tests='phpunit'):
+    context.execute_steps(
+        '''
+        {given} a {framework} project checking {checks} and testing {tests}
+        And system libraries have been installed for developing with PHP
+        '''.format(
+            given='Given I have just created',
+            framework=framework,
+            checks=checks,
+            tests=tests)
+    )
