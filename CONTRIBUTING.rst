@@ -18,7 +18,7 @@ Testing
 We use `tox`_ to run tests against all target environments.  You may want to
 use `pyenv`_ to test against all Python version locally.  Alternatively, you
 can test only against the versions you already have installed on your machine
-like this, wait for the buld servers to cover the missing pieces and fix
+as follows, wait for the build servers to cover the missing pieces and fix
 identified issues with additional commits:
 
 .. code-block:: bash
@@ -27,8 +27,8 @@ identified issues with additional commits:
 
 Tests that require Docker must be run locally on your developer machine,
 because not all CI servers allow running Docker (inside Docker) on their
-infrastructure.  In `behave`_ those tests are tagged with ``@docker``.
-Run them with:
+infrastructure.  In `behave`_ tests the related scenarios are tagged with
+``@docker``.  Run them with:
 
 .. code-block:: bash
 

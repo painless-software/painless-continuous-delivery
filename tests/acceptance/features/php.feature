@@ -25,5 +25,5 @@ Feature: Painless Continuous Delivery project setup powered by Cookiecutter
     And the application is available at <applicationurl>
 
     Examples: PHP frameworks
-      | framework | | buildcommand         | startcommand         | applicationurl   |
-      | Symfony   | | docker-compose build | docker-compose up -d | http://localhost |
+      | framework | buildcommand         | startcommand         | applicationurl   |
+      | Symfony   | docker-compose build | docker-compose up -d | http://localhost |
