@@ -48,6 +48,7 @@ class TestRepos(object):
             'vcs_account': vcs_account,
             'ci_service': ci_service,
             'docker_registry': docker_registry,
+            'framework': 'Symfony',  # replace this once more are supported!!
         })
 
         assert result.exit_code == 0
@@ -71,4 +72,20 @@ class TestRepos(object):
             '{haystack}'.format(
                 needle=remote_url,
                 haystack='\n'.join(git_config),
+            )
+
+        docker_image = 'image: {registry}/{image}'.format(
+            registry=docker_registry,
+            image=project_slug,
+        )
+        deploy_conf = [
+            line.strip() for line in result.project.join(
+                'docker-compose.final.yml').readlines(cr=False)
+            if line.strip()
+        ]
+        assert docker_image in deploy_conf, \
+            'Container image missing in deployment configuration: {image}\n' \
+            '{config}'.format(
+                image=docker_image,
+                config='\n'.join(deploy_conf),
             )
