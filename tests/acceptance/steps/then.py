@@ -33,8 +33,14 @@ def step_impl(context):
         context.explain_log('Not all services are starting up successfully.')
 
 
-@then('the application is available at {applicationurl}')  # noqa
-def step_impl(context, applicationurl):
-    r = requests.get(applicationurl)
+@then('the application is available at {appurl} showing {appcontent}')  # noqa
+def step_impl(context, appurl, appcontent):
+    r = requests.get(appurl, appcontent)
     assert r.status_code == 200, \
         'Application returns status code %s' % r.status_code
+
+    response_body = r.content.decode('utf-8')
+    assert appcontent in response_body, \
+        "Application doesn't show expected content: {expected}\n" \
+        "----------------- (response body follows)\n" \
+        "{body}".format(expected=appcontent, body=response_body)

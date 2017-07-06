@@ -22,8 +22,8 @@ Feature: Painless Continuous Delivery project setup powered by Cookiecutter
     Then all images are built successfully
     When I run <startcommand>
     Then the project starts up successfully
-    And the application is available at <applicationurl>
+    And the application is available at <appurl> showing <appcontent>
 
     Examples: PHP frameworks
-      | framework | buildcommand         | startcommand         | applicationurl   |
-      | Symfony   | docker-compose build | docker-compose up -d | http://localhost |
+      | framework | buildcommand         | startcommand         | appurl           | appcontent                |
+      | Symfony   | docker-compose build | docker-compose up -d | http://localhost | Welcome to</span> Symfony |
