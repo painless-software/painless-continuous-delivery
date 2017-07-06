@@ -14,7 +14,6 @@ class TestCISetup(object):
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'Bitbucket.org',
-            'vcs_remote': 'git@bitbucket.org:painless-software/myproject.git',
             'ci_service': 'bitbucket-pipelines.yml',
             'ci_testcommand': '          - tox',
             'checks': 'flake8,pylint',
@@ -23,8 +22,7 @@ class TestCISetup(object):
         ('codeship', {
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
-            'vcs_platform': 'Bitbucket.org',
-            'vcs_remote': 'git@bitbucket.org:painless-software/myproject.git',
+            'vcs_platform': 'GitHub.com',
             'ci_service': 'codeship-steps.yml',
             'ci_testcommand': '  service: app',
             'checks': 'flake8,pylint',
@@ -34,7 +32,6 @@ class TestCISetup(object):
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitLab.com',
-            'vcs_remote': 'git@gitlab.com:painless-software/myproject.git',
             'ci_service': '.gitlab-ci.yml',
             'ci_testcommand': '  script: tox -e py36',
             'checks': 'flake8,pylint',
@@ -44,7 +41,6 @@ class TestCISetup(object):
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'Bitbucket.org',
-            'vcs_remote': 'git@bitbucket.org:painless-software/myproject.git',
             'ci_service': 'shippable.yml',
             'ci_testcommand': '    - tox',
             'checks': 'flake8,pylint',
@@ -54,7 +50,6 @@ class TestCISetup(object):
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitHub.com',
-            'vcs_remote': 'git@github.com:painless-software/myproject.git',
             'ci_service': '.travis.yml',
             'ci_testcommand': 'script: tox',
             'checks': 'flake8,pylint',
@@ -64,7 +59,6 @@ class TestCISetup(object):
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitHub.com',
-            'vcs_remote': 'git@github.com:painless-software/myproject.git',
             'ci_service': 'vexor.yml',
             'ci_testcommand': 'script: tox',
             'checks': 'flake8,pylint',
@@ -73,8 +67,7 @@ class TestCISetup(object):
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
-    def test_ci_setup(self, cookies, project_slug,
-                      vcs_account, vcs_platform, vcs_remote,
+    def test_ci_setup(self, cookies, project_slug, vcs_account, vcs_platform,
                       ci_service, ci_testcommand, checks, tests):
         """
         Generate a CI setup with specific settings and verify it is complete.
@@ -94,11 +87,6 @@ class TestCISetup(object):
         assert result.project.basename == project_slug
         assert result.project.isdir()
         assert result.project.join('README.rst').isfile()
-
-        assert result.project.join('.git').isdir()
-        git_config = result.project.join('.git', 'config').readlines(cr=False)
-        assert '[remote "origin"]' in git_config
-        assert '\turl = {}'.format(vcs_remote) in git_config
 
         ci_service_conf = result.project.join(ci_service).readlines(cr=False)
         assert ci_testcommand in ci_service_conf
