@@ -26,8 +26,7 @@
         ".travis.yml",
         "vexor.yml"
     ],
-    "checks": "flake8",
-    "tests": "py27,py35",
+    "docker_registry": "{{ cookiecutter.vcs_platform.replace('Bitbucket.org', 'hub.docker.com').replace('GitHub.com', 'quay.io').replace('GitLab.com', 'registry.gitlab.com') }}/{{ cookiecutter.vcs_account }}",
     "framework": [
         "(none)",
         "Django",
@@ -40,6 +39,8 @@
         "Postgres",
         "MySQL/MariaDB"
     ],
+    "checks": "flake8",
+    "tests": "py27,py35",
     "monitoring": [
         "(none)",
         "Datadog",
