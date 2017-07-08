@@ -3,7 +3,7 @@
 !.ssh
 
 Dockerfile
-docker-compose.yml
+docker-compose*.yml
 README.rst
 tests/
 tox.ini
