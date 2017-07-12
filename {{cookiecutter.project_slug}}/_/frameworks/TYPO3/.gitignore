@@ -2,6 +2,7 @@
 # TYPO3 CMS Base Distribution
 #############################
 .DS_Store
+.env
 .idea
 bin
 index.php

@@ -8,6 +8,7 @@ services:
     build:
       context: .
       dockerfile: ./config/webserver/Dockerfile
+    env_file: .env
     volumes:
       - .:/var/www/html
 
