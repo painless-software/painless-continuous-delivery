@@ -1,4 +1,4 @@
-# Painless development and deployment with Docker.
+# Painless development and deployment with Docker. Base configuration.
 # Visit the docs at https://docs.docker.com/compose/
 
 version: '3'
