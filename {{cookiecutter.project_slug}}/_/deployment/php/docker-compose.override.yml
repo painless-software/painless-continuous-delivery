@@ -21,14 +21,13 @@ services:
     image: painless/npm
     volumes:
       - .:/var/www/html
-
-{% if cookiecutter.database == 'Postgres' -%}
+{% if cookiecutter.database == 'Postgres' %}
   database:
     # Make database accessible on localhost during development
     # If you use docker-machine configure port forwarding in addition!
     ports:
       - "5432:5432"
-{% elif cookiecutter.database == 'MySQL/MariaDB' -%}
+{%- elif cookiecutter.database == 'MySQL/MariaDB' %}
   database:
     # Make database accessible on localhost during development
     # If you use docker-machine configure port forwarding in addition!
