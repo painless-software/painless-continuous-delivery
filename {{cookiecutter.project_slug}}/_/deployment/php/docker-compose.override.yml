@@ -1,7 +1,7 @@
 # Painless development and deployment with Docker.
 # Visit the docs at https://docs.docker.com/compose/extends/
 
-version: "3"
+version: '3'
 
 services:
   application:
@@ -14,8 +14,11 @@ services:
 
   composer:
     image: painless/composer
+    user: "$LOCAL_UID:$LOCAL_GID"
+    env_file: .env
     volumes:
       - .:/var/www/html
+    working_dir: /var/www/html
 
   npm:
     image: painless/npm
@@ -26,11 +29,11 @@ services:
     # Make database accessible on localhost during development
     # If you use docker-machine configure port forwarding in addition!
     ports:
-      - "5432:5432"
+      - '5432:5432'
 {%- elif cookiecutter.database == 'MySQL/MariaDB' %}
   database:
     # Make database accessible on localhost during development
     # If you use docker-machine configure port forwarding in addition!
     ports:
-      - "3306:3306"
+      - '3306:3306'
 {% endif -%}
