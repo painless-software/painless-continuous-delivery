@@ -14,7 +14,7 @@ services:
 
   composer:
     image: painless/composer
-    user: "$LOCAL_UID:$LOCAL_GID"
+    user: "${LOCAL_UID:-1001}:${LOCAL_GID:-1001}"
     env_file: .env
     volumes:
       - .:/var/www/html

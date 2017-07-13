@@ -6,7 +6,7 @@ from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
 class TestRepos(object):
     """
     Tests for verifying generated local Git repository and Docker registry
-    settup, executed several times with different values (test scenarios).
+    setup, executed several times with different values (test scenarios).
     """
     scenarios = [
         ('Bitbucket/DockerHub', {
