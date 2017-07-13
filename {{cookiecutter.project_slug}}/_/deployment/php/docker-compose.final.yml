@@ -1,7 +1,7 @@
 # Painless development and deployment with Docker.
 # Visit the docs at https://docs.docker.com/compose/extends/
 
-version: "3"
+version: '3'
 
 services:
   application:

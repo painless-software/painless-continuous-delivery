@@ -1,7 +1,7 @@
 # Painless development and deployment with Docker.
 # Visit the docs at https://docs.docker.com/compose/
 
-version: "3"
+version: '3'
 
 volumes:
   database_data: {}
@@ -9,7 +9,7 @@ volumes:
 services:
   application:
     ports:
-      - "80:80"
+      - '80:80'
 {%- if cookiecutter.database in ['Postgres', 'MySQL/MariaDB'] %}
     depends_on:
       - database

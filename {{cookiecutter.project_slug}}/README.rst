@@ -51,3 +51,38 @@ Other useful commands:
 See the `docker-compose CLI reference`_ for other commands.
 
 .. _docker-compose CLI reference: https://docs.docker.com/compose/reference/overview/
+
+Docker Run Commands
+^^^^^^^^^^^^^^^^^^^
+
+Development tools supported out-of-the-box: (see `docker-compose.override.yml`_)
+
+{% if cookiecutter.framework in ['Symfony', 'TYPO3'] -%}
+- composer
+- npm
+{%- else %}
+None yet. Sorry.
+{%- endif %}
+
+Source `.envrc`_ to activate natural aliases for those commands:
+
+.. code-block:: bash
+
+    . .envrc  # or `source .envrc` in bash
+
+.. note::
+
+    **Optional but recommended:**
+
+    Install and configure `direnv`_ to make this automatic for all projects
+    you work on.  See `.envrc`_ for setup instructions.
+
+Alternatively, you can run those commands the classic way, i.e.
+
+.. code-block:: bash
+
+    docker-compose run <toolname>
+
+.. _docker-compose.override.yml: docker-compose.override.yml
+.. _direnv: https://direnv.net/
+.. _.envrc: .envrc
