@@ -18,6 +18,8 @@ Feature: Painless Continuous Delivery project setup powered by Cookiecutter
   Scenario Outline: Starting to develop is simple and quick
     Given my computer is set up for development with Docker
     And I want to work on a <framework> project
+    When I run bash -c ". .envrc"
+    Then a .env file is created with UID/GID values
     When I run <buildcommand>
     Then all images are built successfully
     When I run <startcommand>

@@ -10,12 +10,24 @@ def step_impl(context):
         context.explain_log('Running tests in generated project fails.')
 
 
+@then(u'a {dotenv} file is created with UID/GID values')  # noqa
+def step_impl(context, dotenv):
+    assert context.exit_code == 0, \
+        context.explain_log('Command fails with exit code %s.' %
+                            context.exit_code)
+
+    with context.safe_chdir(context.generated_dir):
+        with open(dotenv) as dotenvfile:
+            content = dotenvfile.read()
+            assert 'LOCAL_UID=' in content
+            assert 'LOCAL_GID=' in content
+
+
 @then('all images are built successfully')  # noqa
 def step_impl(context):
     assert context.exit_code == 0, \
         context.explain_log('Docker build fails.')
 
-    assert 'Successfully built' in context.log
     assert 'Successfully built' in context.log
 
 
