@@ -4,6 +4,17 @@ Change Log
 All notable changes to this project are documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`__.
 
+0.3.0 (2017-07-24)
+------------------
+
+- Make GitLab CI configuration more readable
+- Add Python 3.6, drop Python 3.3 (CI server issues)
+- Add Symfony, TYPO3 project skeletons
+- Add new options: docker_registry, checks
+- Add functional tests for Django, Flask, Symfony
+- Add experimental direnv support (.envrc configuration file)
+- Add Docker Compose v3 override configuration (PHP frameworks)
+
 0.2.0 (2017-03-28)
 ------------------
 
