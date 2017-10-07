@@ -1,21 +1,22 @@
 # Painless deployment with Travis CI.
 # Visit the docs at https://docs.travis-ci.com/
 
-dist: trusty
-sudo: required
 language: python
-python: 3.6
+python:
+  {%- for env in '2.7,3.4,3.5,3.6,pypy'.split(',') %}
+  - {{ env }}
+  {%- endfor %}
 
-env:
-  matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
-    {%- for env in cookiecutter.checks.split(',') %}
-    - TOXENV={{ env }}
-    {%- endfor %}
-    {%- for env in cookiecutter.tests.split(',') %}
-    - TOXENV={{ env }}
-    {%- endfor %}
+matrix:
+  include:
+  - python: 3.5
+    env: TOXENV=flake8
+  - python: 3.5
+    env: TOXENV=pylint
+  - python: 3.5
+    env: TOXENV=behave
 
-install: pip install tox
+install: pip install tox-travis
 script: tox
 
 before_cache:
