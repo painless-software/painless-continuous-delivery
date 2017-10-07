@@ -1,23 +1,24 @@
 # Painless deployment with Travis CI.
 # Visit the docs at https://docs.travis-ci.com/
 
-dist: trusty
-sudo: required
 language: python
-python: 3.6
+python:
+  - 2.7
+  - 3.4
+  - 3.5
+  - 3.6
+  - pypy
 
-env:
-  matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
-    - TOXENV=flake8
-    - TOXENV=pylint
-    - TOXENV=py27
-    - TOXENV=py34
-    - TOXENV=py35
-    - TOXENV=py36
-    - TOXENV=pypy
-    - TOXENV=behave
+matrix:
+  include:
+  - python: 3.5
+    env: TOXENV=flake8
+  - python: 3.5
+    env: TOXENV=pylint
+  - python: 3.5
+    env: TOXENV=behave
 
-install: pip install tox
+install: pip install tox-travis
 script: tox
 
 before_cache:
