@@ -11,12 +11,9 @@ python:
 
 matrix:
   include:
-  - python: 3.5
-    env: TOXENV=flake8
-  - python: 3.5
-    env: TOXENV=pylint
-  - python: 3.5
-    env: TOXENV=behave
+    - { python: 3.5, env: TOXENV=flake8 }
+    - { python: 3.5, env: TOXENV=pylint }
+    - { python: 3.5, env: TOXENV=behave }
 
 install: pip install tox-travis
 script: tox
