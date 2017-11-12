@@ -6,6 +6,7 @@ image: painless/tox:multi
 stages:
 - check
 - test
+- build
 - deploy
 
 flake8:
@@ -39,6 +40,13 @@ pypy:
 behave:
   stage: test
   script: tox -e behave
+
+build:
+  stage: build
+  script:
+  - echo 'This build would build a Docker image and push it to the registry.'
+  only:
+  - feature/*
 
 staging:
   stage: deploy
