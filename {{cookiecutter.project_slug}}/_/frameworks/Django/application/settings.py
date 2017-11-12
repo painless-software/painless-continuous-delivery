@@ -3,9 +3,10 @@ Django settings for application project.
 """
 from os.path import abspath, dirname, join
 from environ import Env
+
 BASE_DIR = dirname(dirname(abspath(__file__)))
 
-env = Env()  # pylint: disable=invalid-name
+env = Env()
 Env.read_env(join(BASE_DIR, '.env'))
 
 DEBUG = env.bool('DJANGO_DEBUG', default=True)
@@ -94,20 +95,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.'
-                'UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.'
-                'MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.'
-                'CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.'
-                'NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 

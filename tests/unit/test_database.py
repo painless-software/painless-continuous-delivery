@@ -89,6 +89,8 @@ class TestDatabase(object):
         for req in required_packages:
             assert req in requirements_txt
 
-        exit_code = system('flake8 %s' % result.project.dirname)
-        assert exit_code == 0, 'PEP8 violation or syntax error.' \
-                               ' (flake8 failed; see captured stdout call)'
+        assert result.project.join('tox.ini').isfile()
+        with result.project.as_cwd():
+            exit_code = system('flake8')
+            assert exit_code == 0, 'PEP8 violation or syntax error.' \
+                                   ' (flake8 failed; see captured stdout call)'
