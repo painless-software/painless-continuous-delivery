@@ -24,6 +24,13 @@ services:
     image: painless/npm
     volumes:
       - .:/var/www/html
+
+  gulp:
+    image: painless/npm
+    volumes:
+      - .:/var/www/html
+    environment:
+      - ENTRYPOINT='npm run gulp'
 {% if cookiecutter.database == 'Postgres' %}
   database:
     # Make database accessible on localhost during development
