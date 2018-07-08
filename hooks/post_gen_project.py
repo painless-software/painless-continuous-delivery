@@ -15,8 +15,8 @@ def shell(command, capture=False):
             stdout = check_output(command, shell=True, stderr=STDOUT,
                                   universal_newlines=True)
             return str(stdout)
-        else:
-            check_call(command, shell=True)
+
+        return check_call(command, shell=True)
     except CalledProcessError as err:
         LOG.error('Project generation failed.')
         sys.exit(err.returncode)
