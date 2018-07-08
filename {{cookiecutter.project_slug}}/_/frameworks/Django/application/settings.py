@@ -6,7 +6,7 @@ from environ import Env
 
 BASE_DIR = dirname(dirname(abspath(__file__)))
 
-env = Env()
+env = Env()  # pylint: disable=invalid-name
 Env.read_env(join(BASE_DIR, '.env'))
 
 DEBUG = env.bool('DJANGO_DEBUG', default=True)
