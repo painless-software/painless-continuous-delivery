@@ -1,6 +1,6 @@
-Django>=1.11,<2
+Django>=2,<2.1
 django-environ
-{% if cookiecutter.database == 'Postgres' %}psycopg2
+{% if cookiecutter.database == 'Postgres' %}psycopg2-binary
 {% elif cookiecutter.database == 'MySQL/MariaDB' %}mysqlclient
 {% endif -%}
 {% if cookiecutter.monitoring == 'Datadog' %}django-datadog

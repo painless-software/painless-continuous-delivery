@@ -1,4 +1,4 @@
-FROM python:3.5
+FROM python:3.7
 WORKDIR /opt/{{ cookiecutter.project_slug }}
 COPY requirements.txt requirements.txt
 RUN pip install uwsgi -r requirements.txt

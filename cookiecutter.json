@@ -40,7 +40,7 @@
         "MySQL/MariaDB"
     ],
     "checks": "flake8",
-    "tests": "py27,py35",
+    "tests": "py36,py37",
     "monitoring": [
         "(none)",
         "Datadog",

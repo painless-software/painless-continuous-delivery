@@ -1,7 +1,7 @@
 # Painless development and deployment with Docker.
 # Visit the docs at https://docs.docker.com/compose/
 
-version: "2"
+version: "3"
 
 volumes:
   database_data: {}
@@ -30,10 +30,6 @@ services:
   database:
     image: postgres
     # Make database accessible on localhost during development
-    # # NOTE: on OS X and Windows, if you use docker-machine and VirtualBox,
-    # # ----  you need to configure port forwarding in addition; see
-    # #     https://jihedamine.github.io/docker-liferay-virtualbox#setup-port-forwarding
-    # #     https://docs.docker.com/engine/installation/#/on-macos-and-windows
     # ports:
     #   - "5432:5432"
     volumes:
@@ -47,10 +43,6 @@ services:
       MYSQL_USER: mysql
       MYSQL_PASSWORD: mysql
     # Make database accessible on localhost during development
-    # # NOTE: on OS X and Windows, if you use docker-machine and VirtualBox,
-    # # ----  you need to configure port forwarding in addition; see
-    # #     https://jihedamine.github.io/docker-liferay-virtualbox#setup-port-forwarding
-    # #     https://docs.docker.com/engine/installation/#/on-macos-and-windows
     # ports:
     #   - "3306:3306"
     volumes:
