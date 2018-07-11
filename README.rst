@@ -2,17 +2,17 @@
 Painless Continuous Delivery
 ============================
 
-|health| |about|
+|about| |health|
 
 A cookiecutter for projects with continuous delivery baked in.
 
 
-.. |health| image:: https://landscape.io/github/painless-software/painless-continuous-delivery/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/painless-software/painless-continuous-delivery/master
-   :alt: Code health
 .. |about| image:: https://img.shields.io/badge/About-Painless_Continuous_Delivery-44a0dd.svg
    :target: https://slides.com/bittner/djangocon2017-painless-continuous-delivery/
    :alt: Elevator pitch
+.. |health| image:: https://landscape.io/github/painless-software/painless-continuous-delivery/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/painless-software/painless-continuous-delivery/master
+   :alt: Code health
 
 Supported Technologies and Services
 ===================================
