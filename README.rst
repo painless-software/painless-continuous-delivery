@@ -2,7 +2,7 @@
 Painless Continuous Delivery
 ============================
 
-|health|
+|health| |about|
 
 A cookiecutter for projects with continuous delivery baked in.
 
@@ -10,6 +10,9 @@ A cookiecutter for projects with continuous delivery baked in.
 .. |health| image:: https://landscape.io/github/painless-software/painless-continuous-delivery/master/landscape.svg?style=flat
    :target: https://landscape.io/github/painless-software/painless-continuous-delivery/master
    :alt: Code health
+.. |about| image:: https://img.shields.io/badge/About-Painless_Continuous_Delivery-44a0dd.svg
+   :target: https://slides.com/bittner/djangocon2017-painless-continuous-delivery/
+   :alt: Elevator pitch
 
 Supported Technologies and Services
 ===================================
@@ -32,23 +35,23 @@ Supported Technologies and Services
 
 
 .. |bitbucket| image:: https://img.shields.io/badge/Bitbucket-Pipelines-blue.svg
-   :alt: Bitbucket Pipelines
    :target: https://bitbucket.org/painless-software/painless-continuous-delivery/addon/pipelines/home
+   :alt: Bitbucket Pipelines
 .. |codeship| image:: https://img.shields.io/codeship/64f85000-617f-0134-d666-52056d8a95f1/master.svg
-   :alt: Codeship
    :target: https://app.codeship.com/projects/174831
+   :alt: Codeship
 .. |gitlab-ci| image:: https://gitlab.com/painless-software/painless-continuous-delivery/badges/master/build.svg
-   :alt: GitLab CI
    :target: https://gitlab.com/painless-software/painless-continuous-delivery
+   :alt: GitLab CI
 .. |shippable| image:: https://img.shields.io/shippable/57e164fc6356081000190caa/master.svg
-   :alt: Shippable
    :target: https://app.shippable.com/projects/57e164fc6356081000190caa/
+   :alt: Shippable
 .. |travis-ci| image:: https://img.shields.io/travis/painless-software/painless-continuous-delivery/master.svg
-   :alt: Travis CI
    :target: https://travis-ci.org/painless-software/painless-continuous-delivery
+   :alt: Travis CI
 .. |vexor-ci| image:: https://ci.vexor.io/projects/59719621-2f88-4c7b-95a9-d1536c519e96/status.svg
-   :alt: Vexor CI
    :target: https://ci.vexor.io/ui/projects/59719621-2f88-4c7b-95a9-d1536c519e96/builds
+   :alt: Vexor CI
 
 Usage
 =====
@@ -80,7 +83,7 @@ Please refer to the README files in those folders for additional details.
 How Can I Contribute?
 =====================
 
-See our `contributing guide`_.
+See our `contributing guide`_.  Consult our `Wiki`_ for technology notes.
 
 Credits
 =======
@@ -90,4 +93,5 @@ consultancy in software development.  Less pain, more fun.
 
 
 .. _contributing guide: CONTRIBUTING.rst
+.. _Wiki: https://github.com/painless-software/painless-continuous-delivery/wiki
 .. _Painless Software: https://painless.software/
