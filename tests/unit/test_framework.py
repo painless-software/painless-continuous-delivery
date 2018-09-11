@@ -6,7 +6,7 @@ from . import verify_file_matches_repo_root
 
 
 # pylint: disable=too-few-public-methods
-class TestFramework(object):
+class TestFramework:
     """
     Tests for verifying generated projects using specific Web frameworks.
     """

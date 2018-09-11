@@ -3,7 +3,7 @@ from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
 
 
 # pylint: disable=too-few-public-methods
-class TestRepos(object):
+class TestRepos:
     """
     Tests for verifying generated local Git repository and Docker registry
     setup, executed several times with different values (test scenarios).
