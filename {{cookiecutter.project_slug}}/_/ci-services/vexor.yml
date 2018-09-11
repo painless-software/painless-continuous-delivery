@@ -4,7 +4,7 @@
 language: python
 python:
   {%- for env in cookiecutter.tests.split(',') if env not in ["behave"] %}
-  - "{{ env|replace('py27','2.7')|replace('py34','3.4')|replace('py35','3.5')|replace('py36','3.6') }}"
+  - "{{ env|replace('py35','3.5')|replace('py36','3.6')|replace('py37','3.7') }}"
   {%- endfor %}
 
 env:

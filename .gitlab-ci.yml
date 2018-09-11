@@ -17,14 +17,6 @@ pylint:
   stage: check
   script: tox -e pylint
 
-py27:
-  stage: test
-  script: tox -e py27
-
-py34:
-  stage: test
-  script: tox -e py34
-
 py35:
   stage: test
   script: tox -e py35
@@ -32,6 +24,10 @@ py35:
 py36:
   stage: test
   script: tox -e py36
+
+py37:
+  stage: test
+  script: tox -e py37
 
 pypy:
   stage: test

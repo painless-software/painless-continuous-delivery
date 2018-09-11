@@ -3,17 +3,16 @@
 
 language: python
 python:
-  - 2.7
-  - 3.4
   - 3.5
   - 3.6
+  - 3.7
   - pypy
 
 matrix:
   include:
-    - { python: 3.5, env: TOXENV=flake8 }
-    - { python: 3.5, env: TOXENV=pylint }
-    - { python: 3.5, env: TOXENV=behave }
+    - { python: 3.6, env: TOXENV=flake8 }
+    - { python: 3.6, env: TOXENV=pylint }
+    - { python: 3.6, env: TOXENV=behave }
 
 install: pip install tox-travis
 script: tox
