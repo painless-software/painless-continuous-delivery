@@ -2,17 +2,23 @@
 # Visit the docs at https://docs.travis-ci.com/
 
 language: python
-python:
-  - 3.5
-  - 3.6
-  - 3.7
-  - pypy3
 
 matrix:
   include:
-    - { python: 3.6, env: TOXENV=flake8 }
-    - { python: 3.6, env: TOXENV=pylint }
-    - { python: 3.6, env: TOXENV=behave }
+    - { python: 3.5 }
+    - { python: 3.6 }
+    - { python: 3.7, dist: xenial, sudo: true }
+    - { python: pypy3 }
+
+stages:
+  - lint
+  - test
+
+jobs:
+  include:
+    - { stage: lint, python: 3.6, env: TOXENV=flake8 }
+    - { stage: lint, python: 3.6, env: TOXENV=pylint }
+    - { stage: test, python: 3.6, env: TOXENV=behave }
 
 install: pip install tox-travis
 script: tox
