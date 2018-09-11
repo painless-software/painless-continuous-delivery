@@ -57,4 +57,5 @@ Examples:
 .. code-block:: bash
 
     $ tox -e behave -- --format=pretty
+    $ tox -e behave -- --tags=-docker
     $ tox -e flake8 -- --help
