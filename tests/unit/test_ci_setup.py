@@ -4,7 +4,7 @@ from . import verify_file_matches_repo_root
 
 
 # pylint: disable=too-few-public-methods
-class TestCISetup(object):
+class TestCISetup:
     """
     Tests for verifying generated CI setups of this cookiecutter,
     executed several times with different values (test scenarios).

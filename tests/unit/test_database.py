@@ -6,7 +6,7 @@ from . import verify_required_settings
 
 
 # pylint: disable=too-few-public-methods
-class TestDatabase(object):
+class TestDatabase:
     """
     Tests for verifying database configuration in generated projects.
     """

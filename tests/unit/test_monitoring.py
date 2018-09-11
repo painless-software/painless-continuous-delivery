@@ -6,7 +6,7 @@ from . import verify_required_settings
 
 
 # pylint: disable=too-few-public-methods
-class TestMonitoring(object):
+class TestMonitoring:
     """
     Tests for verifying monitoring configuration in generated projects.
     """
