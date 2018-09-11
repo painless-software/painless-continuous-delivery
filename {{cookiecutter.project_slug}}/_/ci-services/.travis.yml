@@ -2,13 +2,10 @@
 # Visit the docs at https://docs.travis-ci.com/
 
 language: python
-
-matrix:
-  include:
-    {%- for env in cookiecutter.tests.split(",") if env not in ["behave"] %}
-    - { python: {{ env|replace('py35','3.5')|replace('py36','3.6')|replace('py37','3.7') }}
-        {%- if env == 'py37' %}, dist: xenial, sudo: true{% endif %} }
-    {%- endfor %}
+python:
+  {%- for env in cookiecutter.tests.split(",") if env not in ["behave", "py37"] %}
+  - {{ env|replace('py35','3.5')|replace('py36','3.6')|replace('py37','3.7') }}
+  {%- endfor %}
 
 stages:
   - lint
@@ -19,6 +16,9 @@ jobs:
     {%- for env in cookiecutter.checks.split(",") %}
     - { stage: lint, python: 3.6, env: TOXENV={{ env }} }
     {%- endfor %}
+    {%- if "py37" in cookiecutter.tests.split(",") %}
+    - { stage: test, python: 3.7, dist: xenial, sudo: true }
+    {%- endif %}
     {%- if "behave" in cookiecutter.tests.split(",") %}
     - { stage: test, python: 3.6, env: TOXENV=behave }
     {%- endif %}
