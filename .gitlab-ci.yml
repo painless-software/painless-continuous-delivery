@@ -29,9 +29,9 @@ py37:
   stage: test
   script: tox -e py37
 
-pypy:
+pypy3:
   stage: test
-  script: tox -e pypy
+  script: tox -e pypy3
 
 behave:
   stage: test

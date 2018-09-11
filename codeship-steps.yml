@@ -14,8 +14,8 @@
       command: tox -e py36
     - name: py37
       command: tox -e py37
-    - name: pypy
-      command: tox -e pypy
+    - name: pypy3
+      command: tox -e pypy3
     - name: behave
       command: tox -e behave
 

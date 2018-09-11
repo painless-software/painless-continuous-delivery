@@ -3,7 +3,7 @@
 
 language: python
 python:
-  {%- for env in '3.5,3.6,3.7,pypy'.split(',') %}
+  {%- for env in '3.5,3.6,3.7,pypy3'.split(',') %}
   - {{ env }}
   {%- endfor %}
 
