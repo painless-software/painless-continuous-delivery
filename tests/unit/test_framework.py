@@ -43,7 +43,7 @@ class TestFramework(object):
                 ]),
             ],
             'checks': 'flake8,pylint',
-            'tests': 'py27,py34,py35,py36,pypy,behave',
+            'tests': 'py35,py36,py37,pypy,behave',
         }),
         ('flask', {
             'project_slug': 'flask-project',
@@ -77,7 +77,7 @@ class TestFramework(object):
                 ]),
             ],
             'checks': 'flake8,pylint',
-            'tests': 'py27,py34,py35,py36,pypy,behave',
+            'tests': 'py35,py36,py37,pypy,behave',
         }),
         ('symfony', {
             'project_slug': 'symfony-project',

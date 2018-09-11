@@ -23,7 +23,7 @@ identified issues with additional commits:
 
 .. code-block:: bash
 
-    tox -e flake8,pylint,py35,py27
+    tox -e flake8,pylint,py36,py37
 
 Tests that require Docker must be run locally on your developer machine,
 because not all CI servers allow running Docker (inside Docker) on their

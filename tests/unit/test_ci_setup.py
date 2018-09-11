@@ -17,7 +17,7 @@ class TestCISetup(object):
             'ci_service': 'bitbucket-pipelines.yml',
             'ci_testcommand': '          - tox',
             'checks': 'flake8,pylint',
-            'tests': 'py27,py34,py35,py36,pypy,behave',
+            'tests': 'py35,py36,py37,pypy,behave',
         }),
         ('codeship', {
             'project_slug': 'myproject',
@@ -26,7 +26,7 @@ class TestCISetup(object):
             'ci_service': 'codeship-steps.yml',
             'ci_testcommand': '  service: app',
             'checks': 'flake8,pylint',
-            'tests': 'py27,py34,py35,py36,pypy,behave',
+            'tests': 'py35,py36,py37,pypy,behave',
         }),
         ('gitlab', {
             'project_slug': 'myproject',
@@ -35,7 +35,7 @@ class TestCISetup(object):
             'ci_service': '.gitlab-ci.yml',
             'ci_testcommand': '  script: tox -e py36',
             'checks': 'flake8,pylint',
-            'tests': 'py27,py34,py35,py36,pypy,behave',
+            'tests': 'py35,py36,py37,pypy,behave',
         }),
         ('shippable', {
             'project_slug': 'myproject',
@@ -44,7 +44,7 @@ class TestCISetup(object):
             'ci_service': 'shippable.yml',
             'ci_testcommand': '    - tox',
             'checks': 'flake8,pylint',
-            'tests': 'py27,py34,py35,py36,pypy,behave',
+            'tests': 'py35,py36,py37,pypy,behave',
         }),
         ('travis', {
             'project_slug': 'myproject',
@@ -53,7 +53,7 @@ class TestCISetup(object):
             'ci_service': '.travis.yml',
             'ci_testcommand': 'script: tox',
             'checks': 'flake8,pylint',
-            'tests': 'py27,py34,py35,py36,pypy,behave',
+            'tests': 'py35,py36,py37,pypy,behave',
         }),
         ('vexor', {
             'project_slug': 'myproject',
@@ -62,7 +62,7 @@ class TestCISetup(object):
             'ci_service': 'vexor.yml',
             'ci_testcommand': 'script: tox',
             'checks': 'flake8,pylint',
-            'tests': 'py27,py34,py35,py36,pypy,behave',
+            'tests': 'py35,py36,py37,pypy,behave',
         }),
     ]
 
