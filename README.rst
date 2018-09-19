@@ -34,7 +34,7 @@ Supported Technologies and Services
 ==================== =========================================================
 
 
-.. |bitbucket| image:: https://img.shields.io/badge/Bitbucket-Pipelines-blue.svg
+.. |bitbucket| image:: https://img.shields.io/bitbucket/pipelines/painless-software/painless-continuous-delivery/master.svg
    :target: https://bitbucket.org/painless-software/painless-continuous-delivery/addon/pipelines/home
    :alt: Bitbucket Pipelines
 .. |codeship| image:: https://img.shields.io/codeship/64f85000-617f-0134-d666-52056d8a95f1/master.svg
