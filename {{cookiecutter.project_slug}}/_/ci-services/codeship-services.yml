@@ -7,4 +7,4 @@ services:
   app:
     image: painless/tox:multi
     volumes:
-      - .:/app
+    - .:/app

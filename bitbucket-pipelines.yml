@@ -2,8 +2,34 @@
 # Visit the docs at https://confluence.atlassian.com/x/VYk8Lw
 
 image: painless/tox:multi
+
 pipelines:
   default:
-    - step:
-        script:
-          - tox
+  - step:
+      name: Flake8
+      script:
+      - tox -e flake8
+  - step:
+      name: Pylint
+      script:
+      - tox -e pylint
+  - step:
+      name: Python 3.5
+      script:
+      - tox -e py35
+  - step:
+      name: Python 3.6
+      script:
+      - tox -e py36
+  - step:
+      name: Python 3.7
+      script:
+      - tox -e py37
+  - step:
+      name: PyPy 3
+      script:
+      - tox -e pypy3
+  - step:
+      name: Behave
+      script:
+      - tox -e behave
