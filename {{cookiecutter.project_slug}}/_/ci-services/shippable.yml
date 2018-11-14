@@ -3,23 +3,19 @@
 
 language: python
 python:
-  - 3.6
+- 3.7
 
 env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
-    {%- for env in cookiecutter.checks.split(',') %}
-    - TOXENV={{ env }}
-    {%- endfor %}
-    {%- for env in cookiecutter.tests.split(',') %}
-    - TOXENV={{ env }}
-    {%- endfor %}
+  {%- for env in cookiecutter.checks.split(',') %}
+  - TOXENV={{ env }}
+  {%- endfor %}
+  {%- for env in cookiecutter.tests.split(',') %}
+  - TOXENV={{ env }}
+  {%- endfor %}
 
 build:
-  cache: true
-  cache_dir_list:
-    - $HOME/.cache/pip
   ci:
-    - rm -rf $HOME/.cache/pip/log
-    - pip install tox
-    - tox
-    - mv -v tests/reports/* shippable/testresults/ || true
+  - pip install tox
+  - tox
+  - mv -v tests/reports/* shippable/testresults/ || true

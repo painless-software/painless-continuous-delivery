@@ -15,7 +15,7 @@ class TestCISetup:
             'vcs_account': 'painless-software',
             'vcs_platform': 'Bitbucket.org',
             'ci_service': 'bitbucket-pipelines.yml',
-            'ci_testcommand': '          - tox',
+            'ci_testcommand': '      - tox -e py37',
             'checks': 'flake8,pylint',
             'tests': 'py35,py36,py37,pypy3,behave',
         }),
@@ -33,7 +33,7 @@ class TestCISetup:
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitLab.com',
             'ci_service': '.gitlab-ci.yml',
-            'ci_testcommand': '  script: tox -e py36',
+            'ci_testcommand': '  script: tox -e py37',
             'checks': 'flake8,pylint',
             'tests': 'py35,py36,py37,pypy3,behave',
         }),
@@ -42,7 +42,7 @@ class TestCISetup:
             'vcs_account': 'painless-software',
             'vcs_platform': 'Bitbucket.org',
             'ci_service': 'shippable.yml',
-            'ci_testcommand': '    - tox',
+            'ci_testcommand': '  - tox',
             'checks': 'flake8,pylint',
             'tests': 'py35,py36,py37,pypy3,behave',
         }),
@@ -89,7 +89,8 @@ class TestCISetup:
         assert result.project.join('README.rst').isfile()
 
         ci_service_conf = result.project.join(ci_service).readlines(cr=False)
-        assert ci_testcommand in ci_service_conf
+        assert ci_testcommand in ci_service_conf, \
+            "Test command not found in CI config: '%s'" % ci_testcommand
 
         codeship_services = result.project.join('codeship-services.yml')
         assert (ci_service == 'codeship-steps.yml' and

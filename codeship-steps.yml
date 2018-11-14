@@ -4,20 +4,20 @@
 - type: parallel
   service: app
   steps:
-    - name: flake8
-      command: tox -e flake8
-    - name: pylint
-      command: tox -e pylint
-    - name: py35
-      command: tox -e py35
-    - name: py36
-      command: tox -e py36
-    - name: py37
-      command: tox -e py37
-    - name: pypy3
-      command: tox -e pypy3
-    - name: behave
-      command: tox -e behave
+  - name: flake8
+    command: tox -e flake8
+  - name: pylint
+    command: tox -e pylint
+  - name: py35
+    command: tox -e py35
+  - name: py36
+    command: tox -e py36
+  - name: py37
+    command: tox -e py37
+  - name: pypy3
+    command: tox -e pypy3
+  - name: behave
+    command: tox -e behave
 
 - name: deploy_staging
   service: app

@@ -3,24 +3,20 @@
 
 language: python
 python:
-  - 3.6
+- 3.7
 
 env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
-    - TOXENV=flake8
-    - TOXENV=pylint
-    - TOXENV=py35
-    - TOXENV=py36
-    - TOXENV=py37
-    - TOXENV=pypy3
-    - TOXENV=behave
+  - TOXENV=flake8
+  - TOXENV=pylint
+  - TOXENV=py35
+  - TOXENV=py36
+  - TOXENV=py37
+  - TOXENV=pypy3
+  - TOXENV=behave
 
 build:
-  cache: true
-  cache_dir_list:
-    - $HOME/.cache/pip
   ci:
-    - rm -rf $HOME/.cache/pip/log
-    - pip install tox
-    - tox
-    - mv -v tests/reports/* shippable/testresults/ || true
+  - pip install tox
+  - tox
+  - mv -v tests/reports/* shippable/testresults/ || true
