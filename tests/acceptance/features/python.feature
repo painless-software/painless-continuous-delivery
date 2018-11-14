@@ -9,6 +9,6 @@ Feature: Painless Continuous Delivery project setup powered by Cookiecutter
     Then all tests pass successfully
 
     Examples: Python frameworks
-      | framework | checks        | tests            | commands |
-      | Django    | flake8,pylint | py_local_,behave | tox      |
-      | Flask     | flake8,pylint | py_local_,behave | tox      |
+      | framework | checks        | tests         | commands |
+      | Django    | flake8,pylint | python,behave | tox      |
+      | Flask     | flake8,pylint | python,behave | tox      |

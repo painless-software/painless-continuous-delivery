@@ -1,18 +1,18 @@
 """
 'Given' step implementations for acceptance tests.  Powered by behave.
 """
-from cookiecutter.main import cookiecutter
 from os import system
 from sys import version_info
+from cookiecutter.main import cookiecutter
 
 
 @given('I have just created a {framework} project checking {checks} and testing {tests}')  # noqa
 def step_impl(context, framework, checks, tests):
-    if 'py_local_' in tests:
+    if 'python' in tests:
         # use active/local Python version to make Vexor CI pass
         major, minor = version_info[:2]
         py_version = 'py%s%s' % (major, minor)
-        tests = tests.replace('py_local_', py_version)
+        tests = tests.replace('python', py_version)
 
     project_slug = 'painless-%s-project' % framework.lower()
     context.set_logfilename(project_slug)

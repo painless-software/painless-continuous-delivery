@@ -50,7 +50,7 @@ class TestDatabase:
             'database': 'MySQL/MariaDB',
             'required_settings': {
                 'DATABASES': {
-                    'ENGINE': "'django.db.backends.mysql'",
+                    'ENGINE': "'mysql.connector.django'",
                     'NAME': "env('MYSQL_DATABASE', default='mysql')",
                     'USER': "env('MYSQL_USER', default='mysql')",
                     'PASSWORD': "env('MYSQL_PASSWORD', default='mysql')",
@@ -60,7 +60,7 @@ class TestDatabase:
             },
             'required_packages': [
                 'django-environ',
-                'mysqlclient',
+                'mysql-connector',
             ],
         }),
     ]

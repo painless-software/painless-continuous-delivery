@@ -45,6 +45,7 @@ htmlcov/
 coverage.xml
 nosetests.xml
 unittests.xml
+.pytest_cache/
 tests/reports/
 
 # Translations

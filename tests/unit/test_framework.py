@@ -29,7 +29,6 @@ class TestFramework:
                 'config/webserver/nginx.conf',
                 'tox.ini',
                 'tests/README.rst',
-                'tests/requirements.txt',
             ],
             'install_commands': [
                 ('pip install -r %s', 'requirements.txt'),
@@ -63,7 +62,6 @@ class TestFramework:
                 'config/webserver/nginx.conf',
                 'tox.ini',
                 'tests/README.rst',
-                'tests/requirements.txt',
             ],
             'install_commands': [
                 ('pip install -r %s', 'requirements.txt'),
