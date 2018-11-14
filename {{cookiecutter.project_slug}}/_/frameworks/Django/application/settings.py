@@ -81,7 +81,7 @@ DATABASES = {
         'HOST': env('POSTGRES_HOST', default='database'),
         'PORT': env.int('POSTGRES_PORT', default=5432),
 {%- elif cookiecutter.database == 'MySQL/MariaDB' %}
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'mysql.connector.django',
         'NAME': env('MYSQL_DATABASE', default='mysql'),
         'USER': env('MYSQL_USER', default='mysql'),
         'PASSWORD': env('MYSQL_PASSWORD', default='mysql'),
