@@ -5,31 +5,48 @@ image: painless/tox:multi
 
 pipelines:
   default:
-  - step:
-      name: Flake8
-      script:
-      - tox -e flake8
-  - step:
-      name: Pylint
-      script:
-      - tox -e pylint
-  - step:
-      name: Python 3.5
-      script:
-      - tox -e py35
-  - step:
-      name: Python 3.6
-      script:
-      - tox -e py36
-  - step:
-      name: Python 3.7
-      script:
-      - tox -e py37
-  - step:
-      name: PyPy 3
-      script:
-      - tox -e pypy3
-  - step:
-      name: Behave
-      script:
-      - tox -e behave
+  - parallel:
+    - step:
+        name: Flake8
+        script:
+        - tox -e flake8
+    - step:
+        name: Pylint
+        script:
+        - tox -e pylint
+
+  - parallel:
+    - step:
+        name: Python 3.5
+        script:
+        - tox -e py35
+    - step:
+        name: Python 3.6
+        script:
+        - tox -e py36
+    - step:
+        name: Python 3.7
+        script:
+        - tox -e py37
+    - step:
+        name: PyPy 3
+        script:
+        - tox -e pypy3
+    - step:
+        name: Behave
+        script:
+        - tox -e behave
+
+  branches:
+    master:
+    - step:
+        name: Staging
+        script:
+        - echo 'This build would deploy to Staging now.'
+
+  tags:
+    '*':
+    - step:
+        name: Production
+        script:
+        - echo 'This build would deploy to Production now.'
