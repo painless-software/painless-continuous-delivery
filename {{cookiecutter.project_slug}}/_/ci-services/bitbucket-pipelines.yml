@@ -5,7 +5,7 @@ image: painless/tox:multi
 
 pipelines:
   default:
-  - parallel:
+  - parallel: &linting
     {%- for env in cookiecutter.checks.split(",") %}
     - step:
         name: {{ env|capitalize }}
@@ -13,7 +13,7 @@ pipelines:
         - tox -e {{ env }}
     {%- endfor %}
 
-  - parallel:
+  - parallel: &tests
     {%- for env in cookiecutter.tests.split(",") %}
     - step:
         name: {{ env|replace('py35','Python 3.5')|replace('py36','Python 3.6')|replace('py37','Python 3.7')|replace('pypy3','PyPy 3')|replace('behave','Behave') }}
@@ -23,6 +23,9 @@ pipelines:
 
   branches:
     master:
+    - parallel: *linting
+    - parallel: *tests
+
     - step:
         name: Staging
         deployment: Staging
@@ -31,6 +34,9 @@ pipelines:
 
   tags:
     '*':
+    - parallel: *linting
+    - parallel: *tests
+
     - step:
         name: Production
         deployment: Production

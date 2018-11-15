@@ -5,7 +5,7 @@ image: painless/tox:multi
 
 pipelines:
   default:
-  - parallel:
+  - parallel: &linting
     - step:
         name: Flake8
         script:
@@ -15,7 +15,7 @@ pipelines:
         script:
         - tox -e pylint
 
-  - parallel:
+  - parallel: &tests
     - step:
         name: Python 3.5
         script:
@@ -39,6 +39,9 @@ pipelines:
 
   branches:
     master:
+    - parallel: *linting
+    - parallel: *tests
+
     - step:
         name: Staging
         deployment: Staging
@@ -47,6 +50,9 @@ pipelines:
 
   tags:
     '*':
+    - parallel: *linting
+    - parallel: *tests
+
     - step:
         name: Production
         deployment: Production
