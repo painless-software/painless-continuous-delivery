@@ -5,7 +5,7 @@ image: painless/tox:multi
 
 pipelines:
   default:
-  - parallel: &linting
+  - parallel: &checks
     {%- for env in cookiecutter.checks.split(",") %}
     - step:
         name: {{ env|capitalize }}
@@ -23,7 +23,7 @@ pipelines:
 
   branches:
     master:
-    - parallel: *linting
+    - parallel: *checks
     - parallel: *tests
 
     - step:
@@ -34,7 +34,7 @@ pipelines:
 
   tags:
     '*':
-    - parallel: *linting
+    - parallel: *checks
     - parallel: *tests
 
     - step:

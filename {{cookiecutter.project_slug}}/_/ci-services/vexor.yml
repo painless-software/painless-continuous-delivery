@@ -3,25 +3,19 @@
 
 language: python
 python:
-  {%- for env in cookiecutter.tests.split(',') if env not in ["behave"] %}
-  - "{{ env|replace('py35','3.5')|replace('py36','3.6')|replace('py37','3.7') }}"
-  {%- endfor %}
+{%- for env in cookiecutter.tests.split(',') if env not in ["behave"] %}
+- "{{ env|replace('py35','3.5')|replace('py36','3.6')|replace('py37','3.7') }}"
+{%- endfor %}
 
 env:
-  matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
-    {%- for env in cookiecutter.checks.split(',') %}
-    - TOXENV={{ env }}
-    {%- endfor %}
-    {%- for env in cookiecutter.tests.split(',') if env in ["behave"] %}
-    - TOXENV={{ env }}
-    {%- endfor %}
-    - TOXENV=$(echo $TRAVIS_PYTHON_VERSION | sed 's/^\([23]\)\.\([34567]\)/py\1\2/')
+  matrix:  # $ tox -l | xargs -I ARG echo '  - TOXENV=ARG'
+  {%- for env in cookiecutter.checks.split(',') %}
+  - TOXENV={{ env }}
+  {%- endfor %}
+  {%- for env in cookiecutter.tests.split(',') if env in ["behave"] %}
+  - TOXENV={{ env }}
+  {%- endfor %}
+  - TOXENV=$(echo $TRAVIS_PYTHON_VERSION | sed 's/^\([23]\)\.\([34567]\)/py\1\2/')
 
 install: pip install tox
 script: tox
-
-before_cache:
-  - rm -rf $HOME/.cache/pip/log
-cache:
-  directories:
-    - $HOME/.cache/pip
