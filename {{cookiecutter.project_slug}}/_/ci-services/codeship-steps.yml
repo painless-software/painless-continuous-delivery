@@ -1,24 +1,36 @@
 # Painless deployment with Codeship.
 # Visit the docs at https://documentation.codeship.com/docker/steps/
 
-- type: parallel
+- name: Checks
+  type: parallel
   service: app
   steps:
   {%- for env in cookiecutter.checks.split(',') %}
-  - name: {{ env }}
+  - name: {{ env|capitalize }}
     command: tox -e {{ env }}
   {%- endfor %}
+
+- name: Tests
+  type: parallel
+  service: app
+  steps:
   {%- for env in cookiecutter.tests.split(',') %}
-  - name: {{ env }}
+  - name: {{ env|replace('py35','Python 3.5')|replace('py36','Python 3.6')|replace('py37','Python 3.7')|replace('pypy3','PyPy 3')|replace('behave','Behave') }}
     command: tox -e {{ env }}
   {%- endfor %}
 
-- name: deploy_staging
-  service: app
-  command: echo 'This build would deploy to Staging now.'
+- name: Deploy staging
+  type: serial
   tag: master
-
-- name: deploy_master
   service: app
-  command: echo 'This build would deploy to Production now.'
+  steps:
+  - name: Staging
+    command: echo 'This build would deploy to Staging now.'
+
+- name: Deploy production
+  type: manual
   tag: ^v[0-9]+\.[0-9]+\.[0-9]+$
+  service: app
+  steps:
+  - name: Production
+    command: echo 'This build would deploy to Production now.'

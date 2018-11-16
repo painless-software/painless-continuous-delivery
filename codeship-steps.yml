@@ -1,30 +1,42 @@
 # Painless deployment with Codeship.
 # Visit the docs at https://documentation.codeship.com/docker/steps/
 
-- type: parallel
+- name: Checks
+  type: parallel
   service: app
   steps:
-  - name: flake8
+  - name: Flake8
     command: tox -e flake8
-  - name: pylint
+  - name: Pylint
     command: tox -e pylint
-  - name: py35
+
+- name: Tests
+  type: parallel
+  service: app
+  steps:
+  - name: Python 3.5
     command: tox -e py35
-  - name: py36
+  - name: Python 3.6
     command: tox -e py36
-  - name: py37
+  - name: Python 3.7
     command: tox -e py37
-  - name: pypy3
+  - name: PyPy 3
     command: tox -e pypy3
-  - name: behave
+  - name: Behave
     command: tox -e behave
 
-- name: deploy_staging
-  service: app
-  command: echo 'This build would deploy to Staging now.'
+- name: Deploy staging
+  type: serial
   tag: master
-
-- name: deploy_master
   service: app
-  command: echo 'This build would deploy to Production now.'
+  steps:
+  - name: Staging
+    command: echo 'This build would deploy to Staging now.'
+
+- name: Deploy production
+  type: manual
   tag: ^v[0-9]+\.[0-9]+\.[0-9]+$
+  service: app
+  steps:
+  - name: Production
+    command: echo 'This build would deploy to Production now.'
