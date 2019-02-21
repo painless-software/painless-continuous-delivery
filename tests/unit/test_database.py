@@ -41,7 +41,7 @@ class TestDatabase:
             },
             'required_packages': [
                 'django-environ',
-                'psycopg2-binary',
+                'psycopg2',
             ],
         }),
         ('MySQL/MariaDB', {
