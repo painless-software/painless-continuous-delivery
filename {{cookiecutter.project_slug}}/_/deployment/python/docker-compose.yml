@@ -5,7 +5,7 @@ version: "2"
 
 services:
   webserver:
-    build: ./config/webserver
+    build: ./deployment/webserver
     ports:
       - "80:80"
     volumes_from:
@@ -16,7 +16,7 @@ services:
   application:
     build:
       context: .
-      dockerfile: ./config/application/Dockerfile
+      dockerfile: ./deployment/application/Dockerfile
     user: application
 {%- if cookiecutter.database in ['Postgres', 'MySQL/MariaDB'] %}
     depends_on:
