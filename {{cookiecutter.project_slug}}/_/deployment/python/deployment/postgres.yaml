@@ -1,0 +1,119 @@
+kind: Template
+apiVersion: template.openshift.io/v1
+
+parameters:
+- name: ENVIRONMENT
+  required: false
+- name: APP_NAMESPACE
+  required: false
+- name: APP_NAME
+  value: example
+  required: true
+- name: APP_TAG
+  required: false
+- name: COMPONENT
+  value: postgres
+  required: true
+- name: REGISTRY
+  value: docker-registry.default.svc:5000
+  required: true
+
+objects:
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: ${COMPONENT}
+    labels:
+      app: ${APP_NAME}
+      component: ${COMPONENT}
+  spec:
+    ports:
+    - name: postgresql
+      port: 5432
+      targetPort: ${COMPONENT}
+    selector:
+      app: ${APP_NAME}
+      component: ${COMPONENT}
+    type: ClusterIP
+
+- kind: StatefulSet
+  apiVersion: apps/v1
+  metadata:
+    name: ${COMPONENT}
+    labels:
+      app: ${APP_NAME}
+      component: ${COMPONENT}
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 2
+    updateStrategy:
+      type: RollingUpdate
+    serviceName: ${COMPONENT}
+    selector:
+      matchLabels:
+        app: ${APP_NAME}
+        component: ${COMPONENT}
+    template:
+      metadata:
+        labels:
+          app: ${APP_NAME}
+          component: ${COMPONENT}
+      spec:
+        containers:
+        - name: postgresql
+          image: ${REGISTRY}/openshift/postgresql:9.6
+          imagePullPolicy: Always
+          ports:
+          - name: ${COMPONENT}
+            containerPort: 5432
+          env:
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: ${COMPONENT}
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: ${COMPONENT}
+          - name: POSTGRESQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: database-name
+                name: ${COMPONENT}
+          livenessProbe:
+            tcpSocket:
+              port: ${COMPONENT}
+            initialDelaySeconds: 30
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+                'SELECT 1'
+            initialDelaySeconds: 8
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          volumeMounts:
+          - name: data
+            mountPath: /var/lib/pgsql/data
+        restartPolicy: Always
+    volumeClaimTemplates:
+      - metadata:
+          name: data
+          labels:
+            app: ${APP_NAME}
+            component: ${COMPONENT}
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi

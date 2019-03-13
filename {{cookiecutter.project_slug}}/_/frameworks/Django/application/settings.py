@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     {%- elif cookiecutter.monitoring == 'Sentry' %}
     'raven.contrib.django.raven_compat',
     {%- endif %}
+    'django_probes',
 ]
 
 MIDDLEWARE = [
