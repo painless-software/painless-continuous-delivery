@@ -1,5 +1,6 @@
 Django>=2.1,<2.2
 django-environ
+django-probes
 {% if cookiecutter.database == 'Postgres' %}psycopg2
 {% elif cookiecutter.database == 'MySQL/MariaDB' %}mysql-connector
 {% endif -%}
