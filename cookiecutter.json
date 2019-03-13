@@ -26,6 +26,9 @@
         ".travis.yml",
         "vexor.yml"
     ],
+    "container_platform": [
+        "appuio"
+    ],
     "docker_registry": "{{ cookiecutter.vcs_platform.replace('Bitbucket.org', 'hub.docker.com').replace('GitHub.com', 'quay.io').replace('GitLab.com', 'registry.gitlab.com') }}/{{ cookiecutter.vcs_account }}",
     "framework": [
         "(none)",
