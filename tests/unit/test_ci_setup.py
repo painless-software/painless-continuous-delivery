@@ -16,7 +16,7 @@ class TestCISetup:
             'vcs_platform': 'Bitbucket.org',
             'ci_service': 'bitbucket-pipelines.yml',
             'ci_testcommand': '        - tox -e py37',
-            'checks': 'flake8,pylint',
+            'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
         }),
         ('codeship', {
@@ -25,7 +25,7 @@ class TestCISetup:
             'vcs_platform': 'GitHub.com',
             'ci_service': 'codeship-steps.yml',
             'ci_testcommand': '  service: app',
-            'checks': 'flake8,pylint',
+            'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
         }),
         ('gitlab', {
@@ -34,7 +34,7 @@ class TestCISetup:
             'vcs_platform': 'GitLab.com',
             'ci_service': '.gitlab-ci.yml',
             'ci_testcommand': '  script: tox -e py37',
-            'checks': 'flake8,pylint',
+            'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
         }),
         ('shippable', {
@@ -43,7 +43,7 @@ class TestCISetup:
             'vcs_platform': 'Bitbucket.org',
             'ci_service': 'shippable.yml',
             'ci_testcommand': '  - tox',
-            'checks': 'flake8,pylint',
+            'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
         }),
         ('travis', {
@@ -52,7 +52,7 @@ class TestCISetup:
             'vcs_platform': 'GitHub.com',
             'ci_service': '.travis.yml',
             'ci_testcommand': 'script: tox',
-            'checks': 'flake8,pylint',
+            'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
         }),
         ('vexor', {
@@ -61,7 +61,7 @@ class TestCISetup:
             'vcs_platform': 'GitHub.com',
             'ci_service': 'vexor.yml',
             'ci_testcommand': 'script: tox',
-            'checks': 'flake8,pylint',
+            'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
         }),
     ]

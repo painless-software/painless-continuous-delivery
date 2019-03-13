@@ -1,5 +1,0 @@
-ignore-patterns:
-  - (^|/).*/_/frameworks(/|$)
-python-targets:
-  - 2
-  - 3

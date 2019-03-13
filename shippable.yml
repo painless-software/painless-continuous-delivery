@@ -9,6 +9,7 @@ env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
   - TOXENV=flake8
   - TOXENV=pylint
+  - TOXENV=bandit
   - TOXENV=py35
   - TOXENV=py36
   - TOXENV=py37

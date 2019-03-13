@@ -9,6 +9,8 @@
     command: tox -e flake8
   - name: Pylint
     command: tox -e pylint
+  - name: Bandit
+    command: tox -e bandit
 
 - name: Tests
   type: parallel

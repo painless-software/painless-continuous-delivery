@@ -10,8 +10,8 @@ A cookiecutter for projects with continuous delivery baked in.
 .. |about| image:: https://img.shields.io/badge/About-Painless_Continuous_Delivery-44a0dd.svg
    :target: https://slides.com/bittner/djangocon2017-painless-continuous-delivery/
    :alt: Elevator pitch
-.. |health| image:: https://landscape.io/github/painless-software/painless-continuous-delivery/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/painless-software/painless-continuous-delivery/master
+.. |health| image:: https://img.shields.io/codacy/grade/7aade15697ed4ad39758553efcd31c77/master.svg
+   :target: https://www.codacy.com/app/painless/painless-continuous-delivery
    :alt: Code health
 
 Supported Technologies and Services
