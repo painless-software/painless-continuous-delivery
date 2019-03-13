@@ -8,7 +8,7 @@ Getting Started
 
 To start developing on this project simply bring up the Docker setup:
 
-.. code-block:: bash
+.. code-block:: console
 {% if cookiecutter.framework == 'Django' %}
     docker-compose up --build -d
     docker-compose exec application python manage.py migrate
@@ -19,29 +19,29 @@ To start developing on this project simply bring up the Docker setup:
 {% else %}
     docker-compose up --build
 {% endif %}
-Open your web browser at http://localhost to see the application you're
-developing.  Log output will be displayed in the terminal, as usual.
+Open your web browser at http://localhost:8000 to see the application
+you're developing.  Log output will be displayed in the terminal, as usual.
 
 Working with Docker
 ^^^^^^^^^^^^^^^^^^^
 
 Create/destroy development environment:
 
-.. code-block:: bash
+.. code-block:: console
 
     docker-compose up -d    # create and start; omit -d to see log output
     docker-compose down     # docker-compose kill && docker-compose rm -af
 
 Start/stop development environment:
 
-.. code-block:: bash
+.. code-block:: console
 
     docker-compose start    # resume after 'stop'
     docker-compose stop     # stop containers, but keep them intact
 
 Other useful commands:
 
-.. code-block:: bash
+.. code-block:: console
 
     docker-compose ps       # list running containers
     docker-compose logs -f  # view (and follow) container logs
@@ -64,7 +64,7 @@ None yet. Sorry.
 
 Source `.envrc`_ to activate natural aliases for those commands:
 
-.. code-block:: bash
+.. code-block:: console
 
     . .envrc  # or `source .envrc` in bash
 
@@ -77,7 +77,7 @@ Source `.envrc`_ to activate natural aliases for those commands:
 
 Alternatively, you can run those commands the classic way, i.e.
 
-.. code-block:: bash
+.. code-block:: console
 
     docker-compose run <toolname>
 

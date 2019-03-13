@@ -13,7 +13,12 @@ DEBUG = env.bool('DJANGO_DEBUG', default=True)
 
 SECRET_KEY = 'dummy-secret' if DEBUG else env('DJANGO_SECRET_KEY')
 
-ALLOWED_HOSTS = [] if DEBUG else [
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+    '[::1]',
+] if DEBUG else [
     'example.com',
 ]
 
