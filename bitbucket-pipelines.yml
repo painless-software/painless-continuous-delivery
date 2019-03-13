@@ -14,6 +14,10 @@ pipelines:
         name: Pylint
         script:
         - tox -e pylint
+    - step:
+        name: Bandit
+        script:
+        - tox -e bandit
 
   - parallel: &tests
     - step:
