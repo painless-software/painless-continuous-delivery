@@ -1,7 +1,17 @@
 # Painless deployment with GitLab CI.
 # Visit the docs at https://docs.gitlab.com/ce/ci/
 
-image: painless/tox:multi
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_REGISTRY: registry.appuio.ch
+  DOCKER_HOST: tcp://docker:2375
+  OPENSHIFT_CONSOLE: https://console.appuio.ch
+  OPENSHIFT_PROJECT_STAGING: example-staging
+  OPENSHIFT_PROJECT_PROD: example-prod
+  APP_NAME: example
+
+services:
+  - name: docker:dind
 
 stages:
 - check
@@ -11,30 +21,80 @@ stages:
 {% for env in cookiecutter.checks.split(",") %}
 {{ env }}:
   stage: check
+  image: docker.io/painless/tox
   script: tox -e {{ env }}
 {% endfor %}
 {%- for env in cookiecutter.tests.split(",") %}
 {{ env }}:
   stage: test
+  image: docker.io/painless/tox
   script: tox -e {{ env }}
 {% endfor %}
-build:
+application:
   stage: build
+  image: docker.io/library/docker
   script:
-  - echo 'This build would build a Docker image and push it to the registry.'
+  - COMPONENT=application
+    IMAGE_NAME=${APP_NAME}
+
+  - docker build -t "${IMAGE}" -f "deployment/${COMPONENT}/Dockerfile" .
+  - docker login -u gitlab-ci -p ${OPENSHIFT_TOKEN} ${DOCKER_REGISTRY}
+  - docker push "${IMAGE}"
   only:
-  - feature/*
+  - master
 
 staging:
+  environment:
+    name: staging
+    url: https://console.appuio.ch/console/project/example-staging/overview
   stage: deploy
+  image: docker.io/appuio/oc:v3.9
   script:
-  - echo 'This build would deploy to Staging now.'
+  - SOURCE=${OPENSHIFT_PROJECT_STAGING}
+    TARGET=${OPENSHIFT_PROJECT_STAGING}
+    CLI="oc -n ${TARGET}"
+
+  - $CLI login ${OPENSHIFT_CONSOLE} --token=${OPENSHIFT_TOKEN}
+  - $CLI get secret postgres ||
+    $CLI process -f deployment/postgres-secrets.yaml |
+    $CLI apply -f -
+  - $CLI get secret application ||
+    $CLI process -f deployment/application-secrets.yaml |
+    $CLI apply -f -
+  - $CLI tag "${SOURCE}/${APP_NAME}:${CI_COMMIT_SHA}"
+             "${TARGET}/${APP_NAME}:${CI_COMMIT_SHA}"
+  - $CLI process --param-file=deployment/envs/${ENVIRONMENT} -p APP_TAG=${CI_COMMIT_SHA} -f deployment/postgres.yaml |
+    $CLI apply -f -
+  - $CLI process --param-file=deployment/envs/${ENVIRONMENT} -p APP_TAG=${CI_COMMIT_SHA} -f deployment/application.yaml |
+    $CLI apply -f -
+  - $CLI plugin cleanup ${APP_NAME} --git-repo-path="$PWD" --force=y
   only:
   - master
 
 production:
+  environment:
+    name: production
+    url: https://console.appuio.ch/console/project/example-prod/overview
   stage: deploy
+  image: docker.io/appuio/oc:v3.9
   script:
-  - echo 'This build would deploy to Production now.'
+  - SOURCE=${OPENSHIFT_PROJECT_STAGING}
+    TARGET=${OPENSHIFT_PROJECT_PROD}
+    CLI="oc -n ${TARGET}"
+
+  - $CLI login ${OPENSHIFT_CONSOLE} --token=${OPENSHIFT_TOKEN}
+  - $CLI get secret postgres ||
+    $CLI process -f deployment/postgres-secrets.yaml |
+    $CLI apply -f -
+  - $CLI get secret application ||
+    $CLI process -f deployment/application-secrets.yaml |
+    $CLI apply -f -
+  - $CLI tag "${SOURCE}/${APP_NAME}:${CI_COMMIT_SHA}"
+             "${TARGET}/${APP_NAME}:${CI_COMMIT_SHA}"
+  - $CLI process --param-file=deployment/envs/${ENVIRONMENT} -p APP_TAG=${CI_COMMIT_SHA} -f deployment/postgres.yaml |
+    $CLI apply -f -
+  - $CLI process --param-file=deployment/envs/${ENVIRONMENT} -p APP_TAG=${CI_COMMIT_SHA} -f deployment/application.yaml |
+    $CLI apply -f -
+  - $CLI plugin cleanup ${APP_NAME} --git-repo-path="$PWD" --force=y
   only:
   - tags
