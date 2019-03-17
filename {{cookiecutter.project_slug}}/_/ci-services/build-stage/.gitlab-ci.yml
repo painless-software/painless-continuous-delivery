@@ -1,0 +1,13 @@
+
+application:
+  stage: build
+  image: docker.io/library/docker
+  script:
+  - COMPONENT=application
+    IMAGE_NAME=${APP_NAME}
+
+  - docker build -t "${IMAGE}" -f "deployment/${COMPONENT}/Dockerfile" .
+  - docker login -u gitlab-ci -p ${OPENSHIFT_TOKEN} ${DOCKER_REGISTRY}
+  - docker push "${IMAGE}"
+  only:
+  - master

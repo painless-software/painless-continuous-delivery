@@ -13,21 +13,22 @@
         "MPL-2"
     ],
     "vcs_platform": [
+        "GitLab.com",
         "Bitbucket.org",
-        "GitHub.com",
-        "GitLab.com"
+        "GitHub.com"
     ],
     "vcs_account": "company-or-username",
     "ci_service": [
-        "bitbucket-pipelines.yml",
-        "codeship-steps.yml",
         ".gitlab-ci.yml",
-        "shippable.yml",
+        "bitbucket-pipelines.yml",
         ".travis.yml",
+        "codeship-steps.yml",
+        "shippable.yml",
         "vexor.yml"
     ],
     "container_platform": [
-        "appuio"
+        "(none)",
+        "APPUiO"
     ],
     "docker_registry": "{{ cookiecutter.vcs_platform.replace('Bitbucket.org', 'hub.docker.com').replace('GitHub.com', 'quay.io').replace('GitLab.com', 'registry.gitlab.com') }}/{{ cookiecutter.vcs_account }}",
     "framework": [
