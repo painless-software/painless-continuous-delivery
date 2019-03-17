@@ -3,15 +3,19 @@
 
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_REGISTRY: registry.appuio.ch
+  DOCKER_REGISTRY: {{ cookiecutter.docker_registry }}
   DOCKER_HOST: tcp://docker:2375
   OPENSHIFT_CONSOLE: https://console.appuio.ch
-  OPENSHIFT_PROJECT_STAGING: example-staging
-  OPENSHIFT_PROJECT_PROD: example-prod
-  APP_NAME: example
+  APP_NAME: {{ cookiecutter.project_slug }}
 
 services:
   - name: docker:dind
+
+stages:
+- check
+- test
+- build
+- deploy
 
 {#- (stages follow now, after one empty line) #}
 {% include '_/ci-services/lint-stage/%s' % cookiecutter.ci_service -%}

@@ -1,6 +1,6 @@
 
-deployment:
-  blueprint: &deployment
+.deployment:
+  script: &deployment
   - CLI="oc -n ${TARGET}"
 
   - $CLI login ${OPENSHIFT_CONSOLE} --token=${OPENSHIFT_TOKEN}
@@ -21,25 +21,25 @@ deployment:
 staging:
   environment:
     name: staging
-    url: https://console.appuio.ch/console/project/example-staging/overview
+    url: https://console.appuio.ch/console/project/{{ cookiecutter.project_slug }}-staging/overview
+  variables:
+    SOURCE: {{ cookiecutter.project_slug }}-staging
+    TARGET: {{ cookiecutter.project_slug }}-staging
   stage: deploy
   image: docker.io/appuio/oc:v3.9
-  script:
-  - SOURCE=${OPENSHIFT_PROJECT_STAGING}
-    TARGET=${OPENSHIFT_PROJECT_STAGING}
-  - *deployment
+  script: *deployment
   only:
   - master
 
 production:
   environment:
     name: production
-    url: https://console.appuio.ch/console/project/example-prod/overview
+    url: https://console.appuio.ch/console/project/{{ cookiecutter.project_slug }}-prod/overview
+  variables:
+    SOURCE: {{ cookiecutter.project_slug }}-staging
+    TARGET: {{ cookiecutter.project_slug }}-prod
   stage: deploy
   image: docker.io/appuio/oc:v3.9
-  script:
-  - SOURCE=${OPENSHIFT_PROJECT_STAGING}
-    TARGET=${OPENSHIFT_PROJECT_PROD}
-  - *deployment
+  script: *deployment
   only:
   - tags
