@@ -1,0 +1,6 @@
+{% for env in cookiecutter.checks.split(",") %}
+{{ env }}:
+  stage: check
+  image: docker.io/painless/tox
+  script: tox -e {{ env }}
+{% endfor -%}
