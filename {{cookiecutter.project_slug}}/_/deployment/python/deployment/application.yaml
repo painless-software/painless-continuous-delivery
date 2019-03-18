@@ -2,8 +2,6 @@ kind: Template
 apiVersion: template.openshift.io/v1
 
 parameters:
-- name: ENVIRONMENT
-  required: true
 - name: APP_NAMESPACE
   required: true
 - name: APP_NAME
@@ -16,16 +14,6 @@ parameters:
   required: true
 - name: REGISTRY
   value: docker-registry.default.svc:5000
-  required: true
-- name: DJANGO_EMAIL_USER
-  required: true
-- name: DJANGO_EMAIL_PASSWORD
-  required: true
-- name: TLS_CERT
-  required: true
-- name: TLS_KEY
-  required: true
-- name: TLS_CA_CERT
   required: true
 
 objects:
@@ -61,9 +49,6 @@ objects:
     tls:
       termination: edge
       insecureEdgeTerminationPolicy: Redirect
-      key: ${TLS_KEY}
-      certificate: ${TLS_CERT}
-      caCertificate: ${TLS_CA_CERT}
     to:
       kind: Service
       name: ${COMPONENT}
@@ -111,8 +96,6 @@ objects:
           - name: uwsgi
             containerPort: 8000
           env:
-          - name: ENVIRONMENT
-            value: ${ENVIRONMENT}
           - name: DJANGO_DATABASE_URL
             valueFrom:
               secretKeyRef:
@@ -123,15 +106,6 @@ objects:
               secretKeyRef:
                 key: secret-key
                 name: ${COMPONENT}
-          - name: SENTRY_DSN
-            valueFrom:
-              secretKeyRef:
-                key: sentry-dsn
-                name: ${COMPONENT}
-          - name: DJANGO_EMAIL_USER
-            value: ${DJANGO_EMAIL_USER}
-          - name: DJANGO_EMAIL_PASSWORD
-            value: ${DJANGO_EMAIL_PASSWORD}
           livenessProbe:
             tcpSocket:
               port: uwsgi
