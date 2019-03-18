@@ -2,8 +2,6 @@ kind: Template
 apiVersion: template.openshift.io/v1
 
 parameters:
-- name: ENVIRONMENT
-  required: false
 - name: APP_NAMESPACE
   required: false
 - name: APP_NAME
