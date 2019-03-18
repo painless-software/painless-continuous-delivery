@@ -5,7 +5,7 @@ parameters:
 - name: APP_NAMESPACE
   required: true
 - name: APP_NAME
-  value: example
+  value: {{ cookiecutter.project_slug }}
   required: true
 - name: APP_TAG
   required: true
