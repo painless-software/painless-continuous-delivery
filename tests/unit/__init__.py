@@ -59,12 +59,31 @@ def not_found_pretty(needle, lines):
            }
 
 
+class FunctionCall:
+    """Mimics a class method call for testing settings"""
+    def __init__(self, name, end=''):
+        self.func = name
+        self.end = end
+        self.body = ''
+
+    def __call__(self, *body_text):
+        new = FunctionCall(self.func, self.end)
+
+        new.body = '\n'
+        for line in body_text:
+            new.body += '%s\n' % line
+        return new
+
+    def __str__(self):
+        return '%(func)s(%(body)s)%(end)s' % self.__dict__
+
+
 def verify_required_settings(required_settings, settings):
     """
     Assert that the required settings are included in the generated ones.
     """
     for key, value in required_settings.items():
-        if isinstance(value, str):
+        if isinstance(value, (str, FunctionCall)):
             key_value_pair = '%s = %s' % (key, value)
             assert key_value_pair in settings, \
                 not_found_pretty(key_value_pair, settings)
@@ -73,7 +92,9 @@ def verify_required_settings(required_settings, settings):
             if isinstance(value, dict):
                 for dict_key, dict_value in value.items():
                     key_value_pair = "'%s': %s," % (dict_key, dict_value)
-                    assert key_value_pair in lines, \
+                    key_val_lines = key_value_pair.splitlines()
+                    intersection = [_ for _ in key_val_lines if _ in lines]
+                    assert intersection == key_val_lines, \
                         not_found_pretty(key_value_pair, lines)
             else:  # list or tuple
                 for item in value:

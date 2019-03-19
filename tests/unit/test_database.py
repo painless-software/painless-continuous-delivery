@@ -2,7 +2,7 @@
 from os import system
 
 from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
-from . import verify_required_settings
+from . import FunctionCall, verify_required_settings
 
 
 # pylint: disable=too-few-public-methods
@@ -10,6 +10,7 @@ class TestDatabase:
     """
     Tests for verifying database configuration in generated projects.
     """
+    env_db = FunctionCall('env.db')
     scenarios = [
         ('(none)', {
             'project_slug': 'django-project-no-db',
@@ -17,9 +18,11 @@ class TestDatabase:
             'database': '(none)',
             'required_settings': {
                 'DATABASES': {
-                    'ENGINE': "'django.db.backends.sqlite3'",
-                    'NAME': "join(BASE_DIR, 'db.sqlite3')",
-                }
+                    'default': env_db(
+                        "'DJANGO_DATABASE_URL',",
+                        "default='sqlite://%s' % join(BASE_DIR, 'db.sqlite3')"
+                    ),
+                },
             },
             'required_packages': [
                 'django-environ',
@@ -31,12 +34,10 @@ class TestDatabase:
             'database': 'Postgres',
             'required_settings': {
                 'DATABASES': {
-                    'ENGINE': "'django.db.backends.postgresql'",
-                    'NAME': "env('POSTGRES_DATABASE', default='postgres')",
-                    'USER': "env('POSTGRES_USER', default='postgres')",
-                    'PASSWORD': "env('POSTGRES_PASSWORD', default=None)",
-                    'HOST': "env('POSTGRES_HOST', default='database')",
-                    'PORT': "env.int('POSTGRES_PORT', default=5432)",
+                    'default': env_db(
+                        "'DJANGO_DATABASE_URL',",
+                        "default='postgres://postgres:postgres@database/postgres'"
+                    ),
                 },
             },
             'required_packages': [
@@ -50,12 +51,10 @@ class TestDatabase:
             'database': 'MySQL/MariaDB',
             'required_settings': {
                 'DATABASES': {
-                    'ENGINE': "'mysql.connector.django'",
-                    'NAME': "env('MYSQL_DATABASE', default='mysql')",
-                    'USER': "env('MYSQL_USER', default='mysql')",
-                    'PASSWORD': "env('MYSQL_PASSWORD', default='mysql')",
-                    'HOST': "env('MYSQL_HOST', default='database')",
-                    'PORT': "env.int('MYSQL_PORT', default=3306)",
+                    'default': env_db(
+                        "'DJANGO_DATABASE_URL',",
+                        "default='mysql://mysql:mysql@database/mysql'"
+                    ),
                 },
             },
             'required_packages': [

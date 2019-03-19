@@ -75,26 +75,16 @@ WSGI_APPLICATION = 'application.wsgi.application'
 # Database
 
 DATABASES = {
-    'default': {
+    'default': env.db(
+        'DJANGO_DATABASE_URL',
 {%- if cookiecutter.database == '(none)' %}
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': join(BASE_DIR, 'db.sqlite3'),
+        default='sqlite://%s' % join(BASE_DIR, 'db.sqlite3')
 {%- elif cookiecutter.database == 'Postgres' %}
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DATABASE', default='postgres'),
-        'USER': env('POSTGRES_USER', default='postgres'),
-        'PASSWORD': env('POSTGRES_PASSWORD', default=None),
-        'HOST': env('POSTGRES_HOST', default='database'),
-        'PORT': env.int('POSTGRES_PORT', default=5432),
+        default='postgres://postgres:postgres@database/postgres'
 {%- elif cookiecutter.database == 'MySQL/MariaDB' %}
-        'ENGINE': 'mysql.connector.django',
-        'NAME': env('MYSQL_DATABASE', default='mysql'),
-        'USER': env('MYSQL_USER', default='mysql'),
-        'PASSWORD': env('MYSQL_PASSWORD', default='mysql'),
-        'HOST': env('MYSQL_HOST', default='database'),
-        'PORT': env.int('MYSQL_PORT', default=3306),
+        default='mysql://mysql:mysql@database/mysql'
 {%- endif %}
-    }
+    ),
 }
 
 # Password validation
