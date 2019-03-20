@@ -76,6 +76,7 @@ objects:
         initContainers:
         - name: check-db-ready
           image: ${REGISTRY}/${APP_NAMESPACE}/${APP_NAME}:${APP_TAG}
+          command: ['python', 'manage.py', 'wait_for_database']
           env:
           - name: DJANGO_DATABASE_URL
             valueFrom:
@@ -87,8 +88,6 @@ objects:
               secretKeyRef:
                 key: secret-key
                 name: ${COMPONENT}
-          command:
-          - python manage.py wait_for_database
         containers:
         - name: django
           image: ${REGISTRY}/${APP_NAMESPACE}/${APP_NAME}:${APP_TAG}
@@ -123,8 +122,7 @@ objects:
               memory: 512Mi
         - name: nginx
           image: ${REGISTRY}/${APP_NAMESPACE}/${APP_NAME}:${APP_TAG}
-          command:
-          - nginx
+          command: ['nginx']
           ports:
           - name: nginx
             containerPort: 8080
