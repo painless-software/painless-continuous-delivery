@@ -36,7 +36,7 @@ class TestDatabase:
                 'DATABASES': {
                     'default': env_db(
                         "'DJANGO_DATABASE_URL',",
-                        "default='postgres://postgres:postgres@database/postgres'"
+                        "default='postgres://postgres:postgres@database/postgres'"  # noqa
                     ),
                 },
             },
