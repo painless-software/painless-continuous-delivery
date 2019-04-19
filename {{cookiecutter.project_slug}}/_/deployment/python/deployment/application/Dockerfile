@@ -12,15 +12,17 @@ COPY requirements requirements
 
 RUN apt-get update \
  && apt-get install -y \
-    gcc \
-    nginx \
-    python3-dev \
     gettext \
-    vim \
+    libpq5 \
+    nginx \
+    gcc \
+    libpq-dev \
+    python3-dev \
  && pip --disable-pip-version-check --no-cache-dir \
     install -r ${REQUIREMENTS} \
  && apt-get purge -y \
     gcc \
+    libpq-dev \
     python3-dev \
  && apt-get autoremove -y --purge \
  && apt-get clean \
