@@ -4,6 +4,12 @@ Change Log
 All notable changes to this project are documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`__.
 
+0.4.0 (2019-MM-DD)
+------------------
+
+- Generate Kubernetes/OpenShift deployment configuration
+- Remove Vexor (discontinued CI service)
+
 0.3.0 (2017-07-24)
 ------------------
 
