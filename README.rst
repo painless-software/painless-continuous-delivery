@@ -30,7 +30,6 @@ Supported Technologies and Services
 ..                   GitLab CI  - |gitlab-ci|
 ..                   Shippable  - |shippable|
 ..                   Travis CI  - |travis-ci|
-..                   Vexor CI   - |vexor-ci|
 ==================== =========================================================
 
 
@@ -49,9 +48,6 @@ Supported Technologies and Services
 .. |travis-ci| image:: https://img.shields.io/travis/painless-software/painless-continuous-delivery/master.svg
    :target: https://travis-ci.org/painless-software/painless-continuous-delivery
    :alt: Travis CI
-.. |vexor-ci| image:: https://ci.vexor.io/projects/59719621-2f88-4c7b-95a9-d1536c519e96/status.svg
-   :target: https://ci.vexor.io/ui/projects/59719621-2f88-4c7b-95a9-d1536c519e96/builds
-   :alt: Vexor CI
 
 Usage
 =====

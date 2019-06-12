@@ -23,8 +23,7 @@
         "bitbucket-pipelines.yml",
         ".travis.yml",
         "codeship-steps.yml",
-        "shippable.yml",
-        "vexor.yml"
+        "shippable.yml"
     ],
     "container_platform": [
         "(none)",
