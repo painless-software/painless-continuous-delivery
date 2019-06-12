@@ -18,6 +18,7 @@ services:
     user: "${UID:-1001}:0"
     volumes:
       - .:/app
+    restart: on-failure
 {%- if cookiecutter.database in ['Postgres', 'MySQL/MariaDB'] %}
     depends_on:
       - database
@@ -30,7 +31,7 @@ services:
       - "5432:5432"
     volumes:
       - database_data:/var/lib/postgresql/data
-    restart: on-failure:10
+    restart: on-failure
 {%- elif cookiecutter.database == 'MySQL/MariaDB' %}
   database:
     image: docker.io/library/mariadb

@@ -1,0 +1,56 @@
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_REGISTRY: {{ cookiecutter.docker_registry }}
+  DOCKER_HOST: tcp://docker:2375
+  OPENSHIFT_CONSOLE: https://console.appuio.ch
+  APP_NAME: {{ cookiecutter.project_slug }}
+
+services:
+  - name: docker:dind
+
+stages:
+- check
+- test
+- build
+- deploy
+
+.check:
+  stage: check
+  image: docker.io/painless/tox
+
+.test:
+  stage: test
+  image: docker.io/painless/tox
+
+.build:
+  stage: build
+  image: docker.io/library/docker
+  script:
+  - IMAGE="${DOCKER_REGISTRY}/${REGISTRY_PROJECT}/${APP_NAME}:${CI_COMMIT_SHA}"
+
+  - docker build -t "${IMAGE}" -f "deployment/${COMPONENT}/Dockerfile" .
+  - docker login -u gitlab-ci -p ${KUBE_TOKEN} https://${DOCKER_REGISTRY}
+  - docker push "${IMAGE}"
+  environment:
+    name: dev
+
+.deploy:
+  stage: deploy
+  image: docker.io/appuio/oc:v3.9
+  script:
+  - CLI="oc -n ${TARGET}"
+
+  - $CLI get secret postgres ||
+    $CLI process -f deployment/postgres-secrets.yaml |
+    $CLI apply -f -
+  - $CLI get secret application ||
+    $CLI process -f deployment/application-secrets.yaml |
+    $CLI apply -f -
+  - $CLI tag "${SOURCE}/${APP_NAME}:${CI_COMMIT_SHA}"
+             "${TARGET}/${APP_NAME}:${CI_COMMIT_SHA}"
+  - $CLI process --param-file=deployment/envs/${ENVIRONMENT} -p APP_TAG=${CI_COMMIT_SHA} -f deployment/postgres.yaml |
+    $CLI apply -f -
+  - $CLI process --param-file=deployment/envs/${ENVIRONMENT} -p APP_TAG=${CI_COMMIT_SHA} -f deployment/application.yaml |
+    $CLI apply -f -
+  - $CLI plugin cleanup ${APP_NAME} --git-repo-path="$PWD" --force=y

@@ -1,6 +1,5 @@
 {% for env in cookiecutter.tests.split(",") %}
 {{ env }}:
-  stage: test
-  image: docker.io/painless/tox
+  extends: .test
   script: tox -e {{ env }}
 {% endfor -%}

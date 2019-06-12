@@ -23,40 +23,42 @@ Open your web browser at http://localhost:8000 to see the application
 you're developing.  Log output will be displayed in the terminal, as usual.
 
 {% if cookiecutter.container_platform == 'APPUiO' -%}
-Initial Setup on APPUiO (OpenShift)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Initial Setup (APPUiO + GitLab)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1. Create a ``prod`` and ``staging`` project at the `VSHN Control Panel
-   <https://control.vshn.net/openshift/projects/appuio%20public>`_.
-   For sizing consider roughly the sum of ``limits`` of all resources
-   (it must be strictly greater than the sum of ``requests``).
-1. Create a service account as described in the `APPUiO docs
-   <https://appuio-community-documentation.readthedocs.io/en/latest/services/webserver/50_pushing_to_appuio.html>`_
-   (see below)
-1. Add the ``token`` value from the ``gitlab-ci-token`` secret to the GitLab
-   project Settings > CI/CD > Variables as "OPENSHIFT_TOKEN".
+#. Create a ``prod``, ``int`` and ``dev`` project at the `VSHN Control
+   Panel <https://control.vshn.net/openshift/projects/appuio%20public>`_.
+   For quota sizing consider roughly the sum of ``limits`` of all
+   resources (must be strictly greater than the sum of ``requests``):
 
-.. code-block:: console
+   .. code-block:: console
 
-    # Calculate min/max sizing requirements for quotas
-    $ grep -A2 limits deployment/*yaml
-    $ grep -A2 requests deployment/*yaml
+        $ grep -A2 limits deployment/*yaml
+        $ grep -A2 requests deployment/*yaml
 
-.. code-block:: console
+#. Create a service account as described in the `APPUiO docs
+   <https://appuio-community-documentation.readthedocs.io/en/latest/services/webserver/50_pushing_to_appuio.html>`_:
 
-    # Create a service account to allow GitLab CI to push images to the APPUiO registry
-    $ oc -n {{ cookiecutter.project_slug }}-prod create sa gitlab-ci
+   Create a service account, grant permissions to push images and apply
+   configurations, and get the service account's token value:
 
-.. code-block:: console
+   .. code-block:: console
 
-    # Grant permission for pushing Docker images to APPUiO and applying configurations
-    $ oc -n {{ cookiecutter.project_slug }}-prod policy add-role-to-user edit -z gitlab-ci
-    $ oc -n {{ cookiecutter.project_slug }}-staging policy add-role-to-user edit system:serviceaccount:{{ cookiecutter.project_slug }}-prod:gitlab-ci
+        $ oc -n {{ cookiecutter.project_slug }}-prod create sa gitlab-ci
+        $ oc -n {{ cookiecutter.project_slug }}-prod policy add-role-to-user edit -z gitlab-ci
+        $ oc -n {{ cookiecutter.project_slug }}-prod sa get-token gitlab-ci
 
-.. code-block:: console
+   Grant the service account permissions on dev and int projects:
 
-    # Get the token value from APPUiO
-    $ oc -n {{ cookiecutter.project_slug }}-prod sa get-token gitlab-ci
+   .. code-block:: console
+
+        $ oc policy add-role-to-user edit system:serviceaccount:{{ cookiecutter.project_slug }}-prod:gitlab-ci -n {{ cookiecutter.project_slug }}-int
+        $ oc policy add-role-to-user edit system:serviceaccount:{{ cookiecutter.project_slug }}-prod:gitlab-ci -n {{ cookiecutter.project_slug }}-dev
+
+#. Configure the Kubernetes integration in your GitLab project adding
+   the ``token`` value from the ``gitlab-ci-token`` secret to:
+
+   -  Operations > Kubernetes > "APPUiO" > Kubernetes cluster details > Service Token
 
 {% endif -%}
 Working with Docker
@@ -87,17 +89,14 @@ See the `docker-compose CLI reference`_ for other commands.
 
 .. _docker-compose CLI reference: https://docs.docker.com/compose/reference/overview/
 
+{% if cookiecutter.framework in ['Symfony', 'TYPO3'] -%}
 Docker Run Commands
 ^^^^^^^^^^^^^^^^^^^
 
 Development tools supported out-of-the-box: (see `docker-compose.override.yml`_)
 
-{% if cookiecutter.framework in ['Symfony', 'TYPO3'] -%}
 - composer
 - npm
-{%- else %}
-None yet. Sorry.
-{%- endif %}
 
 Source `.envrc`_ to activate natural aliases for those commands:
 
@@ -121,3 +120,4 @@ Alternatively, you can run those commands the classic way, i.e.
 .. _docker-compose.override.yml: docker-compose.override.yml
 .. _direnv: https://direnv.net/
 .. _.envrc: .envrc
+{% endif -%}

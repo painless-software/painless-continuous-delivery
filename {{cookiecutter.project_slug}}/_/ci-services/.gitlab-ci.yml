@@ -1,23 +1,6 @@
 # Painless deployment with GitLab CI.
 # Visit the docs at https://docs.gitlab.com/ce/ci/
-
-variables:
-  DOCKER_DRIVER: overlay2
-  DOCKER_REGISTRY: {{ cookiecutter.docker_registry }}
-  DOCKER_HOST: tcp://docker:2375
-  OPENSHIFT_CONSOLE: https://console.appuio.ch
-  APP_NAME: {{ cookiecutter.project_slug }}
-
-services:
-  - name: docker:dind
-
-stages:
-- check
-- test
-- build
-- deploy
-
-{#- (stages follow now, after one empty line) #}
+{% include '_/ci-services/definitions/%s' % cookiecutter.ci_service -%}
 {% include '_/ci-services/lint-stage/%s' % cookiecutter.ci_service -%}
 {% include '_/ci-services/test-stage/%s' % cookiecutter.ci_service -%}
 {% include '_/ci-services/build-stage/%s' % cookiecutter.ci_service -%}

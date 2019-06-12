@@ -1,15 +1,9 @@
 
 application:
-  stage: build
-  image: docker.io/library/docker
+  extends: .build
   variables:
     COMPONENT: application
-    REGISTRY_PROJECT: {{ cookiecutter.project_slug }}-staging
-  script:
-  - IMAGE="${DOCKER_REGISTRY}/${REGISTRY_PROJECT}/${APP_NAME}:${CI_COMMIT_SHA}"
-
-  - docker build -t "${IMAGE}" -f "deployment/${COMPONENT}/Dockerfile" .
-  - docker login -u gitlab-ci -p ${OPENSHIFT_TOKEN} https://${DOCKER_REGISTRY}
-  - docker push "${IMAGE}"
+    REGISTRY_PROJECT: {{ cookiecutter.project_slug }}-dev
   only:
+  - feature/*
   - master

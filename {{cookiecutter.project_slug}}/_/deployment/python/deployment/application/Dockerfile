@@ -12,11 +12,11 @@ COPY requirements requirements
 
 RUN apt-get update \
  && apt-get install -y \
+    gcc \
     gettext \
     libpq5 \
-    nginx \
-    gcc \
     libpq-dev \
+    nginx \
     python3-dev \
  && pip --disable-pip-version-check --no-cache-dir \
     install -r ${REQUIREMENTS} \
