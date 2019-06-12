@@ -1,38 +1,30 @@
 
-.deployment:
-  script: &deployment
-  - CLI="oc -n ${TARGET}"
-
-  - $CLI login ${OPENSHIFT_CONSOLE} --token=${OPENSHIFT_TOKEN}
-  - $CLI get secret postgres ||
-    $CLI process -f deployment/postgres-secrets.yaml |
-    $CLI apply -f -
-  - $CLI get secret application ||
-    $CLI process -f deployment/application-secrets.yaml |
-    $CLI apply -f -
-  - $CLI tag "${SOURCE}/${APP_NAME}:${CI_COMMIT_SHA}"
-             "${TARGET}/${APP_NAME}:${CI_COMMIT_SHA}"
-  - $CLI process --param-file=deployment/envs/${ENVIRONMENT} -p APP_TAG=${CI_COMMIT_SHA} -f deployment/postgres.yaml |
-    $CLI apply -f -
-  - $CLI process --param-file=deployment/envs/${ENVIRONMENT} -p APP_TAG=${CI_COMMIT_SHA} -f deployment/application.yaml |
-    $CLI apply -f -
-  - $CLI plugin cleanup ${APP_NAME} --git-repo-path="$PWD" --force=y
+dev:
+  extends: .deploy
+  environment:
+    name: dev
+    url: https://console.appuio.ch/console/project/{{ cookiecutter.project_slug }}-dev/overview
+  variables:
+    ENVIRONMENT: dev
+    SOURCE: {{ cookiecutter.project_slug }}-dev
+    TARGET: {{ cookiecutter.project_slug }}-dev
+  only:
+  - feature/*
 
 staging:
+  extends: .deploy
   environment:
     name: staging
     url: https://console.appuio.ch/console/project/{{ cookiecutter.project_slug }}-staging/overview
   variables:
     ENVIRONMENT: staging
-    SOURCE: {{ cookiecutter.project_slug }}-staging
+    SOURCE: {{ cookiecutter.project_slug }}-dev
     TARGET: {{ cookiecutter.project_slug }}-staging
-  stage: deploy
-  image: docker.io/appuio/oc:v3.9
-  script: *deployment
   only:
   - master
 
 production:
+  extends: .deploy
   environment:
     name: production
     url: https://console.appuio.ch/console/project/{{ cookiecutter.project_slug }}-prod/overview
@@ -40,8 +32,5 @@ production:
     ENVIRONMENT: prod
     SOURCE: {{ cookiecutter.project_slug }}-staging
     TARGET: {{ cookiecutter.project_slug }}-prod
-  stage: deploy
-  image: docker.io/appuio/oc:v3.9
-  script: *deployment
   only:
   - tags
