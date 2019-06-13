@@ -15,6 +15,8 @@ env:
   - TOXENV=py37
   - TOXENV=pypy3
   - TOXENV=behave
+  allow_failures:
+  - TOXENV=bandit
 
 build:
   ci:
