@@ -102,7 +102,7 @@ def verify_required_settings(required_settings, settings):
                         not_found_pretty(item, lines)
 
 
-def verify_file_matches_repo_root(result, *file):
+def verify_file_matches_repo_root(result, *file, max_compare_bytes=-1):
     """
     Assert that a generated file matches the one with the identical name in
     the project repository root.
@@ -110,8 +110,8 @@ def verify_file_matches_repo_root(result, *file):
     mother_file = REPO_ROOT_PATH.join(*file).strpath
     generated_file = result.project.join(*file).strpath
     with open(mother_file) as mother, open(generated_file) as generated:
-        diff = ''.join(context_diff(mother.readlines(),
-                                    generated.readlines(),
+        diff = ''.join(context_diff(mother.readlines(max_compare_bytes),
+                                    generated.readlines(max_compare_bytes),
                                     fromfile=mother_file,
                                     tofile=generated_file))
     assert not diff, \
