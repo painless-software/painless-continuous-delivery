@@ -1,0 +1,9 @@
+
+- name: Checks
+  type: parallel
+  service: app
+  steps:
+  {%- for env in cookiecutter.checks.split(',') %}
+  - name: {{ env|capitalize }}
+    command: tox -e {{ env }}
+  {%- endfor %}

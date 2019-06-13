@@ -1,0 +1,16 @@
+
+- name: Deploy staging
+  type: serial
+  tag: master
+  service: app
+  steps:
+  - name: Staging
+    command: echo 'This build would deploy to Staging now.'
+
+- name: Deploy production
+  type: manual
+  tag: ^v[0-9]+\.[0-9]+\.[0-9]+$
+  service: app
+  steps:
+  - name: Production
+    command: echo 'This build would deploy to Production now.'

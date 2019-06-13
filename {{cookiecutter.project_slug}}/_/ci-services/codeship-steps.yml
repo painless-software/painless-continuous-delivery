@@ -1,36 +1,7 @@
 # Painless deployment with Codeship.
 # Visit the docs at https://documentation.codeship.com/docker/steps/
-
-- name: Checks
-  type: parallel
-  service: app
-  steps:
-  {%- for env in cookiecutter.checks.split(',') %}
-  - name: {{ env|capitalize }}
-    command: tox -e {{ env }}
-  {%- endfor %}
-
-- name: Tests
-  type: parallel
-  service: app
-  steps:
-  {%- for env in cookiecutter.tests.split(',') %}
-  - name: {{ env|replace('py35','Python 3.5')|replace('py36','Python 3.6')|replace('py37','Python 3.7')|replace('pypy3','PyPy 3')|replace('behave','Behave') }}
-    command: tox -e {{ env }}
-  {%- endfor %}
-
-- name: Deploy staging
-  type: serial
-  tag: master
-  service: app
-  steps:
-  - name: Staging
-    command: echo 'This build would deploy to Staging now.'
-
-- name: Deploy production
-  type: manual
-  tag: ^v[0-9]+\.[0-9]+\.[0-9]+$
-  service: app
-  steps:
-  - name: Production
-    command: echo 'This build would deploy to Production now.'
+{% include '_/ci-services/definitions/%s' % cookiecutter.ci_service -%}
+{% include '_/ci-services/lint-stage/%s' % cookiecutter.ci_service -%}
+{% include '_/ci-services/test-stage/%s' % cookiecutter.ci_service -%}
+{% include '_/ci-services/build-stage/%s' % cookiecutter.ci_service -%}
+{% include '_/ci-services/deploy-stage/%s' % cookiecutter.ci_service -%}
