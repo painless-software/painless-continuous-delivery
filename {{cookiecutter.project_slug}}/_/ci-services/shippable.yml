@@ -7,15 +7,8 @@ python:
 
 env:
   matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
-  {%- for env in cookiecutter.checks.split(',') %}
-  - TOXENV={{ env }}
-  {%- endfor %}
-  {%- for env in cookiecutter.tests.split(',') %}
-  - TOXENV={{ env }}
-  {%- endfor %}
-
-build:
-  ci:
-  - pip install tox
-  - tox
-  - mv -v tests/reports/* shippable/testresults/ || true
+{%- include '_/ci-services/definitions/%s' % cookiecutter.ci_service -%}
+{% include '_/ci-services/lint-stage/%s' % cookiecutter.ci_service -%}
+{% include '_/ci-services/test-stage/%s' % cookiecutter.ci_service %}
+{% include '_/ci-services/build-stage/%s' % cookiecutter.ci_service -%}
+{% include '_/ci-services/deploy-stage/%s' % cookiecutter.ci_service -%}

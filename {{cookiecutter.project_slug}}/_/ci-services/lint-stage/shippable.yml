@@ -1,0 +1,3 @@
+  {%- for env in cookiecutter.checks.split(',') %}
+  - TOXENV={{ env }}
+  {%- endfor -%}
