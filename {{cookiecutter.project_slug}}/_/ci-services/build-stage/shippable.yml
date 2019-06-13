@@ -1,0 +1,6 @@
+
+build:
+  ci:
+  - pip install tox
+  - tox
+  - mv -v tests/reports/* shippable/testresults/ || true
