@@ -5,5 +5,5 @@ application:
     COMPONENT: application
     REGISTRY_PROJECT: {{ cookiecutter.project_slug }}-dev
   only:
-  - feature/*
+  - merge_requests
   - master
