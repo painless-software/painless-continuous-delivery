@@ -19,5 +19,8 @@ jobs:
   - { stage: test, python: 3.7, dist: xenial, sudo: true }
   - { stage: test, python: 3.6, env: TOXENV=behave }
 
+  allow_failures:
+  - env: TOXENV=bandit
+
 install: pip install tox-travis
 script: tox
