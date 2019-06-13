@@ -95,5 +95,5 @@ class TestCISetup:
                 codeship_services.isfile()) or not codeship_services.exists()
 
         # ensure this project itself stays up-to-date with the template
-        # verify_file_matches_repo_root(result, ci_service,
-        #                               max_compare_bytes=100)
+        verify_file_matches_repo_root(result, ci_service,
+                                      max_compare_bytes=85)
