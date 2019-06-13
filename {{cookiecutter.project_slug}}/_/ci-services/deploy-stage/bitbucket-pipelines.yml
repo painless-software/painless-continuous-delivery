@@ -1,0 +1,23 @@
+
+  branches:
+    master:
+    - parallel: *checks
+    - parallel: *tests
+
+    - step:
+        name: Staging
+        deployment: Staging
+        script:
+        - echo 'This build would deploy to Staging now.'
+
+  tags:
+    '*':
+    - parallel: *checks
+    - parallel: *tests
+
+    - step:
+        name: Production
+        deployment: Production
+        trigger: manual
+        script:
+        - echo 'This build would deploy to Production now.'
