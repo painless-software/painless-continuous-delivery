@@ -1,0 +1,8 @@
+
+  - parallel: &checks
+    {%- for env in cookiecutter.checks.split(",") %}
+    - step:
+        name: {{ env|capitalize }}
+        script:
+        - tox -e {{ env }}
+    {%- endfor %}
