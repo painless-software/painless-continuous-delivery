@@ -1,0 +1,6 @@
+  {%- if "py37" in cookiecutter.tests.split(",") %}
+  - { stage: test, python: 3.7, dist: xenial, sudo: true }
+  {%- endif %}
+  {%- if "behave" in cookiecutter.tests.split(",") %}
+  - { stage: test, python: 3.6, env: TOXENV=behave }
+  {%- endif -%}

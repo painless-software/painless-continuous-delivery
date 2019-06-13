@@ -1,0 +1,3 @@
+  {%- for env in cookiecutter.checks.split(",") %}
+  - { stage: lint, python: 3.6, env: TOXENV={{ env }} }
+  {%- endfor -%}
