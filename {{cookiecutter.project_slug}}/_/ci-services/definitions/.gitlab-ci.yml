@@ -33,7 +33,7 @@ stages:
   - docker login -u gitlab-ci -p ${KUBE_TOKEN} https://${DOCKER_REGISTRY}
   - docker push "${IMAGE}"
   environment:
-    name: dev
+    name: development
 
 .deploy:
   stage: deploy
@@ -43,14 +43,14 @@ stages:
 
   - $CLI get secret postgres ||
     $CLI process -f deployment/postgres-secrets.yaml |
-    $CLI apply -f -
+    $CLI apply --overwrite -f -
   - $CLI get secret application ||
     $CLI process -f deployment/application-secrets.yaml |
-    $CLI apply -f -
+    $CLI apply --overwrite -f -
   - $CLI tag "${SOURCE}/${APP_NAME}:${CI_COMMIT_SHA}"
              "${TARGET}/${APP_NAME}:${CI_COMMIT_SHA}"
   - $CLI process --param-file=deployment/envs/${ENVIRONMENT} -p APP_TAG=${CI_COMMIT_SHA} -f deployment/postgres.yaml |
-    $CLI apply -f -
+    $CLI apply --overwrite -f -
   - $CLI process --param-file=deployment/envs/${ENVIRONMENT} -p APP_TAG=${CI_COMMIT_SHA} -f deployment/application.yaml |
-    $CLI apply -f -
+    $CLI apply --overwrite -f -
   - $CLI plugin cleanup ${APP_NAME} --git-repo-path="$PWD" --force=y
