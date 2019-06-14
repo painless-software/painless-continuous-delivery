@@ -17,7 +17,7 @@ pipelines:
     - step:
         name: Bandit
         script:
-        - tox -e bandit
+        - tox -e bandit || true
 
   - parallel: &tests
     - step:
@@ -47,10 +47,10 @@ pipelines:
     - parallel: *tests
 
     - step:
-        name: Staging
-        deployment: Staging
+        name: Integration
+        deployment: Integration
         script:
-        - echo 'This build would deploy to Staging now.'
+        - echo 'This build would deploy to Integration now.'
 
   tags:
     '*':
