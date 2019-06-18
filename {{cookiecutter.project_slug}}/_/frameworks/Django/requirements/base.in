@@ -5,5 +5,5 @@ django-probes
 {% elif cookiecutter.database == 'MySQL/MariaDB' %}mysql-connector
 {% endif -%}
 {% if cookiecutter.monitoring == 'Datadog' %}django-datadog
-{% elif cookiecutter.monitoring == 'Sentry' %}raven
+{% elif cookiecutter.monitoring == 'Sentry' %}sentry-sdk
 {% endif -%}
