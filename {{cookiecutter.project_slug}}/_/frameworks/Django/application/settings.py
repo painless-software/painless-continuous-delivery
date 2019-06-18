@@ -25,16 +25,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     {%- if cookiecutter.monitoring == 'Datadog' %}
     'django_datadog',
-    {%- elif cookiecutter.monitoring == 'Sentry' %}
-    'raven.contrib.django.raven_compat',
     {%- endif %}
     'django_probes',
 ]
 
 MIDDLEWARE = [
-{%- if cookiecutter.monitoring == 'Datadog' %}
+    {%- if cookiecutter.monitoring == 'Datadog' %}
     'django_datadog.middleware.DatadogMiddleware',
-{%- endif %}
+    {%- endif %}
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,13 +67,13 @@ WSGI_APPLICATION = 'application.wsgi.application'
 DATABASES = {
     'default': env.db(
         'DJANGO_DATABASE_URL',
-{%- if cookiecutter.database == '(none)' %}
+        {%- if cookiecutter.database == '(none)' %}
         default='sqlite://%s' % join(BASE_DIR, 'db.sqlite3')
-{%- elif cookiecutter.database == 'Postgres' %}
+        {%- elif cookiecutter.database == 'Postgres' %}
         default='postgres://postgres:postgres@database/postgres'
-{%- elif cookiecutter.database == 'MySQL/MariaDB' %}
+        {%- elif cookiecutter.database == 'MySQL/MariaDB' %}
         default='mysql://mysql:mysql@database/mysql'
-{%- endif %}
+        {%- endif %}
     ),
 }
 
@@ -103,7 +101,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
@@ -113,6 +110,8 @@ USE_TZ = True
 
 STATIC_ROOT = join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+MEDIA_ROOT = join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 {%- if cookiecutter.monitoring == 'Datadog' %}
 
 DATADOG_API_KEY = env('DATADOG_API_KEY', default=None)
@@ -120,9 +119,11 @@ DATADOG_APP_KEY = env('DATADOG_APP_KEY', default=None)
 DATADOG_APP_NAME = env('DATADOG_APP_NAME', default=None)
 {%- elif cookiecutter.monitoring == 'Sentry' %}
 
-RAVEN_CONFIG = {
-    'dsn': env('SENTRY_DSN', default=None),
-    # Automatically configure the release based on information from Git
-    'release': env('REVISION', default=None),
-}
+SENTRY_DSN = env('SENTRY_DSN', default=None)
+if SENTRY_DSN:
+    import sentry_sdk
+
+    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[
+        sentry_sdk.integrations.django.DjangoIntegration(),
+    ])
 {%- endif %}
