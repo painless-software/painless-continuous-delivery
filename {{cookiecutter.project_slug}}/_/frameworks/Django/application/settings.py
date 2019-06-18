@@ -4,15 +4,46 @@ Django settings for application project.
 from os.path import abspath, dirname, join
 from environ import Env
 
-BASE_DIR = dirname(dirname(abspath(__file__)))
-
 env = Env()  # pylint: disable=invalid-name
+{%- if cookiecutter.monitoring == 'Sentry' %}
+
+SENTRY_DSN = env('SENTRY_DSN', default=None)
+
+if SENTRY_DSN:
+    import sentry_sdk
+
+    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[
+        sentry_sdk.integrations.django.DjangoIntegration(),
+    ])
+{%- endif %}
+
+BASE_DIR = dirname(dirname(abspath(__file__)))
 
 DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
 SECRET_KEY = 'dummy-secret' if DEBUG else env('DJANGO_SECRET_KEY')
 
 ALLOWED_HOSTS = ['*']
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': env('DJANGO_LOG_LEVEL', default='INFO'),
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+        },
+    },
+}
 
 # Application definition
 
@@ -117,13 +148,4 @@ MEDIA_URL = '/media/'
 DATADOG_API_KEY = env('DATADOG_API_KEY', default=None)
 DATADOG_APP_KEY = env('DATADOG_APP_KEY', default=None)
 DATADOG_APP_NAME = env('DATADOG_APP_NAME', default=None)
-{%- elif cookiecutter.monitoring == 'Sentry' %}
-
-SENTRY_DSN = env('SENTRY_DSN', default=None)
-if SENTRY_DSN:
-    import sentry_sdk
-
-    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[
-        sentry_sdk.integrations.django.DjangoIntegration(),
-    ])
 {%- endif %}
