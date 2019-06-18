@@ -60,6 +60,8 @@ Initial Setup (APPUiO + GitLab)
 
    -  Operations > Kubernetes > "APPUiO" > Kubernetes cluster details > Service Token
 
+   (*Note:* Make sure "GitLab-managed cluster" is unchecked in the cluster details.)
+
 {% endif -%}
 Working with Docker
 ^^^^^^^^^^^^^^^^^^^
