@@ -143,6 +143,14 @@ STATIC_ROOT = join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 MEDIA_ROOT = join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+if DEBUG:
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TEMPLATE_CONTEXT': True,
+        'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+    }
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+    INSTALLED_APPS += ['debug_toolbar']
 {%- if cookiecutter.monitoring == 'Datadog' %}
 
 DATADOG_API_KEY = env('DATADOG_API_KEY', default=None)
