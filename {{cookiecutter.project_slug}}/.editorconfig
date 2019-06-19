@@ -1,5 +1,4 @@
-# http://editorconfig.org
-
+# https://EditorConfig.org
 root = true
 
 [*]
@@ -15,7 +14,7 @@ indent_style = space
 indent_size = 4
 
 [*.py]
-line_length = 120
+line_length = 88
 known_first_party = {{ cookiecutter.project_slug }}
 multi_line_output = 3
 default_section = THIRDPARTY
@@ -23,7 +22,7 @@ default_section = THIRDPARTY
 [*.{html,css,scss,json}]
 indent_size = 4
 
-[*.yml]
+[*.{yaml,yml}]
 indent_size = 2
 
 [*.md]
