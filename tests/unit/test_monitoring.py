@@ -32,13 +32,10 @@ class TestMonitoring:
             'framework': 'Django',
             'monitoring': 'Sentry',
             'required_settings': {
-                'RAVEN_CONFIG': {
-                    'dsn': "env('SENTRY_DSN', default=None)",
-                    'release': "env('REVISION', default=None)",
-                },
+                'SENTRY_DSN': "env('SENTRY_DSN', default=None)",
             },
             'required_packages': [
-                'raven',
+                'sentry-sdk',
             ],
         }),
         # ('Sentry(flask)', {
@@ -46,11 +43,10 @@ class TestMonitoring:
         #     'framework': 'Flask',
         #     'monitoring': 'Sentry',
         #     'required_settings': {
-        #         'dsn': "env('SENTRY_DSN', default=None)",
-        #         'release': "raven.fetch_git_sha(dirname(pardir))",
+        #         'SENTRY_DSN': "env('SENTRY_DSN', default=None)",
         #     },
         #     'required_packages': [
-        #         'raven',
+        #         'sentry-sdk',
         #     ],
         # }),
     ]
