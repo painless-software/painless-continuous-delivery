@@ -36,8 +36,8 @@ Supported Technologies and Services
 .. |bitbucket| image:: https://img.shields.io/bitbucket/pipelines/painless-software/painless-continuous-delivery/master.svg
    :target: https://bitbucket.org/painless-software/painless-continuous-delivery/addon/pipelines/home
    :alt: Bitbucket Pipelines
-.. |codeship| image:: https://img.shields.io/codeship/64f85000-617f-0134-d666-52056d8a95f1/master.svg
-   :target: https://app.codeship.com/projects/174831
+.. |codeship| image:: https://img.shields.io/codeship/5543c1f0-706e-0137-4541-72c064fff696/master.svg
+   :target: https://app.codeship.com/projects/5543c1f0-706e-0137-4541-72c064fff696
    :alt: Codeship
 .. |gitlab-ci| image:: https://gitlab.com/painless-software/painless-continuous-delivery/badges/master/build.svg
    :target: https://gitlab.com/painless-software/painless-continuous-delivery/pipelines
