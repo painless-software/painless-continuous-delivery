@@ -47,6 +47,7 @@
     "monitoring": [
         "(none)",
         "Datadog",
+        "NewRelic",
         "Sentry"
     ],
     "_copy_without_render": [
