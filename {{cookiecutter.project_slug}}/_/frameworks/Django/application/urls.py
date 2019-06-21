@@ -22,7 +22,7 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    import debug_toolbar
+    import debug_toolbar  # pylint: disable=import-error
 
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
