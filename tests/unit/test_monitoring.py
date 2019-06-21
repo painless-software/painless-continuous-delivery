@@ -27,6 +27,18 @@ class TestMonitoring:
                 'django-datadog',
             ],
         }),
+        ('NewRelic(django)', {
+            'project_slug': 'django-project',
+            'framework': 'Django',
+            'monitoring': 'NewRelic',
+            'required_settings': {
+                'NEWRELIC_LICENSE_KEY':
+                "env('NEWRELIC_LICENSE_KEY', default=None)",
+            },
+            'required_packages': [
+                'newrelic',
+            ],
+        }),
         ('Sentry(django)', {
             'project_slug': 'django-project',
             'framework': 'Django',

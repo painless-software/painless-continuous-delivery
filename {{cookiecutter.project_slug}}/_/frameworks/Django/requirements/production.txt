@@ -17,6 +17,8 @@ mysql-connector==2.2.9
 {% endif -%}
 {% if cookiecutter.monitoring == 'Datadog' -%}
 django-datadog==1.0.1
+{% elif cookiecutter.monitoring == 'NewRelic' -%}
+newrelic==4.20.0.120
 {% elif cookiecutter.monitoring == 'Sentry' -%}
 sentry-sdk==0.9.1
 certifi==2019.6.16        # via sentry-sdk

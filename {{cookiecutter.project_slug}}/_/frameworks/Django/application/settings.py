@@ -156,4 +156,12 @@ if DEBUG:
 DATADOG_API_KEY = env('DATADOG_API_KEY', default=None)
 DATADOG_APP_KEY = env('DATADOG_APP_KEY', default=None)
 DATADOG_APP_NAME = env('DATADOG_APP_NAME', default=None)
+{%- elif cookiecutter.monitoring == 'NewRelic' %}
+
+NEWRELIC_LICENSE_KEY = env('NEWRELIC_LICENSE_KEY', default=None)
+
+if NEWRELIC_LICENSE_KEY:
+    import newrelic.agent
+
+    newrelic.agent.initialize(join(BASE_DIR, 'newrelic.ini'))
 {%- endif %}
