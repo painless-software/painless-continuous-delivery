@@ -2,13 +2,20 @@ Change Log
 ==========
 
 All notable changes to this project are documented in this file.
-This project adheres to `Semantic Versioning <http://semver.org/>`__.
+This project adheres to `Semantic Versioning <https://semver.org>`__.
 
-0.4.0 (2019-MM-DD)
+0.4.0 (2019-06-21)
 ------------------
 
-- Generate Kubernetes/OpenShift deployment configuration
+- Prepare New Relic integration for Django
+- Update Sentry integration for Django
+- Add Django debug toolbar setup
 - Remove Vexor (discontinued CI service)
+- Add Python security scanner (Bandit) and PyClean
+- Generate deployment configuration for APPUiO (OpenShift)
+- Add running Python doctests
+- Run parallel build jobs on Bitbucket Pipelines and Codeship
+- Use stages on Travis CI
 
 0.3.0 (2017-07-24)
 ------------------
