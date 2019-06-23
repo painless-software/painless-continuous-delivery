@@ -48,19 +48,19 @@ Initial Setup (APPUiO + GitLab)
         $ oc -n {{ cookiecutter.project_slug }}-prod policy add-role-to-user edit -z gitlab-ci
         $ oc -n {{ cookiecutter.project_slug }}-prod sa get-token gitlab-ci
 
-   Grant the service account permissions on dev and int projects:
-
-   .. code-block:: console
-
-        $ oc -n {{ cookiecutter.project_slug }}-int policy add-role-to-user edit system:serviceaccount:{{ cookiecutter.project_slug }}-prod:gitlab-ci
-        $ oc -n {{ cookiecutter.project_slug }}-dev policy add-role-to-user edit system:serviceaccount:{{ cookiecutter.project_slug }}-prod:gitlab-ci
-
 #. Configure the Kubernetes integration in your GitLab project adding
    the ``token`` value from the ``gitlab-ci-token`` secret to:
 
    -  Operations > Kubernetes > "APPUiO" > Kubernetes cluster details > Service Token
 
    (*Note:* Make sure "GitLab-managed cluster" is unchecked in the cluster details.)
+
+#. Grant the service account permissions on dev and int projects:
+
+   .. code-block:: console
+
+        $ oc -n {{ cookiecutter.project_slug }}-int policy add-role-to-user edit system:serviceaccount:{{ cookiecutter.project_slug }}-prod:gitlab-ci
+        $ oc -n {{ cookiecutter.project_slug }}-dev policy add-role-to-user edit system:serviceaccount:{{ cookiecutter.project_slug }}-prod:gitlab-ci
 
 {% endif -%}
 Working with Docker

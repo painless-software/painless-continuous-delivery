@@ -4,7 +4,7 @@ Change Log
 All notable changes to this project are documented in this file.
 This project adheres to `Semantic Versioning <https://semver.org>`__.
 
-0.5.0 (2019-xx-xx)
+0.5.0 (unreleased)
 ------------------
 
 - Use Kustomize for deployments (instead of OpenShift templates)
