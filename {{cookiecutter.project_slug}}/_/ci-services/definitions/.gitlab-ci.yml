@@ -18,10 +18,17 @@ stages:
 .check:
   stage: check
   image: docker.io/painless/tox
+  only:
+  - merge_requests
+  - master
 
 .test:
   stage: test
   image: docker.io/painless/tox
+  only:
+  - merge_requests
+  - master
+
 
 .build:
   stage: build
