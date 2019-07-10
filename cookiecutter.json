@@ -42,8 +42,8 @@
         "Postgres",
         "MySQL/MariaDB"
     ],
-    "checks": "flake8",
-    "tests": "py36,py37",
+    "checks": "bandit,flake8,pylint,safety",
+    "tests": "py37",
     "monitoring": [
         "(none)",
         "Datadog",
