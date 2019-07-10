@@ -5,7 +5,6 @@ development:
     name: development
     url: https://console.appuio.ch/console/project/{{ cookiecutter.project_slug }}-dev/overview
   variables:
-    ENVIRONMENT: development
     SOURCE: {{ cookiecutter.project_slug }}-dev
     TARGET: {{ cookiecutter.project_slug }}-dev
   only:
@@ -17,7 +16,6 @@ integration:
     name: integration
     url: https://console.appuio.ch/console/project/{{ cookiecutter.project_slug }}-int/overview
   variables:
-    ENVIRONMENT: integration
     SOURCE: {{ cookiecutter.project_slug }}-dev
     TARGET: {{ cookiecutter.project_slug }}-int
   only:
@@ -29,7 +27,6 @@ production:
     name: production
     url: https://console.appuio.ch/console/project/{{ cookiecutter.project_slug }}-prod/overview
   variables:
-    ENVIRONMENT: production
     SOURCE: {{ cookiecutter.project_slug }}-int
     TARGET: {{ cookiecutter.project_slug }}-prod
   only:

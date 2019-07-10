@@ -1,9 +1,10 @@
 
 application:
   extends: .build
+  environment:
+    name: development
   variables:
-    COMPONENT: application
-    REGISTRY_PROJECT: {{ cookiecutter.project_slug }}-dev
+    TARGET: {{ cookiecutter.project_slug }}-dev
   only:
   - merge_requests
   - master
