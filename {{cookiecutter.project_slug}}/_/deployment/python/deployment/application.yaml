@@ -74,7 +74,7 @@ objects:
           component: ${COMPONENT}
       spec:
         initContainers:
-        - name: check-db-ready
+        - name: wait-for-database
           image: ${REGISTRY}/${APP_NAMESPACE}/${APP_NAME}:${APP_TAG}
           command: ['python', 'manage.py', 'wait_for_database']
           env:
