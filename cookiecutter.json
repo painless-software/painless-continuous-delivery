@@ -43,7 +43,7 @@
         "MySQL/MariaDB"
     ],
     "checks": "bandit,flake8,pylint,safety",
-    "tests": "py37",
+    "tests": "py37,behave",
     "monitoring": [
         "(none)",
         "Datadog",
