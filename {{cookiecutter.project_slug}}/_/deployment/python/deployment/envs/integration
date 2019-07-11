@@ -1,1 +1,1 @@
-APP_NAMESPACE={{ cookiecutter.project_slug }}-int
+APP_NAMESPACE={{ cookiecutter.project_slug }}-integration

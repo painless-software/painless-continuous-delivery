@@ -4,7 +4,7 @@ application:
   environment:
     name: development
   variables:
-    TARGET: {{ cookiecutter.project_slug }}-dev
+    TARGET: {{ cookiecutter.project_slug }}-development
   only:
   - merge_requests
   - master

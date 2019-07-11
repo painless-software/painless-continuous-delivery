@@ -1,1 +1,1 @@
-APP_NAMESPACE={{ cookiecutter.project_slug }}-dev
+APP_NAMESPACE={{ cookiecutter.project_slug }}-development

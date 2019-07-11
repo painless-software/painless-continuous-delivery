@@ -26,8 +26,8 @@ you're developing.  Log output will be displayed in the terminal, as usual.
 Initial Setup (APPUiO + GitLab)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Create a ``prod``, ``int`` and ``dev`` project at the `VSHN Control
-   Panel <https://control.vshn.net/openshift/projects/appuio%20public>`_.
+#. Create a ``production``, ``integration`` and ``development`` project at the
+   `VSHN Control Panel <https://control.vshn.net/openshift/projects/appuio%20public>`_.
    For quota sizing consider roughly the sum of ``limits`` of all
    resources (must be strictly greater than the sum of ``requests``):
 
@@ -44,9 +44,9 @@ Initial Setup (APPUiO + GitLab)
 
    .. code-block:: console
 
-        $ oc -n {{ cookiecutter.project_slug }}-prod create sa gitlab-ci
-        $ oc -n {{ cookiecutter.project_slug }}-prod policy add-role-to-user edit -z gitlab-ci
-        $ oc -n {{ cookiecutter.project_slug }}-prod sa get-token gitlab-ci
+        $ oc -n {{ cookiecutter.project_slug }}-production create sa gitlab-ci
+        $ oc -n {{ cookiecutter.project_slug }}-production policy add-role-to-user edit -z gitlab-ci
+        $ oc -n {{ cookiecutter.project_slug }}-production sa get-token gitlab-ci
 
 #. Configure the Kubernetes integration in your GitLab project adding
    the ``token`` value from the ``gitlab-ci-token`` secret to:
@@ -55,12 +55,14 @@ Initial Setup (APPUiO + GitLab)
 
    (*Note:* Make sure "GitLab-managed cluster" is unchecked in the cluster details.)
 
-#. Grant the service account permissions on dev and int projects:
+#. Grant the service account permissions on development and integration projects:
 
    .. code-block:: console
 
-        $ oc -n {{ cookiecutter.project_slug }}-int policy add-role-to-user edit system:serviceaccount:{{ cookiecutter.project_slug }}-prod:gitlab-ci
-        $ oc -n {{ cookiecutter.project_slug }}-dev policy add-role-to-user edit system:serviceaccount:{{ cookiecutter.project_slug }}-prod:gitlab-ci
+        $ oc -n {{ cookiecutter.project_slug }}-integration policy add-role-to-user \
+          edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:gitlab-ci
+        $ oc -n {{ cookiecutter.project_slug }}-development policy add-role-to-user \
+          edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:gitlab-ci
 
 {% endif -%}
 Working with Docker
@@ -123,3 +125,20 @@ Alternatively, you can run those commands the classic way, i.e.
 .. _direnv: https://direnv.net/
 .. _.envrc: .envrc
 {% endif -%}
+CI/CD Process
+^^^^^^^^^^^^^
+
+We have 3 environments corresponding to 3 namespaces on our container
+platform: *development*, *integration*, *production*
+
+- Any merge request triggers a deployment (of the feature branch) on
+  *development*.
+- Any change on the main branch, e.g. when a merge request is merged into
+  ``master``, triggers a deployment on *integration*.
+- To trigger a deployment on *production* push a Git tag, e.g.
+
+  .. code-block:: console
+
+    $ git checkout master
+    $ git tag 1.0.0
+    $ git push --tags
