@@ -6,7 +6,7 @@
 #
 django-environ==0.4.5
 django-probes==1.2.0
-django==2.2.2
+django==2.2.3
 pytz==2019.1              # via django
 sqlparse==0.3.0           # via django
 uwsgi==2.0.18
@@ -20,7 +20,7 @@ django-datadog==1.0.1
 {% elif cookiecutter.monitoring == 'NewRelic' -%}
 newrelic==4.20.0.120
 {% elif cookiecutter.monitoring == 'Sentry' -%}
-sentry-sdk==0.9.1
+sentry-sdk==0.10.1
 certifi==2019.6.16        # via sentry-sdk
 urllib3==1.25.3           # via sentry-sdk
 {% endif -%}
