@@ -26,7 +26,7 @@ you're developing.  Log output will be displayed in the terminal, as usual.
 Initial Setup (APPUiO + GitLab)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Create a ``production``, ``integration`` and ``development`` project at the
+#. Create a *production*, *integration* and *development* project at the
    `VSHN Control Panel <https://control.vshn.net/openshift/projects/appuio%20public>`_.
    For quota sizing consider roughly the sum of ``limits`` of all
    resources (must be strictly greater than the sum of ``requests``):
@@ -55,7 +55,8 @@ Initial Setup (APPUiO + GitLab)
 
    (*Note:* Make sure "GitLab-managed cluster" is unchecked in the cluster details.)
 
-#. Grant the service account permissions on development and integration projects:
+#. Grant the service account permissions on the *development* and *integration*
+   projects:
 
    .. code-block:: console
 
