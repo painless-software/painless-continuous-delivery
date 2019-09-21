@@ -53,7 +53,7 @@ Supported Technologies and Services
 Usage
 =====
 
-Install `cookiecutter <https://github.com/audreyr/cookiecutter>`_:
+Install `cookiecutter <https://github.com/cookiecutter/cookiecutter>`_:
 
 .. code-block:: bash
 
