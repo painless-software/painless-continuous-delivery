@@ -50,6 +50,11 @@
         "NewRelic",
         "Sentry"
     ],
+    "push": [
+        "manual",
+        "automatic",
+        "force"
+    ],
     "_copy_without_render": [
         "_/frameworks/Flask",
         "_/frameworks/Symfony",
