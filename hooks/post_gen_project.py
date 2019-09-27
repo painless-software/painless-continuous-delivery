@@ -117,6 +117,17 @@ def init_version_control():
     LOG.info('Then push the code to it: $ git push -u origin --all')
 
 
+def deploy_field_test():
+    """
+    Push the generated project to the target repo. Trigger this action
+    using the ``push`` parameter, e.g. ``cookiecutter ... push=force``.
+    """
+    if '{{ cookiecutter.push }}' == 'automatic':
+        shell('git push origin master')
+    elif '{{ cookiecutter.push }}' == 'force':
+        shell('git push origin master --force')
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(message)s')
     LOG = logging.getLogger('post_gen_project')
@@ -126,3 +137,4 @@ if __name__ == "__main__":
     set_up_deployment()
     remove_temporary_files()
     init_version_control()
+    deploy_field_test()

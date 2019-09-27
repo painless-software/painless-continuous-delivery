@@ -3,10 +3,20 @@
 
 image: painless/tox:multi
 
+.cookiecutter:
+  stage: deploy
+  before_script:
+  - git config --global user.name "Cookiecutter"
+  - git config --global user.email "cookiecutter@painless.software"
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p -m 700 ~/.ssh && echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+  only:
+  - master
+
 stages:
 - check
 - test
-- build
 - deploy
 
 flake8:
@@ -42,23 +52,7 @@ behave:
   stage: test
   script: tox -e behave
 
-build:
-  stage: build
+example-django:
+  extends: .cookiecutter
   script:
-  - echo 'This build would build a Docker image and push it to the registry.'
-  only:
-  - feature/*
-
-staging:
-  stage: deploy
-  script:
-  - echo 'This build would deploy to Staging now.'
-  only:
-  - master
-
-production:
-  stage: deploy
-  script:
-  - echo 'This build would deploy to Production now.'
-  only:
-  - tags
+  - tests/field/example-django.sh
