@@ -8,7 +8,13 @@
 #
 set -e
 
-echo '1) Create demo project from scratch and push it ...'
+log() {
+    NOCOLOR='\033[0m'
+    BLUE='\033[1;34m'
+    echo -e "$1) ${BLUE}${@:2}${NOCOLOR} ..."
+}
+
+log 1 'Create demo project from scratch and push it'
 tox -e cookiecutter -- \
     project_description="Hello world with Django" \
     project_name="Example Django" \
@@ -22,7 +28,15 @@ tox -e cookiecutter -- \
 
 cd /tmp/example-django
 
-echo '2)a) Prepare feature branch ...'
+log 2.a 'Delete existing merge requests'
+curl --silent --header "Authorization: Bearer $GITLAB_API_TOKEN" --request GET \
+    https://gitlab.com/api/v4/projects/appuio%2Fexample-django/merge_requests?state=opened \
+    | sed -e 's/^.*"iid"://' -e 's/,".*$//' \
+    | xargs -I IID \
+curl --silent --header "Authorization: Bearer $GITLAB_API_TOKEN" --request DELETE \
+    https://gitlab.com/api/v4/projects/appuio%2Fexample-django/merge_requests/IID
+
+log 2.b 'Prepare feature branch'
 git checkout -b feature/welcome-page
 
 git mv -v tests/acceptance/features/{login-logout,welcome-page}.feature
@@ -79,20 +93,22 @@ git add -v .
 git commit -m 'Add friendly welcome page'
 git push -u origin feature/welcome-page --force
 
-echo '2)b) Create merge request ...'
-curl --request POST --header "Authorization: Bearer $GITLAB_API_TOKEN" \
+log 2.c 'Create merge request'
+curl --silent --header "Authorization: Bearer $GITLAB_API_TOKEN" --request POST \
     https://gitlab.com/api/v4/projects/appuio%2Fexample-django/merge_requests \
     --form "source_branch=feature/welcome-page" \
     --form "target_branch=master" \
-    --form "title=Add friendly welcome page"
+    --form "title=Add friendly welcome page" \
+    --form "description=A minimal Django application that shows some text. Tests are included." \
+    > /dev/null
 
-echo '3) Allow pipeline to build and push an image ...'
-for minutes in $(seq 11 -1 1); do
+log 3 'Allow pipeline to build and push an image'
+for minutes in $(seq 13 -1 1); do
     echo "- Waiting... ($minutes' remaining)"
     sleep 1m
 done
 
-echo '4) Trigger production relase ...'
+log 4 'Trigger production relase'
 git checkout master
 git tag 1.0.0
 git push --tags --force
