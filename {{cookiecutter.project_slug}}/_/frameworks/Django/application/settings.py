@@ -151,6 +151,9 @@ if DEBUG:
     }
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
     INSTALLED_APPS += ['debug_toolbar']
+
+if SECRET_KEY == 'testing':
+    INSTALLED_APPS += ['behave_django']
 {%- if cookiecutter.monitoring == 'Datadog' %}
 
 DATADOG_API_KEY = env('DATADOG_API_KEY', default=None)
