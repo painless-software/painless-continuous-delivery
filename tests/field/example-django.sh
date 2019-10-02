@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # NOTE: For the very first deployment please follow
 # the steps in the README for the target platform setup.
@@ -25,19 +25,55 @@ cd /tmp/example-django
 echo '2)a) Prepare feature branch ...'
 git checkout -b feature/welcome-page
 
+git mv -v tests/acceptance/features/{login-logout,welcome-page}.feature
+cat > tests/acceptance/features/welcome-page.feature << EOF
+Feature: Welcome page
+  As a visitor of the website
+  I want to be greeted nicely
+  So that I know I'm in the right place
+
+  Scenario: Visitor is greeted by simple text
+    Given I am on the welcome page
+    When I look at the page
+    Then I can see the text "Hello APPUiO!"
+EOF
+sed -E \
+    -e "s|pass|context.response = context.test.client.get('/')\n    assert context.response.status_code == 200|" \
+    -i tests/acceptance/steps/given.py
+sed -E \
+    -e "s/^@when\(.*\)/@when(u'I look at the page')/" \
+    -e "s|assert True, .*|context.body = str(context.response.content)|" \
+    -i tests/acceptance/steps/when.py
+sed -E \
+    -e "s/^@then\(.*\)/@then(u'I can see the text \"{text}\"')/" \
+    -e "s/(step_impl.context)/\1, text/" \
+    -e "s/assert True, .*$/assert text in context.body, \\\\\n        \"No '%s' in '%s'.\" % (text, context.body)/" \
+    -i tests/acceptance/steps/then.py
+
+git add -v .
+git commit -m 'Add tests for welcome page'
+
 mkdir hello
 touch hello/__init__.py
 cat > hello/views.py << EOF
+"""
+Landing page app
+"""
 from django.http import HttpResponse
 
 
 def index(request):
+    """Show a simple welcome page"""
     return HttpResponse('Hello APPUiO!')
 EOF
 sed -E \
     -e "s/^(from django.urls import include, path)$/\1\n\nfrom hello import views/" \
     -e "s/^(    path.'admin.', admin.site.urls.,)$/\1\n    path('', views.index, name='hello')/" \
     -i application/urls.py
+
+sed -E \
+    -e "s/^(commands = pylint --rcfile tox.ini .posargs:application)/\1 hello/" \
+    -i tox.ini
 
 git add -v .
 git commit -m 'Add friendly welcome page'
