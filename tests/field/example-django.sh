@@ -14,7 +14,24 @@ log() {
     echo -e "$1) ${BLUE}${@:2}${NOCOLOR} ..."
 }
 
-log 1 'Create demo project from scratch and push it'
+gitlab() {
+    COMMAND="$1"
+    RESOURCE="$2"
+    PROJECT_NAME="appuio%2Fexample-django"
+    PROJECT_URL="https://gitlab.com/api/v4/projects/${PROJECT_NAME}"
+    set -e
+    curl --silent \
+        --header "Authorization: Bearer $GITLAB_API_TOKEN" \
+        --request $COMMAND \
+        "${PROJECT_URL}/${RESOURCE}" "${@:3}"
+}
+
+log 1 'Delete existing merge requests'
+for IID in $(gitlab GET merge_requests?state=opened | sed -e 's/^.*"iid"://' -e 's/,".*$//'); do
+    gitlab DELETE merge_requests/$IID
+done
+
+log 2 'Create demo project from scratch and push it'
 tox -e cookiecutter -- \
     project_description="Hello world with Django" \
     project_name="Example Django" \
@@ -28,15 +45,7 @@ tox -e cookiecutter -- \
 
 cd /tmp/example-django
 
-log 2.a 'Delete existing merge requests'
-curl --silent --header "Authorization: Bearer $GITLAB_API_TOKEN" --request GET \
-    https://gitlab.com/api/v4/projects/appuio%2Fexample-django/merge_requests?state=opened \
-    | sed -e 's/^.*"iid"://' -e 's/,".*$//' \
-    | xargs -I IID \
-curl --silent --header "Authorization: Bearer $GITLAB_API_TOKEN" --request DELETE \
-    https://gitlab.com/api/v4/projects/appuio%2Fexample-django/merge_requests/IID
-
-log 2.b 'Prepare feature branch'
+log 3 'Prepare feature branch'
 git checkout -b feature/welcome-page
 
 git mv -v tests/acceptance/features/{login-logout,welcome-page}.feature
@@ -93,22 +102,21 @@ git add -v .
 git commit -m 'Add friendly welcome page'
 git push -u origin feature/welcome-page --force
 
-log 2.c 'Create merge request'
-curl --silent --header "Authorization: Bearer $GITLAB_API_TOKEN" --request POST \
-    https://gitlab.com/api/v4/projects/appuio%2Fexample-django/merge_requests \
+log 4 'Create merge request'
+gitlab POST merge_requests \
     --form "source_branch=feature/welcome-page" \
     --form "target_branch=master" \
     --form "title=Add friendly welcome page" \
     --form "description=A minimal Django application that shows some text. Tests are included." \
     > /dev/null
 
-log 3 'Allow pipeline to build and push an image'
+log 5 'Allow pipeline to build and push an image'
 for minutes in $(seq 13 -1 1); do
     echo "- Waiting... ($minutes' remaining)"
     sleep 1m
 done
 
-log 4 'Trigger production relase'
+log 6 'Trigger production relase'
 git checkout master
 git tag 1.0.0
 git push --tags --force
