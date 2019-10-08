@@ -50,10 +50,17 @@ Supported Technologies and Services
    :target: https://travis-ci.org/painless-software/painless-continuous-delivery
    :alt: Travis CI
 
+Demos
+=====
+
+Sample projects generated automatically on a daily basis: (`field tests`_)
+
+- `APPUiO, GitLab CI, Django`_
+
 Usage
 =====
 
-Install `cookiecutter <https://github.com/cookiecutter/cookiecutter>`_:
+Install `cookiecutter`_:
 
 .. code-block:: bash
 
@@ -89,6 +96,9 @@ This project is brought to you by `Painless Software`_, a best-practice
 consultancy in software development.  Less pain, more fun.
 
 
+.. _field tests: tests/field/
+.. _APPUiO, GitLab CI, Django: https://gitlab.com/appuio/example-django
+.. _cookiecutter: https://github.com/cookiecutter/cookiecutter
 .. _contributing guide: CONTRIBUTING.rst
 .. _Wiki: https://github.com/painless-software/painless-continuous-delivery/wiki
 .. _Painless Software: https://painless.software/
