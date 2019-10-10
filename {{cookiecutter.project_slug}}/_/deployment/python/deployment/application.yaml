@@ -144,3 +144,11 @@ objects:
               cpu: 200m
               memory: 64Mi
         restartPolicy: Always
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchLabels:
+                    app: ${APP_NAME}
+                    component: ${COMPONENT}
+                topologyKey: kubernetes.io/hostname
