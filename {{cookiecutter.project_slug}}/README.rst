@@ -9,16 +9,20 @@ Getting Started
 To start developing on this project simply bring up the Docker setup:
 
 .. code-block:: console
-{% if cookiecutter.framework == 'Django' %}
-    docker-compose up --build -d
-    docker-compose exec application python manage.py migrate
-    docker-compose logs -f
-{% elif cookiecutter.framework in ['Symfony', 'TYPO3'] %}
+{% if cookiecutter.framework in ['Symfony', 'TYPO3'] %}
     composer install
-    docker-compose up --build
+    docker-compose build
+    docker-compose up
 {% else %}
-    docker-compose up --build
+    docker-compose build
+    docker-compose up
 {% endif %}
+
+{%- if cookiecutter.framework == 'Django' %}
+Migrations will run automatically at startup (via the container entrypoint).
+If they fail the very first time simply restart the application.
+{%- endif %}
+
 Open your web browser at http://localhost:8000 to see the application
 you're developing.  Log output will be displayed in the terminal, as usual.
 
