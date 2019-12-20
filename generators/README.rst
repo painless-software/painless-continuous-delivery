@@ -22,7 +22,7 @@ Philosophy
 
     .. code-block:: bash
 
-        $ pip install tox
+        pip install tox
 
     Technologies other than Python need software installed systemwide, outside
     of virtual environments created by Tox.
@@ -33,25 +33,25 @@ General Usage
 .. code-block:: bash
 
     # list all available skeleton targets (= Tox targets)
-    $ tox -l
+    tox -l
     # list all skeleton targets for Django
-    $ tox -l -c tox-django.ini
+    tox -l -c tox-django.ini
 
 .. code-block:: bash
 
     # generate all skeletons in the ./.tox/<target>/_/ folder
-    $ tox
+    tox
     # generate only skeletons for Django
-    $ tox -e django
+    tox -e django
     # generate only the skeleton for Django 1.11
-    $ tox -e django111 -c tox-django.ini
+    tox -e django111 -c tox-django.ini
 
 .. code-block:: bash
 
     # list all generated, sanitized skeletons
-    $ ls -l .tox/*/_/
+    ls -l .tox/*/_/
 
 .. code-block:: bash
 
     # remove skeletons, build files and folders
-    $ tox -e clean
+    tox -e clean

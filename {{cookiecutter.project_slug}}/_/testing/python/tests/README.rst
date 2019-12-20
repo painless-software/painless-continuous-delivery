@@ -29,33 +29,33 @@ Use the ``tox`` command in the terminal to run your tests locally:
 .. code-block:: bash
 
     # list all available test environments (= Tox targets)
-    $ tox -l
+    tox -l
 
 .. code-block:: bash
 
     # run all tests against all environments
-    $ tox
+    tox
 
 .. code-block:: bash
 
     # run a specific set of tests (one or several)
-    $ tox -e py35
-    $ tox -e flake8,py35
+    tox -e py35
+    tox -e flake8,py35
 
 .. code-block:: bash
 
     # remove all environments, build files and folders
-    $ tox -e clean
+    tox -e clean
 
 If you need to use command line arguments for a command separate them with a
 double-dash, like so::
 
-     $ tox <tox args> -- <command args>
+     tox <tox args> -- <command args>
 
 Examples:
 
 .. code-block:: bash
 
-    $ tox -e behave -- --format=pretty
-    $ tox -e behave -- --tags=-docker
-    $ tox -e flake8 -- --help
+    tox -e behave -- --format=pretty
+    tox -e behave -- --tags=-docker
+    tox -e flake8 -- --help
