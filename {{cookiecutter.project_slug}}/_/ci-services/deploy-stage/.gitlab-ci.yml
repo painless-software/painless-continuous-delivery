@@ -3,10 +3,8 @@ development:
   extends: .deploy
   environment:
     name: development
-    url: https://console.appuio.ch/console/project/{{ cookiecutter.project_slug }}-development/overview
   variables:
     SOURCE: {{ cookiecutter.project_slug }}-development
-    TARGET: {{ cookiecutter.project_slug }}-development
   only:
   - merge_requests
 
@@ -14,10 +12,8 @@ integration:
   extends: .deploy
   environment:
     name: integration
-    url: https://console.appuio.ch/console/project/{{ cookiecutter.project_slug }}-integration/overview
   variables:
     SOURCE: {{ cookiecutter.project_slug }}-development
-    TARGET: {{ cookiecutter.project_slug }}-integration
   only:
   - master
 
@@ -25,9 +21,7 @@ production:
   extends: .deploy
   environment:
     name: production
-    url: https://console.appuio.ch/console/project/{{ cookiecutter.project_slug }}-production/overview
   variables:
     SOURCE: {{ cookiecutter.project_slug }}-integration
-    TARGET: {{ cookiecutter.project_slug }}-production
   only:
   - tags

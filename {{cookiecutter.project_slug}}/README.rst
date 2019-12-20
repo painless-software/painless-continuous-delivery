@@ -30,7 +30,11 @@ you're developing.  Log output will be displayed in the terminal, as usual.
 Initial Setup (APPUiO + GitLab)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+{% if cookiecutter.environment_strategy == 'dedicated' -%}
 #. Create a *production*, *integration* and *development* project at the
+{% else -%}
+#. Create a project at the
+{% endif -%}
    `VSHN Control Panel <https://control.vshn.net/openshift/projects/appuio%20public>`_.
    For quota sizing consider roughly the sum of ``limits`` of all
    resources (must be strictly greater than the sum of ``requests``):
@@ -48,9 +52,15 @@ Initial Setup (APPUiO + GitLab)
 
    .. code-block:: console
 
+{% if cookiecutter.environment_strategy == 'dedicated' -%}
         oc -n {{ cookiecutter.project_slug }}-production create sa gitlab-ci
         oc -n {{ cookiecutter.project_slug }}-production policy add-role-to-user edit -z gitlab-ci
         oc -n {{ cookiecutter.project_slug }}-production sa get-token gitlab-ci
+{% else -%}
+        oc -n {{ cookiecutter.project_slug }} create sa gitlab-ci
+        oc -n {{ cookiecutter.project_slug }} policy add-role-to-user edit -z gitlab-ci
+        oc -n {{ cookiecutter.project_slug }} sa get-token gitlab-ci
+{% endif -%}
 
 #. Configure the Kubernetes integration in your GitLab project adding
    the ``token`` value from the ``gitlab-ci-token`` secret to:
@@ -59,6 +69,7 @@ Initial Setup (APPUiO + GitLab)
 
    (*Note:* Make sure "GitLab-managed cluster" is unchecked in the cluster details.)
 
+{% if cookiecutter.environment_strategy == 'dedicated' -%}
 #. Grant the service account permissions on the *development* and *integration*
    projects:
 
@@ -69,6 +80,7 @@ Initial Setup (APPUiO + GitLab)
         oc -n {{ cookiecutter.project_slug }}-development policy add-role-to-user \
           edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:gitlab-ci
 
+{% endif -%}
 {% endif -%}
 Working with Docker
 ^^^^^^^^^^^^^^^^^^^
@@ -133,8 +145,13 @@ Alternatively, you can run those commands the classic way, i.e.
 CI/CD Process
 ^^^^^^^^^^^^^
 
+{% if cookiecutter.environment_strategy == 'dedicated' -%}
 We have 3 environments corresponding to 3 namespaces on our container
 platform: *development*, *integration*, *production*
+{% else -%}
+We have 3 environments corresponding to 3 deployments in one namespace on our container
+platform: *development*, *integration*, *production*
+{% endif -%}
 
 - Any merge request triggers a deployment (of the feature branch) on
   *development*.
