@@ -114,7 +114,7 @@ def init_version_control():
     shell('git remote add origin {remote_uri}'.format(**vcs_info))
     LOG.info("You can now create a project '%(project)s' on %(platform_name)s."
              " %(web_url)s", vcs_info)
-    LOG.info('Then push the code to it: $ git push -u origin --all')
+    LOG.info('Then push the code to it: git push -u origin --all')
 
 
 def deploy_field_test():

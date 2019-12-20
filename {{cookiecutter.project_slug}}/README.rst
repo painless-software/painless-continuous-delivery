@@ -37,8 +37,8 @@ Initial Setup (APPUiO + GitLab)
 
    .. code-block:: console
 
-        $ grep -A2 limits deployment/*yaml
-        $ grep -A2 requests deployment/*yaml
+        grep -A2 limits deployment/*yaml
+        grep -A2 requests deployment/*yaml
 
 #. Create a service account as described in the `APPUiO docs
    <https://appuio-community-documentation.readthedocs.io/en/latest/services/webserver/50_pushing_to_appuio.html>`_:
@@ -48,9 +48,9 @@ Initial Setup (APPUiO + GitLab)
 
    .. code-block:: console
 
-        $ oc -n {{ cookiecutter.project_slug }}-production create sa gitlab-ci
-        $ oc -n {{ cookiecutter.project_slug }}-production policy add-role-to-user edit -z gitlab-ci
-        $ oc -n {{ cookiecutter.project_slug }}-production sa get-token gitlab-ci
+        oc -n {{ cookiecutter.project_slug }}-production create sa gitlab-ci
+        oc -n {{ cookiecutter.project_slug }}-production policy add-role-to-user edit -z gitlab-ci
+        oc -n {{ cookiecutter.project_slug }}-production sa get-token gitlab-ci
 
 #. Configure the Kubernetes integration in your GitLab project adding
    the ``token`` value from the ``gitlab-ci-token`` secret to:
@@ -64,9 +64,9 @@ Initial Setup (APPUiO + GitLab)
 
    .. code-block:: console
 
-        $ oc -n {{ cookiecutter.project_slug }}-integration policy add-role-to-user \
+        oc -n {{ cookiecutter.project_slug }}-integration policy add-role-to-user \
           edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:gitlab-ci
-        $ oc -n {{ cookiecutter.project_slug }}-development policy add-role-to-user \
+        oc -n {{ cookiecutter.project_slug }}-development policy add-role-to-user \
           edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:gitlab-ci
 
 {% endif -%}
@@ -144,6 +144,6 @@ platform: *development*, *integration*, *production*
 
   .. code-block:: console
 
-    $ git checkout master
-    $ git tag 1.0.0
-    $ git push --tags
+    git checkout master
+    git tag 1.0.0
+    git push --tags

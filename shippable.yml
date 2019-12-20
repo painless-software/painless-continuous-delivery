@@ -6,7 +6,7 @@ python:
 - 3.7
 
 env:
-  matrix:  # $ tox -l | xargs -I ARG echo '    - TOXENV=ARG'
+  matrix:  # tox -l | xargs -I ARG echo '    - TOXENV=ARG'
   - TOXENV=flake8
   - TOXENV=pylint
   - TOXENV=bandit
