@@ -19,6 +19,7 @@ class TestCISetup:
             'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
+            'environment_strategy': 'shared',
         }),
         ('codeship', {
             'project_slug': 'myproject',
@@ -29,6 +30,7 @@ class TestCISetup:
             'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
+            'environment_strategy': 'shared',
         }),
         ('gitlab', {
             'project_slug': 'myproject',
@@ -39,6 +41,7 @@ class TestCISetup:
             'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
+            'environment_strategy': 'shared',
         }),
         ('shippable', {
             'project_slug': 'myproject',
@@ -49,6 +52,7 @@ class TestCISetup:
             'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
+            'environment_strategy': 'shared',
         }),
         ('travis', {
             'project_slug': 'myproject',
@@ -59,13 +63,14 @@ class TestCISetup:
             'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
+            'environment_strategy': 'shared',
         }),
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
     def test_ci_setup(self, cookies, project_slug, vcs_account, vcs_platform,
                       ci_service, ci_testcommand, checks, tests,
-                      container_platform):
+                      container_platform, environment_strategy):
         """
         Generate a CI setup with specific settings and verify it is complete.
         """
@@ -77,6 +82,7 @@ class TestCISetup:
             'checks': checks,
             'tests': tests,
             'container_platform': container_platform,
+            'environment_strategy': environment_strategy,
         })
 
         assert result.exit_code == 0

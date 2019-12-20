@@ -43,6 +43,8 @@ stages:
 
 .deploy:
   stage: deploy
+  environment:
+    url: "${KUBE_URL}/console/project/{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}/overview"
   image: docker.io/appuio/oc:v3.9
   script:
   - oc project ${TARGET}
