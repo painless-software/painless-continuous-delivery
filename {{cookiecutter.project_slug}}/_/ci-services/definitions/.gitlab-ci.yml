@@ -45,18 +45,22 @@ stages:
   stage: deploy
   environment:
     url: "${KUBE_URL}/console/project/{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}/overview"
-  image: docker.io/appuio/oc:v3.9
+  variables:
+    TARGET: "{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
+    APPLICATION_NAME: "application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
+    DATABASE_NAME: "database{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
+  image: docker.io/appuio/oc:v3.11
   script:
-  - oc project ${TARGET}
+  - oc tag "${SOURCE}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
+           "${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
+  - pushd deployment/kubernetes/application/base &&
+    kustomize edit set image IMAGE="${DOCKER_REGISTRY}/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
+    popd
+  - kustomize build deployment/kubernetes/application | envsubst | kubeval --strict | oc -n ${TARGET} apply -f -
+  - kustomize build deployment/kubernetes/database | envsubst | kubeval --strict | oc -n ${TARGET} apply -f -
   - oc get secret postgres ||
     oc process -f deployment/postgres-secrets.yaml |
     oc apply --overwrite -f -
   - oc get secret application ||
     oc process -f deployment/application-secrets.yaml |
-    oc apply --overwrite -f -
-  - oc tag "${SOURCE}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
-           "${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
-  - oc process --param-file=deployment/envs/${CI_ENVIRONMENT_NAME} -p APP_TAG=${CI_COMMIT_SHA} -f deployment/postgres.yaml |
-    oc apply --overwrite -f -
-  - oc process --param-file=deployment/envs/${CI_ENVIRONMENT_NAME} -p APP_TAG=${CI_COMMIT_SHA} -f deployment/application.yaml |
     oc apply --overwrite -f -

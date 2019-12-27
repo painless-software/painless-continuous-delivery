@@ -1,0 +1,15 @@
+kind: Route
+apiVersion: v1
+metadata:
+  name: "${APPLICATION_NAME}"
+  annotations:
+    kubernetes.io/tls-acme: "true"
+spec:
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  to:
+    kind: Service
+    name: "${APPLICATION_NAME}"
