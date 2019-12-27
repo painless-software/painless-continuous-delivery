@@ -1,0 +1,52 @@
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: "${DATABASE_NAME}"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  serviceName: "${DATABASE_NAME}"
+  template:
+    spec:
+      containers:
+      - name: postgresql
+        image: ${DOCKER_REGISTRY}/openshift/postgresql:9.6
+        imagePullPolicy: Always
+        ports:
+        - name: postgresql
+          containerPort: 5432
+        envFrom:
+        - secretRef:
+            name: "${DATABASE_NAME}"
+        livenessProbe:
+          tcpSocket:
+            port: postgresql
+          initialDelaySeconds: 30
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -i
+            - -c
+            - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+              'SELECT 1'
+          initialDelaySeconds: 8
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/pgsql/data
+      restartPolicy: Always
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

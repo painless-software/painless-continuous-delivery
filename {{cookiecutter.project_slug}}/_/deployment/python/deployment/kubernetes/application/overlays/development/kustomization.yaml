@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../base
+commonLabels:
+  environment: development
+patchesStrategicMerge:
+- route.yaml
+secretGenerator:
+- name: application
+  envs:
+    - secret.env
