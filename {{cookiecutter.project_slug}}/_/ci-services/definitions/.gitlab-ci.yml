@@ -41,8 +41,18 @@ stages:
                  -f "deployment/application/Dockerfile" .
   - docker push "${IMAGE}"
 
+.generate-secrets:
+  before_script:
+  - kubectl -n ${TARGET} get secret ${APPLICATION_NAME} ||
+    kubectl -n ${TARGET} create secret generic ${APPLICATION_NAME} --from-literal=DJANGO_SECRET_KEY=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c50) |
+    kubectl -n ${TARGET} apply -f -
+  - kubectl -n ${TARGET} get secret ${DATABASE_NAME} ||
+    kubectl -n ${TARGET} create secret generic ${DATABASE_NAME} --from-literal=POSTGRESQL_PASSWORD=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c16) |
+    kubectl -n ${TARGET} apply -f -
+
 .deploy:
   stage: deploy
+  extends: generate-secrets
   environment:
     url: "${KUBE_URL}/console/project/{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}/overview"
   variables:
@@ -56,11 +66,7 @@ stages:
   - pushd deployment/kubernetes/application/base &&
     kustomize edit set image IMAGE="${DOCKER_REGISTRY}/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
     popd
-  - kustomize build deployment/kubernetes/application | envsubst | kubeval --strict | oc -n ${TARGET} apply -f -
-  - kustomize build deployment/kubernetes/database | envsubst | kubeval --strict | oc -n ${TARGET} apply -f -
-  - oc get secret postgres ||
-    oc process -f deployment/postgres-secrets.yaml |
-    oc apply --overwrite -f -
-  - oc get secret application ||
-    oc process -f deployment/application-secrets.yaml |
-    oc apply --overwrite -f -
+  - kustomize build deployment/kubernetes/application/${CI_ENVIRONMENT_NAME} | envsubst | kubeval --strict --ignore-missing-schemas
+  - kustomize build deployment/kubernetes/database/${CI_ENVIRONMENT_NAME} | envsubst | kubeval --strict
+  - kustomize build deployment/kubernetes/application/${CI_ENVIRONMENT_NAME} | envsubst | kubectl -n ${TARGET} apply -f -
+  - kustomize build deployment/kubernetes/database/${CI_ENVIRONMENT_NAME} | envsubst | kubectl -n ${TARGET} apply -f -

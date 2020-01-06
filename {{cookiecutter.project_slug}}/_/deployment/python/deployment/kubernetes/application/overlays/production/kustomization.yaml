@@ -4,5 +4,3 @@ resources:
 - ../../base
 commonLabels:
   environment: production
-patchesStrategicMerge:
-- route.yaml
