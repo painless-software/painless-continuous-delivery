@@ -19,6 +19,8 @@ spec:
             name: "${APPLICATION_NAME}"
         - secretRef:
             name: "${APPLICATION_NAME}"
+        - configMapRef:
+            name: "${DATABASE_NAME}"
         - secretRef:
             name: "${DATABASE_NAME}"
       containers:

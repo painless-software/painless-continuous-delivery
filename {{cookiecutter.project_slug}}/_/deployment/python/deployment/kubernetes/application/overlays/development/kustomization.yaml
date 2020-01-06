@@ -4,9 +4,3 @@ resources:
 - ../../base
 commonLabels:
   environment: development
-patchesStrategicMerge:
-- route.yaml
-secretGenerator:
-- name: application
-  envs:
-    - secret.env
