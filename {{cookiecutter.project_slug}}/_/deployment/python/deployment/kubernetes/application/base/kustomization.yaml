@@ -1,13 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 commonLabels:
+  app: "{{ cookiecutter.project_slug }}"
   component: application
 resources:
-- ../../base
 - deployment.yaml
 - route.yaml
 - service.yaml
 configMapGenerator:
-  - name: "${APPLICATION_NAME}"
-    files:
-    - config.env
+- name: "${APPLICATION_NAME}"
+  files:
+  - config.env
