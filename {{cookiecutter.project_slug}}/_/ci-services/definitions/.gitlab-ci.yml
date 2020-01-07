@@ -44,11 +44,9 @@ stages:
 .generate-secrets:
   before_script:
   - kubectl -n ${TARGET} get secret ${APPLICATION_NAME} ||
-    kubectl -n ${TARGET} create secret generic ${APPLICATION_NAME} --from-literal=DJANGO_SECRET_KEY=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c50) |
-    kubectl -n ${TARGET} apply -f -
+    kubectl -n ${TARGET} create secret generic ${APPLICATION_NAME} --from-literal=DJANGO_SECRET_KEY=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c50)
   - kubectl -n ${TARGET} get secret ${DATABASE_NAME} ||
-    kubectl -n ${TARGET} create secret generic ${DATABASE_NAME} --from-literal=POSTGRESQL_PASSWORD=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c16) |
-    kubectl -n ${TARGET} apply -f -
+    kubectl -n ${TARGET} create secret generic ${DATABASE_NAME} --from-literal=POSTGRESQL_PASSWORD=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c16)
 
 .deploy:
   stage: deploy
