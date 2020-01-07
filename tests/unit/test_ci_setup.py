@@ -44,7 +44,7 @@ class TestCISetup:
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
             'environment_strategy': 'shared',
-            'expected_ci_target': \
+            'expected_ci_target':
                 '    TARGET: "myproject"',
         }),
         ('gitlab-dedicated', {
@@ -57,7 +57,7 @@ class TestCISetup:
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
             'environment_strategy': 'dedicated',
-            'expected_ci_target': \
+            'expected_ci_target':
                 '    TARGET: "myproject-${CI_ENVIRONMENT_NAME}"',
         }),
         ('shippable', {
