@@ -4,3 +4,5 @@ resources:
 - ../../base
 commonLabels:
   environment: production
+patchesStrategicMerge:
+- deployment.yaml

@@ -1,5 +1,5 @@
-kind: StatefulSet
 apiVersion: apps/v1
+kind: StatefulSet
 metadata:
   name: "${DATABASE_NAME}"
 spec:

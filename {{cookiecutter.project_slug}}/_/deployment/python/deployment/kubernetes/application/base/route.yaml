@@ -1,5 +1,5 @@
-kind: Route
 apiVersion: v1
+kind: Route
 metadata:
   name: "${APPLICATION_NAME}"
   annotations:
