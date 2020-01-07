@@ -34,7 +34,7 @@ class TestCISetup:
             'environment_strategy': 'shared',
             'expected_ci_target': '',
         }),
-        ('gitlab', {
+        ('gitlab-shared', {
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitLab.com',
@@ -44,7 +44,21 @@ class TestCISetup:
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
             'environment_strategy': 'shared',
-            'expected_ci_target': '    TARGET: "myproject-${CI_ENVIRONMENT_NAME}"',
+            'expected_ci_target': \
+                '    TARGET: "myproject"',
+        }),
+        ('gitlab-dedicated', {
+            'project_slug': 'myproject',
+            'vcs_account': 'painless-software',
+            'vcs_platform': 'GitLab.com',
+            'ci_service': '.gitlab-ci.yml',
+            'ci_testcommand': '  script: tox -e py37',
+            'checks': 'flake8,pylint,bandit',
+            'tests': 'py35,py36,py37,pypy3,behave',
+            'container_platform': 'APPUiO',
+            'environment_strategy': 'dedicated',
+            'expected_ci_target': \
+                '    TARGET: "myproject-${CI_ENVIRONMENT_NAME}"',
         }),
         ('shippable', {
             'project_slug': 'myproject',
@@ -102,8 +116,8 @@ class TestCISetup:
         assert ci_testcommand in ci_service_conf, \
             "Test command not found in CI config: '%s'" % ci_testcommand
         assert expected_ci_target in ci_service_conf, \
-            "Deployment target not found in CI config: '%s'" \
-            % expected_ci_target
+            "Deployment target not found in CI config: '%s'\n%s" \
+            % (expected_ci_target, '\n'.join(ci_service_conf))
 
         codeship_services = result.project.join('codeship-services.yml')
         assert (ci_service == 'codeship-steps.yml' and
