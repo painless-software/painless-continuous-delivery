@@ -61,10 +61,10 @@ stages:
   script:
   - oc tag "${SOURCE}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
            "${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
-  - pushd deployment/kubernetes/application/base &&
+  - pushd deployment/application/base &&
     kustomize edit set image IMAGE="${DOCKER_REGISTRY}/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
     popd
-  - kustomize build deployment/kubernetes/application/${CI_ENVIRONMENT_NAME} | envsubst | kubeval --strict --ignore-missing-schemas
-  - kustomize build deployment/kubernetes/database/${CI_ENVIRONMENT_NAME} | envsubst | kubeval --strict
-  - kustomize build deployment/kubernetes/application/${CI_ENVIRONMENT_NAME} | envsubst | kubectl -n ${TARGET} apply -f -
-  - kustomize build deployment/kubernetes/database/${CI_ENVIRONMENT_NAME} | envsubst | kubectl -n ${TARGET} apply -f -
+  - kustomize build deployment/application/${CI_ENVIRONMENT_NAME} | envsubst | kubeval --strict --ignore-missing-schemas
+  - kustomize build deployment/database/${CI_ENVIRONMENT_NAME} | envsubst | kubeval --strict
+  - kustomize build deployment/application/${CI_ENVIRONMENT_NAME} | envsubst | kubectl -n ${TARGET} apply -f -
+  - kustomize build deployment/database/${CI_ENVIRONMENT_NAME} | envsubst | kubectl -n ${TARGET} apply -f -
