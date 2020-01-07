@@ -7,6 +7,6 @@ resources:
 - deployment.yaml
 - service.yaml
 configMapGenerator:
-- name: "${DATABASE_NAME}"
+- name: "postgres"
   files:
   - config.env

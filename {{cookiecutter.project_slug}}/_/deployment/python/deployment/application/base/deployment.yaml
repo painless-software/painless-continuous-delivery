@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "${APPLICATION_NAME}"
+  name: "application"
 spec:
   replicas: 1
   revisionHistoryLimit: 2
   template:
     metadata:
       labels:
-        name: "${APPLICATION_NAME}"
+        name: "application"
     spec:
       initContainers:
       - name: wait-for-database
@@ -16,9 +16,9 @@ spec:
         command: ['python', 'manage.py', 'wait_for_database']
         envFrom:
         - configMapRef:
-            name: "${APPLICATION_NAME}"
+            name: "application"
         - secretRef:
-            name: "${APPLICATION_NAME}"
+            name: "application"
         - configMapRef:
             name: "${DATABASE_NAME}"
         - secretRef:
@@ -33,9 +33,9 @@ spec:
         - secretRef:
             name: "${DATABASE_NAME}"
         - secretRef:
-            name: "${APPLICATION_NAME}"
+            name: "application"
         - configMapRef:
-            name: "${APPLICATION_NAME}"
+            name: "application"
         livenessProbe:
           tcpSocket:
             port: uwsgi
@@ -80,5 +80,5 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchLabels:
-                  name: "${APPLICATION_NAME}"
+                  name: "application"
               topologyKey: kubernetes.io/hostname

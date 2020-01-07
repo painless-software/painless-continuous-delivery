@@ -8,6 +8,6 @@ resources:
 - route.yaml
 - service.yaml
 configMapGenerator:
-- name: "${APPLICATION_NAME}"
+- name: "application"
   files:
   - config.env
