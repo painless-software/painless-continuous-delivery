@@ -16,8 +16,6 @@ spec:
         - name: postgresql
           containerPort: 5432
         envFrom:
-        - configMapRef:
-            name: "postgres"
         - secretRef:
             name: "postgres"
         livenessProbe:

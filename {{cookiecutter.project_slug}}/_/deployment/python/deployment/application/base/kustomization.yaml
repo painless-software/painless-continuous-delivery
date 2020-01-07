@@ -7,7 +7,3 @@ resources:
 - deployment.yaml
 - route.yaml
 - service.yaml
-configMapGenerator:
-- name: "application"
-  files:
-  - config.env
