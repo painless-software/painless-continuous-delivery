@@ -20,6 +20,7 @@ class TestCISetup:
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
             'environment_strategy': 'shared',
+            'expected_ci_target': '',
         }),
         ('codeship', {
             'project_slug': 'myproject',
@@ -31,6 +32,7 @@ class TestCISetup:
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
             'environment_strategy': 'shared',
+            'expected_ci_target': '',
         }),
         ('gitlab', {
             'project_slug': 'myproject',
@@ -42,6 +44,7 @@ class TestCISetup:
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
             'environment_strategy': 'shared',
+            'expected_ci_target': '    TARGET: "myproject-${CI_ENVIRONMENT_NAME}"',
         }),
         ('shippable', {
             'project_slug': 'myproject',
@@ -53,6 +56,7 @@ class TestCISetup:
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
             'environment_strategy': 'shared',
+            'expected_ci_target': '',
         }),
         ('travis', {
             'project_slug': 'myproject',
@@ -64,13 +68,15 @@ class TestCISetup:
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
             'environment_strategy': 'shared',
+            'expected_ci_target': '',
         }),
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
     def test_ci_setup(self, cookies, project_slug, vcs_account, vcs_platform,
                       ci_service, ci_testcommand, checks, tests,
-                      container_platform, environment_strategy):
+                      container_platform, environment_strategy,
+                      expected_ci_target):
         """
         Generate a CI setup with specific settings and verify it is complete.
         """
@@ -95,6 +101,9 @@ class TestCISetup:
         ci_service_conf = result.project.join(ci_service).readlines(cr=False)
         assert ci_testcommand in ci_service_conf, \
             "Test command not found in CI config: '%s'" % ci_testcommand
+        assert expected_ci_target in ci_service_conf, \
+            "Deployment target not found in CI config: '%s'" \
+            % expected_ci_target
 
         codeship_services = result.project.join('codeship-services.yml')
         assert (ci_service == 'codeship-steps.yml' and
