@@ -15,14 +15,8 @@ spec:
         image: IMAGE
         command: ['python', 'manage.py', 'wait_for_database']
         envFrom:
-        - configMapRef:
-            name: "application"
         - secretRef:
             name: "application"
-        - configMapRef:
-            name: "${DATABASE_NAME}"
-        - secretRef:
-            name: "${DATABASE_NAME}"
       containers:
       - name: django
         image: IMAGE
@@ -31,10 +25,6 @@ spec:
           containerPort: 8000
         envFrom:
         - secretRef:
-            name: "${DATABASE_NAME}"
-        - secretRef:
-            name: "application"
-        - configMapRef:
             name: "application"
         livenessProbe:
           tcpSocket:

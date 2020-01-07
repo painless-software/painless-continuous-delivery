@@ -6,7 +6,3 @@ commonLabels:
 resources:
 - deployment.yaml
 - service.yaml
-configMapGenerator:
-- name: "postgres"
-  files:
-  - config.env
