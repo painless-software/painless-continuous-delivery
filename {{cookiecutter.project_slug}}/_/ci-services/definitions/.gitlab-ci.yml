@@ -63,7 +63,7 @@ stages:
 
 .deploy:
   stage: deploy
-  extends: generate-secrets
+  extends: .generate-secrets
   environment:
     url: "${KUBE_URL}/console/project/{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}/overview"
   image: docker.io/appuio/oc:v3.11
