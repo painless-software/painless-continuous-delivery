@@ -45,7 +45,7 @@ class TestCISetup:
             'container_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'expected_ci_target':
-                '    TARGET: "myproject"',
+                '  TARGET: myproject',
         }),
         ('gitlab-dedicated', {
             'project_slug': 'myproject',
@@ -58,7 +58,7 @@ class TestCISetup:
             'container_platform': 'APPUiO',
             'environment_strategy': 'dedicated',
             'expected_ci_target':
-                '    TARGET: "myproject-${CI_ENVIRONMENT_NAME}"',
+                '    TARGET: myproject-production',
         }),
         ('shippable', {
             'project_slug': 'myproject',
