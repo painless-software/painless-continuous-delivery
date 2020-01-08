@@ -61,8 +61,10 @@ stages:
     DATABASE_NAME: "postgres{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
   image: docker.io/appuio/oc:v3.11
   script:
+{% if cookiecutter.environment_strategy == 'dedicated' -%}
   - oc tag "${SOURCE}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
            "${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
+{%- endif %}
   - pushd deployment/application/base &&
 {% if cookiecutter.environment_strategy == 'dedicated' -%}
     kustomize edit set namesuffix -- "-${CI_ENVIRONMENT_NAME}" &&
