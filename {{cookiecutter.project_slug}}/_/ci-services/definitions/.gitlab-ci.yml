@@ -45,25 +45,27 @@ stages:
   - docker push "${IMAGE}"
 
 .generate-secrets:
+  variables:
+    APPLICATION_NAME: application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
+    DATABASE_NAME: postgres{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
   before_script:
-  - POSTGRESQL_PASSWORD=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c16)
+  - DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
+  - POSTGRES_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
   - kubectl -n ${TARGET} get secret ${APPLICATION_NAME} ||
-    kubectl -n ${TARGET} create secret generic ${APPLICATION_NAME} --from-literal=DJANGO_SECRET_KEY=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c50) \
-    --from-literal=DJANGO_DATABASE_URL=postgres://{{ cookiecutter.project_slug.replace('-', '_') }}:${POSTGRESQL_PASSWORD}@${DATABASE_NAME}/{{ cookiecutter.project_slug.replace('-', '_') }}
+    kubectl -n ${TARGET} create secret generic ${APPLICATION_NAME}
+    --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+    --from-literal=DJANGO_DATABASE_URL=postgres://{{ cookiecutter.project_slug.replace('-', '_') }}:${POSTGRES_PASSWORD}@${DATABASE_NAME}/{{ cookiecutter.project_slug.replace('-', '_') }}
   - kubectl -n ${TARGET} get secret ${DATABASE_NAME} ||
-    kubectl -n ${TARGET} create secret generic ${DATABASE_NAME} --from-literal=POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD} --from-literal=POSTGRESQL_USER={{ cookiecutter.project_slug.replace('-', '_') }} --from-literal=POSTGRESQL_DATABASE={{ cookiecutter.project_slug.replace('-', '_') }}
+    kubectl -n ${TARGET} create secret generic ${DATABASE_NAME}
+    --from-literal=POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
+    --from-literal=POSTGRESQL_USER={{ cookiecutter.project_slug.replace('-', '_') }}
+    --from-literal=POSTGRESQL_DATABASE={{ cookiecutter.project_slug.replace('-', '_') }}
 
 .deploy:
   stage: deploy
   extends: generate-secrets
   environment:
     url: "${KUBE_URL}/console/project/{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}/overview"
-  variables:
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
-    TARGET: "{{ cookiecutter.project_slug }}-${CI_ENVIRONMENT_NAME}"
-{%- endif %}
-    APPLICATION_NAME: "application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
-    DATABASE_NAME: "postgres{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
   image: docker.io/appuio/oc:v3.11
   script:
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
