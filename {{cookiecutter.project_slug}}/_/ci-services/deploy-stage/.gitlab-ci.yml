@@ -3,8 +3,10 @@ development:
   extends: .deploy
   environment:
     name: development
+{% if cookiecutter.environment_strategy == 'dedicated' -%}
   variables:
     SOURCE: {{ cookiecutter.project_slug }}-development
+{%- endif %}
   only:
   - merge_requests
 
@@ -12,8 +14,10 @@ integration:
   extends: .deploy
   environment:
     name: integration
+{% if cookiecutter.environment_strategy == 'dedicated' -%}
   variables:
     SOURCE: {{ cookiecutter.project_slug }}-development
+{%- endif %}
   only:
   - master
 
@@ -21,7 +25,9 @@ production:
   extends: .deploy
   environment:
     name: production
+{% if cookiecutter.environment_strategy == 'dedicated' -%}
   variables:
     SOURCE: {{ cookiecutter.project_slug }}-integration
+{%- endif %}
   only:
   - tags
