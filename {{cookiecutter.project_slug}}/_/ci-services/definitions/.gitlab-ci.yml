@@ -3,6 +3,9 @@ variables:
   DOCKER_DRIVER: overlay2
   DOCKER_HOST: tcp://docker:2375
   DOCKER_REGISTRY: {{ cookiecutter.docker_registry }}
+{%- if cookiecutter.environment_strategy == 'shared' %}
+  TARGET: {{ cookiecutter.project_slug }}
+{%- endif %}
 
 services:
   - name: docker:dind
@@ -56,22 +59,24 @@ stages:
   environment:
     url: "${KUBE_URL}/console/project/{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}/overview"
   variables:
-    TARGET: "{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
+{%- if cookiecutter.environment_strategy == 'dedicated' %}
+    TARGET: "{{ cookiecutter.project_slug }}-${CI_ENVIRONMENT_NAME}"
+{%- endif %}
     APPLICATION_NAME: "application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
     DATABASE_NAME: "postgres{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
   image: docker.io/appuio/oc:v3.11
   script:
-{% if cookiecutter.environment_strategy == 'dedicated' -%}
+{%- if cookiecutter.environment_strategy == 'dedicated' %}
   - oc tag "${SOURCE}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
            "${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
 {%- endif %}
   - pushd deployment/application/base &&
-{% if cookiecutter.environment_strategy == 'dedicated' -%}
+{%- if cookiecutter.environment_strategy == 'dedicated' %}
     kustomize edit set namesuffix -- "-${CI_ENVIRONMENT_NAME}" &&
 {%- endif %}
     kustomize edit set image IMAGE="${DOCKER_REGISTRY}/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
     popd
-{% if cookiecutter.environment_strategy == 'dedicated' -%}
+{%- if cookiecutter.environment_strategy == 'dedicated' %}
   - pushd deployment/database/base &&
     kustomize edit set namesuffix -- "-${CI_ENVIRONMENT_NAME}" &&
     popd
