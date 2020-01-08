@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "application"
+  name: application
 spec:
   replicas: 1
   revisionHistoryLimit: 2
   template:
     metadata:
       labels:
-        name: "application"
+        name: application
     spec:
       initContainers:
       - name: wait-for-database
@@ -16,7 +16,7 @@ spec:
         command: ['python', 'manage.py', 'wait_for_database']
         envFrom:
         - secretRef:
-            name: "application"
+            name: application
       containers:
       - name: django
         image: IMAGE
@@ -25,7 +25,7 @@ spec:
           containerPort: 8000
         envFrom:
         - secretRef:
-            name: "application"
+            name: application
         livenessProbe:
           tcpSocket:
             port: uwsgi
@@ -70,5 +70,5 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchLabels:
-                  name: "application"
+                  name: application
               topologyKey: kubernetes.io/hostname
