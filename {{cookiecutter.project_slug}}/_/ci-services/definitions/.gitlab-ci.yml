@@ -58,22 +58,22 @@ stages:
   variables:
     TARGET: "{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
     APPLICATION_NAME: "application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
-    DATABASE_NAME: "database{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
+    DATABASE_NAME: "postgres{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}"
   image: docker.io/appuio/oc:v3.11
   script:
   - oc tag "${SOURCE}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
            "${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
   - pushd deployment/application/base &&
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
+{% if cookiecutter.environment_strategy == 'dedicated' -%}
     kustomize edit set namesuffix -- "-${CI_ENVIRONMENT_NAME}" &&
-{% endif -%}
+{%- endif %}
     kustomize edit set image IMAGE="${DOCKER_REGISTRY}/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
     popd
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
+{% if cookiecutter.environment_strategy == 'dedicated' -%}
   - pushd deployment/database/base &&
     kustomize edit set namesuffix -- "-${CI_ENVIRONMENT_NAME}" &&
     popd
-{% endif -%}
+{%- endif %}
   - kustomize build deployment/application/${CI_ENVIRONMENT_NAME} | kubeval --strict --ignore-missing-schemas
   - kustomize build deployment/database/${CI_ENVIRONMENT_NAME} | kubeval --strict
   - kustomize build deployment/application/${CI_ENVIRONMENT_NAME} | kubectl -n ${TARGET} apply -f -

@@ -9,18 +9,18 @@ spec:
   template:
     spec:
       containers:
-      - name: postgresql
+      - name: postgres
         image: ${DOCKER_REGISTRY}/openshift/postgresql:9.6
         imagePullPolicy: Always
         ports:
-        - name: postgresql
+        - name: postgres
           containerPort: 5432
         envFrom:
         - secretRef:
             name: "postgres"
         livenessProbe:
           tcpSocket:
-            port: postgresql
+            port: postgres
           initialDelaySeconds: 30
         readinessProbe:
           exec:
