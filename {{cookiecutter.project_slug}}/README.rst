@@ -9,16 +9,16 @@ Getting Started
 To start developing on this project simply bring up the Docker setup:
 
 .. code-block:: console
-{% if cookiecutter.framework in ['Symfony', 'TYPO3'] %}
+{% if cookiecutter.framework in ['Symfony', 'TYPO3'] -%}
     composer install
     docker-compose build
     docker-compose up
-{% else %}
+{% else -%}
     docker-compose build
     docker-compose up
-{% endif %}
+{%- endif %}
 
-{%- if cookiecutter.framework == 'Django' %}
+{% if cookiecutter.framework == 'Django' -%}
 Migrations will run automatically at startup (via the container entrypoint).
 If they fail the very first time simply restart the application.
 {%- endif %}
@@ -34,15 +34,15 @@ Initial Setup (APPUiO + GitLab)
 #. Create a *production*, *integration* and *development* project at the
 {% else -%}
 #. Create a project at the
-{% endif -%}
+{%- endif %}
    `VSHN Control Panel <https://control.vshn.net/openshift/projects/appuio%20public>`_.
    For quota sizing consider roughly the sum of ``limits`` of all
    resources (must be strictly greater than the sum of ``requests``):
 
    .. code-block:: console
 
-        grep -A2 limits deployment/*yaml
-        grep -A2 requests deployment/*yaml
+        grep -A2 limits deployment/*/*/*yaml
+        grep -A2 requests deployment/*/*/*yaml
 
 #. Create a service account as described in the `APPUiO docs
    <https://appuio-community-documentation.readthedocs.io/en/latest/services/webserver/50_pushing_to_appuio.html>`_:
@@ -60,7 +60,7 @@ Initial Setup (APPUiO + GitLab)
         oc -n {{ cookiecutter.project_slug }} create sa gitlab-ci
         oc -n {{ cookiecutter.project_slug }} policy add-role-to-user edit -z gitlab-ci
         oc -n {{ cookiecutter.project_slug }} sa get-token gitlab-ci
-{% endif -%}
+{%- endif %}
 
 #. Configure the Kubernetes integration in your GitLab project adding
    the ``token`` value from the ``gitlab-ci-token`` secret to:
@@ -79,9 +79,9 @@ Initial Setup (APPUiO + GitLab)
           edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:gitlab-ci
         oc -n {{ cookiecutter.project_slug }}-development policy add-role-to-user \
           edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:gitlab-ci
+{%- endif %}
+{%- endif %}
 
-{% endif -%}
-{% endif -%}
 Working with Docker
 ^^^^^^^^^^^^^^^^^^^
 
@@ -141,7 +141,8 @@ Alternatively, you can run those commands the classic way, i.e.
 .. _docker-compose.override.yml: docker-compose.override.yml
 .. _direnv: https://direnv.net/
 .. _.envrc: .envrc
-{% endif -%}
+{%- endif %}
+
 CI/CD Process
 ^^^^^^^^^^^^^
 
@@ -151,7 +152,7 @@ platform: *development*, *integration*, *production*
 {% else -%}
 We have 3 environments corresponding to 3 deployments in one namespace on our container
 platform: *development*, *integration*, *production*
-{% endif -%}
+{%- endif %}
 
 - Any merge request triggers a deployment (of the feature branch) on
   *development*.
