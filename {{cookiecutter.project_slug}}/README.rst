@@ -9,19 +9,18 @@ Getting Started
 To start developing on this project simply bring up the Docker setup:
 
 .. code-block:: console
-{% if cookiecutter.framework in ['Symfony', 'TYPO3'] -%}
+{% if cookiecutter.framework in ['Symfony', 'TYPO3'] %}
     composer install
     docker-compose build
     docker-compose up
-{% else -%}
+{%- else %}
     docker-compose build
     docker-compose up
 {%- endif %}
+{%- if cookiecutter.framework == 'Django' %}
 
-{% if cookiecutter.framework == 'Django' -%}
 Migrations will run automatically at startup (via the container entrypoint).
-If they fail the very first time simply restart the application.
-{%- endif %}
+If they fail the very first time simply restart the application.{% endif %}
 
 Open your web browser at http://localhost:8000 to see the application
 you're developing.  Log output will be displayed in the terminal, as usual.
@@ -32,7 +31,7 @@ Initial Setup (APPUiO + GitLab)
 
 {% if cookiecutter.environment_strategy == 'dedicated' -%}
 #. Create a *production*, *integration* and *development* project at the
-{% else -%}
+{%- else -%}
 #. Create a project at the
 {%- endif %}
    `VSHN Control Panel <https://control.vshn.net/openshift/projects/appuio%20public>`_.
@@ -51,12 +50,11 @@ Initial Setup (APPUiO + GitLab)
    configurations, and get the service account's token value:
 
    .. code-block:: console
-
-{% if cookiecutter.environment_strategy == 'dedicated' -%}
+{% if cookiecutter.environment_strategy == 'dedicated' %}
         oc -n {{ cookiecutter.project_slug }}-production create sa gitlab-ci
         oc -n {{ cookiecutter.project_slug }}-production policy add-role-to-user edit -z gitlab-ci
         oc -n {{ cookiecutter.project_slug }}-production sa get-token gitlab-ci
-{% else -%}
+{%- else %}
         oc -n {{ cookiecutter.project_slug }} create sa gitlab-ci
         oc -n {{ cookiecutter.project_slug }} policy add-role-to-user edit -z gitlab-ci
         oc -n {{ cookiecutter.project_slug }} sa get-token gitlab-ci
@@ -68,8 +66,8 @@ Initial Setup (APPUiO + GitLab)
    -  Operations > Kubernetes > "APPUiO" > Kubernetes cluster details > Service Token
 
    (*Note:* Make sure "GitLab-managed cluster" is unchecked in the cluster details.)
+{%- if cookiecutter.environment_strategy == 'dedicated' %}
 
-{% if cookiecutter.environment_strategy == 'dedicated' -%}
 #. Grant the service account permissions on the *development* and *integration*
    projects:
 
@@ -141,17 +139,17 @@ Alternatively, you can run those commands the classic way, i.e.
 .. _docker-compose.override.yml: docker-compose.override.yml
 .. _direnv: https://direnv.net/
 .. _.envrc: .envrc
-{%- endif %}
 
+{% endif -%}
 CI/CD Process
 ^^^^^^^^^^^^^
 
 {% if cookiecutter.environment_strategy == 'dedicated' -%}
 We have 3 environments corresponding to 3 namespaces on our container
 platform: *development*, *integration*, *production*
-{% else -%}
-We have 3 environments corresponding to 3 deployments in one namespace on our container
-platform: *development*, *integration*, *production*
+{%- else -%}
+We have 3 environments corresponding to 3 deployments in a single namespace
+on our container platform: *development*, *integration*, *production*
 {%- endif %}
 
 - Any merge request triggers a deployment (of the feature branch) on
