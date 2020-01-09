@@ -49,9 +49,8 @@ stages:
     APPLICATION_NAME: application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
     DATABASE_NAME: postgres{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
   before_script:
-  - DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
-    POSTGRES_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
-    true
+  - export DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
+  - export POSTGRES_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
   - kubectl -n ${TARGET} get secret ${APPLICATION_NAME} ||
     kubectl -n ${TARGET} create secret generic ${APPLICATION_NAME}
     --from-literal=DJANGO_DATABASE_URL=postgres://{{ cookiecutter.project_slug.replace('-', '_') }}:${POSTGRES_PASSWORD}@${DATABASE_NAME}/{{ cookiecutter.project_slug.replace('-', '_') }}
