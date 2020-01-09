@@ -84,7 +84,7 @@ stages:
     kustomize edit set namesuffix -- "-${CI_ENVIRONMENT_NAME}" &&
     popd
 {%- endif %}
-  - kustomize build deployment/application/${CI_ENVIRONMENT_NAME} | kubeval --strict --ignore-missing-schemas
-  - kustomize build deployment/database/${CI_ENVIRONMENT_NAME} | kubeval --strict
-  - kustomize build deployment/application/${CI_ENVIRONMENT_NAME} | kubectl -n ${TARGET} apply -f -
-  - kustomize build deployment/database/${CI_ENVIRONMENT_NAME} | kubectl -n ${TARGET} apply -f -
+  - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | kubeval --strict --ignore-missing-schemas
+  - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | kubeval --strict
+  - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | kubectl -n ${TARGET} apply -f -
+  - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | kubectl -n ${TARGET} apply -f -
