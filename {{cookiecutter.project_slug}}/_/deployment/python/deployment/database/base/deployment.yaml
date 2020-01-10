@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: ${DOCKER_REGISTRY}/openshift/postgresql:9.6
+        image: docker-registry.default.svc:5000/openshift/postgresql:9.6
         imagePullPolicy: Always
         ports:
         - name: postgres
