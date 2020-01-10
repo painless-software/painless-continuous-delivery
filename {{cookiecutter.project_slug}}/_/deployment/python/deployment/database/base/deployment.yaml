@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: "postgres"
+  name: postgres
 spec:
   replicas: 1
   revisionHistoryLimit: 2
-  serviceName: "postgres"
+  serviceName: postgres
   template:
     spec:
       containers:
@@ -17,7 +17,7 @@ spec:
           containerPort: 5432
         envFrom:
         - secretRef:
-            name: "postgres"
+            name: postgres
         livenessProbe:
           tcpSocket:
             port: postgres
