@@ -51,12 +51,12 @@ stages:
   before_script:
   - export DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
   - export POSTGRES_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
-  - kubectl -n ${TARGET} get secret ${APPLICATION_NAME} ||
-    kubectl -n ${TARGET} create secret generic ${APPLICATION_NAME}
+  - oc -n ${TARGET} get secret ${APPLICATION_NAME} ||
+    oc -n ${TARGET} create secret generic ${APPLICATION_NAME}
     --from-literal=DJANGO_DATABASE_URL=postgres://{{ cookiecutter.project_slug.replace('-', '_') }}:${POSTGRES_PASSWORD}@${DATABASE_NAME}/{{ cookiecutter.project_slug.replace('-', '_') }}
     --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-  - kubectl -n ${TARGET} get secret ${DATABASE_NAME} ||
-    kubectl -n ${TARGET} create secret generic ${DATABASE_NAME}
+  - oc -n ${TARGET} get secret ${DATABASE_NAME} ||
+    oc -n ${TARGET} create secret generic ${DATABASE_NAME}
     --from-literal=POSTGRESQL_DATABASE={{ cookiecutter.project_slug.replace('-', '_') }}
     --from-literal=POSTGRESQL_USER={{ cookiecutter.project_slug.replace('-', '_') }}
     --from-literal=POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
@@ -85,5 +85,5 @@ stages:
 {%- endif %}
   - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | kubeval --strict --ignore-missing-schemas
   - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | kubeval --strict
-  - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | kubectl -n ${TARGET} apply -f -
-  - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | kubectl -n ${TARGET} apply -f -
+  - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | oc -n ${TARGET} apply -f -
+  - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | oc -n ${TARGET} apply -f -
