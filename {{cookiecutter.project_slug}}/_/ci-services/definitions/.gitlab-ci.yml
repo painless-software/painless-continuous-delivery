@@ -75,6 +75,7 @@ stages:
   - pushd deployment/application/base &&
 {%- if cookiecutter.environment_strategy == 'shared' %}
     kustomize edit set namesuffix -- "-${CI_ENVIRONMENT_NAME}" &&
+    sed -Ez "s/(kind: Service.*name: application)/\1-${CI_ENVIRONMENT_NAME}/" -i route.yaml &&
 {%- endif %}
     kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
     popd
