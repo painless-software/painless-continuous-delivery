@@ -73,12 +73,12 @@ stages:
            "${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
 {%- endif %}
   - pushd deployment/application/base &&
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
+{%- if cookiecutter.environment_strategy == 'shared' %}
     kustomize edit set namesuffix -- "-${CI_ENVIRONMENT_NAME}" &&
 {%- endif %}
     kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
     popd
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
+{%- if cookiecutter.environment_strategy == 'shared' %}
   - pushd deployment/database/base &&
     kustomize edit set namesuffix -- "-${CI_ENVIRONMENT_NAME}" &&
     popd
