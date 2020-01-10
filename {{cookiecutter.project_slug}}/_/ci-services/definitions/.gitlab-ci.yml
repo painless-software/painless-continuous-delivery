@@ -76,7 +76,7 @@ stages:
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
     kustomize edit set namesuffix -- "-${CI_ENVIRONMENT_NAME}" &&
 {%- endif %}
-    kustomize edit set image IMAGE="${DOCKER_REGISTRY}/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
+    kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
     popd
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
   - pushd deployment/database/base &&
