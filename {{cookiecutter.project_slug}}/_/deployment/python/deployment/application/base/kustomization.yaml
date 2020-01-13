@@ -3,7 +3,10 @@ kind: Kustomization
 commonLabels:
   app: "{{ cookiecutter.project_slug }}"
   component: application
+crds:
+- route-crd.yaml
 resources:
 - deployment.yaml
 - route.yaml
+- secret.yaml
 - service.yaml

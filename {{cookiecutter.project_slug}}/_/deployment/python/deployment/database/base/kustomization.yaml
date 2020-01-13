@@ -5,4 +5,5 @@ commonLabels:
   component: database
 resources:
 - deployment.yaml
+- secret.yaml
 - service.yaml
