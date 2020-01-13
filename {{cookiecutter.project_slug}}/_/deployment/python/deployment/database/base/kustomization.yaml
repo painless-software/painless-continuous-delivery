@@ -5,6 +5,9 @@ commonLabels:
   app: {{ cookiecutter.project_slug }}
 {%- endif %}
   component: database
+{%- if cookiecutter.environment_strategy == 'shared' %}
+namespace: {{ cookiecutter.project_slug }}
+{%- endif %}
 resources:
 - deployment.yaml
 - secret.yaml

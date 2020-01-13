@@ -77,5 +77,5 @@ stages:
     popd
   - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | kubeval --strict --ignore-missing-schemas
   - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | kubeval --strict
-  - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | oc -n ${TARGET} apply -f -
-  - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | oc -n ${TARGET} apply -f -
+  - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | oc apply -f -
+  - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | oc apply -f -

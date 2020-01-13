@@ -9,4 +9,6 @@ patchesStrategicMerge:
 {%- if cookiecutter.environment_strategy == 'shared' %}
   app: {{ cookiecutter.project_slug }}-production
 nameSuffix: -production
+{%- else %}
+namespace: {{ cookiecutter.project_slug }}-production
 {%- endif %}
