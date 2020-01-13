@@ -7,4 +7,6 @@ commonLabels:
 {%- if cookiecutter.environment_strategy == 'shared' %}
   app: {{ cookiecutter.project_slug }}-development
 nameSuffix: -development
+{%- else %}
+namespace: {{ cookiecutter.project_slug }}-development
 {%- endif %}
