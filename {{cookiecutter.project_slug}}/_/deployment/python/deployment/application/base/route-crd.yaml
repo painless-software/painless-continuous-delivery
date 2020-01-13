@@ -1,0 +1,18 @@
+github.com/appuio/route.openshift.io.v1.Route:
+  Schema:
+    description: "This is a fake CRD description to make Kustomize fix OpenShift route resources."
+    properties:
+      apiVersion:
+        type: string
+      kind:
+        type: string
+      metadata:
+        $ref: k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta
+      spec:
+        $ref: github.com/appuio/route.openshift.io.v1.RouteSpec
+github.com/appuio/route.openshift.io.v1.RouteSpec:
+  Schema:
+    properties:
+      to:
+        x-kubernetes-object-ref-api-version: v1
+        x-kubernetes-object-ref-kind: Service

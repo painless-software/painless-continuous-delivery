@@ -4,3 +4,6 @@ resources:
 - ../../base
 commonLabels:
   environment: production
+{%- if cookiecutter.environment_strategy == 'shared' %}
+nameSuffix: -production
+{%- endif %}
