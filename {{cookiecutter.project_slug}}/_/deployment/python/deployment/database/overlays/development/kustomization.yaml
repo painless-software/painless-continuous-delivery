@@ -5,5 +5,6 @@ resources:
 commonLabels:
   environment: development
 {%- if cookiecutter.environment_strategy == 'shared' %}
+  app: {{ cookiecutter.project_slug }}-development
 nameSuffix: -development
 {%- endif %}
