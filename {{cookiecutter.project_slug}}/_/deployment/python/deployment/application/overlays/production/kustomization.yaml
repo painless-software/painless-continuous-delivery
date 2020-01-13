@@ -4,11 +4,11 @@ resources:
 - ../../base
 commonLabels:
   environment: production
-patchesStrategicMerge:
-- deployment.yaml
 {%- if cookiecutter.environment_strategy == 'shared' %}
   app: {{ cookiecutter.project_slug }}-production
 nameSuffix: -production
 {%- else %}
 namespace: {{ cookiecutter.project_slug }}-production
 {%- endif %}
+patchesStrategicMerge:
+- deployment.yaml

@@ -41,6 +41,10 @@ spec:
           limits:
             cpu: 1000m
             memory: 512Mi
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep", "20"]
       - name: nginx
         image: IMAGE
         command: ['nginx']
@@ -64,6 +68,10 @@ spec:
           limits:
             cpu: 200m
             memory: 64Mi
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep", "20"]
       restartPolicy: Always
       affinity:
         podAntiAffinity:
