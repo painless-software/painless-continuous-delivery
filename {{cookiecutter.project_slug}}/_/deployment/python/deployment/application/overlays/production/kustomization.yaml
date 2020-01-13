@@ -7,5 +7,6 @@ commonLabels:
 patchesStrategicMerge:
 - deployment.yaml
 {%- if cookiecutter.environment_strategy == 'shared' %}
+  app: {{ cookiecutter.project_slug }}-production
 nameSuffix: -production
 {%- endif %}

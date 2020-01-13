@@ -5,5 +5,6 @@ resources:
 commonLabels:
   environment: integration
 {%- if cookiecutter.environment_strategy == 'shared' %}
+  app: {{ cookiecutter.project_slug }}-integration
 nameSuffix: -integration
 {%- endif %}
