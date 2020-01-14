@@ -27,7 +27,8 @@ gitlab() {
 }
 
 log 1 'Delete existing merge requests'
-for IID in $(gitlab GET merge_requests?state=opened | sed -e 's/^.*"iid"://' -e 's/,".*$//'); do
+for IID in $(gitlab GET 'merge_requests?state=all&scope=all' \
+           | sed -e 's/^.*"iid"://' -e 's/,".*$//' -e '/^\[\]$/d'); do
     gitlab DELETE merge_requests/$IID
 done
 
