@@ -75,7 +75,5 @@ stages:
   - pushd deployment/application/base &&
     kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
     popd
-  - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | kubeval --strict --ignore-missing-schemas
-  - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | kubeval --strict
   - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | oc apply -f -
   - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | oc apply -f -
