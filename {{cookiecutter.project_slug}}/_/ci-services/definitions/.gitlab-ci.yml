@@ -1,7 +1,5 @@
 
 variables:
-  DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://docker:2375
   DOCKER_REGISTRY: {{ cookiecutter.docker_registry }}
 {%- if cookiecutter.environment_strategy == 'shared' %}
   TARGET: {{ cookiecutter.project_slug }}
