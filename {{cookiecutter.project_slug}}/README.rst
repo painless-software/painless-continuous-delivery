@@ -43,11 +43,9 @@ Initial Setup (APPUiO + GitLab)
         grep -A2 limits deployment/*/*/*yaml
         grep -A2 requests deployment/*/*/*yaml
 
-#. Create a service account as described in the `APPUiO docs
-   <https://appuio-community-documentation.readthedocs.io/en/latest/services/webserver/50_pushing_to_appuio.html>`_:
-
-   Create a service account, grant permissions to push images and apply
-   configurations, and get the service account's token value:
+#. Log in to your cluster, create a service account, grant permissions to push
+   images and apply configurations, and get the service account's token value:
+   (`APPUiO docs <https://appuio-community-documentation.readthedocs.io/en/latest/services/webserver/50_pushing_to_appuio.html>`_)
 
    .. code-block:: console
 {% if cookiecutter.environment_strategy == 'dedicated' %}
@@ -60,8 +58,9 @@ Initial Setup (APPUiO + GitLab)
         oc -n {{ cookiecutter.project_slug }} sa get-token gitlab-ci
 {%- endif %}
 
-#. Configure the Kubernetes integration in your GitLab project adding
-   the ``token`` value from the ``gitlab-ci-token`` secret to:
+#. Use the service account token to configure the
+   `Kubernetes integration <https://docs.gitlab.com/ee/user/project/clusters/>`_
+   of your GitLab project:
 
    -  Operations > Kubernetes > "APPUiO" > Kubernetes cluster details > Service Token
 
