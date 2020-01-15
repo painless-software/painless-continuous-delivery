@@ -26,10 +26,16 @@ gitlab() {
         "${PROJECT_URL}/${RESOURCE}" "${@:3}"
 }
 
-log 1 'Delete existing merge requests'
+log 1 'Delete existing merge requests, Git tags, etc.'
 for IID in $(gitlab GET 'merge_requests?state=all&scope=all' \
-           | sed -e 's/^.*"iid"://' -e 's/,".*$//' -e '/^\[\]$/d'); do
+           | sed -E -e 's/"iid":([0-9]*),/\n\1\n/g' | sed -e '/^[^0-9].*$/d'); do
+    echo 'Delete MR !'${IID}' ...'
     gitlab DELETE merge_requests/$IID
+done
+for TAG in $(gitlab GET repository/tags \
+           | sed -E -e 's/"name":"([^"]*)",/\n\1\n/g' | sed -E -e '/^(\[|")/d'); do
+    echo 'Delete Git tag '${TAG}' ...'
+    gitlab DELETE repository/tags/$TAG
 done
 
 log 2 'Create demo project from scratch and push it'
