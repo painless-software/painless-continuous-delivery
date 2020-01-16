@@ -43,6 +43,7 @@ tox -e cookiecutter -- \
     project_description="Hello world with Django" \
     project_name="Example Django" \
     container_platform=APPUiO \
+    container_platform_account="demo4501@appuio.ch" \
     environment_strategy=shared \
     database=Postgres \
     framework=Django \
