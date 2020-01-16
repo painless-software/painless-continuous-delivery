@@ -64,7 +64,11 @@ Initial Setup (APPUiO + GitLab)
 
    -  Operations > Kubernetes > "APPUiO" > Kubernetes cluster details > Service Token
 
-   (*Note:* Make sure "GitLab-managed cluster" is unchecked in the cluster details.)
+   and ensure the following values are set in the cluster details:
+
+   - RBAC-enabled cluster: *(checked)*
+   - GitLab-managed cluster: *(unchecked)*
+   - Project namespace: {% if cookiecutter.environment_strategy == 'shared' %}"{{ cookiecutter.project_slug }}"{% else %}*(empty)*{% endif %}
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
 
 #. Grant the service account permissions on the *development* and *integration*
