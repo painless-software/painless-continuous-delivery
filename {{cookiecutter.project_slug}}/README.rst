@@ -50,11 +50,11 @@ Initial Setup (APPUiO + GitLab)
    .. code-block:: console
 {% if cookiecutter.environment_strategy == 'dedicated' %}
         oc -n {{ cookiecutter.project_slug }}-production create sa gitlab-ci
-        oc -n {{ cookiecutter.project_slug }}-production policy add-role-to-user edit -z gitlab-ci
+        oc -n {{ cookiecutter.project_slug }}-production policy add-role-to-user admin -z gitlab-ci
         oc -n {{ cookiecutter.project_slug }}-production sa get-token gitlab-ci
 {%- else %}
         oc -n {{ cookiecutter.project_slug }} create sa gitlab-ci
-        oc -n {{ cookiecutter.project_slug }} policy add-role-to-user edit -z gitlab-ci
+        oc -n {{ cookiecutter.project_slug }} policy add-role-to-user admin -z gitlab-ci
         oc -n {{ cookiecutter.project_slug }} sa get-token gitlab-ci
 {%- endif %}
 

@@ -29,6 +29,7 @@
         "(none)",
         "APPUiO"
     ],
+    "container_platform_account": "platform-username",
     "environment_strategy": [
         "shared",
         "dedicated"
