@@ -1,4 +1,4 @@
-Django>=2.2,<3.0
+Django>=2.2.9,<3.0
 django-environ
 django-probes
 {% if cookiecutter.database == 'Postgres' -%}
