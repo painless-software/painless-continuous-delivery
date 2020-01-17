@@ -29,7 +29,7 @@ Use the ``tox`` command in the terminal to run your tests locally:
 .. code-block:: bash
 
     # list all available test environments (= Tox targets)
-    tox -l
+    tox -lv
 
 .. code-block:: bash
 

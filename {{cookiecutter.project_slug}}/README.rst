@@ -25,6 +25,9 @@ If they fail the very first time simply restart the application.{% endif %}
 Open your web browser at http://localhost:8000 to see the application
 you're developing.  Log output will be displayed in the terminal, as usual.
 
+For running tests, linting, security checks, etc. see instructions in the
+`tests/ <tests/README.rst>`_ folder.
+
 {% if cookiecutter.container_platform == 'APPUiO' -%}
 Initial Setup (APPUiO + GitLab)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
