@@ -1,18 +1,5 @@
-{% for env in cookiecutter.checks.split(",") %}
+{% for env in cookiecutter.checks.split(",") + ['kubernetes'] %}
 {{ env }}:
   extends: .check
   script: tox -e {{ env }}
 {% endfor -%}
-
-{% if cookiecutter.container_platform != '(none)' %}
-kubernetes:
-  extends: .check
-  image: docker.io/appuio/oc:v3.11
-  script:
-  - kustomize build deployment/application/overlays/development | kubeval --strict --ignore-missing-schemas
-  - kustomize build deployment/application/overlays/integration | kubeval --strict --ignore-missing-schemas
-  - kustomize build deployment/application/overlays/production | kubeval --strict --ignore-missing-schemas
-  - kustomize build deployment/database/overlays/development | kubeval --strict
-  - kustomize build deployment/database/overlays/integration | kubeval --strict
-  - kustomize build deployment/database/overlays/production | kubeval --strict
-{% endif -%}
