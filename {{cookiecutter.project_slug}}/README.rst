@@ -46,8 +46,9 @@ Initial Setup (APPUiO + GitLab)
         grep -A2 limits deployment/*/*/*yaml
         grep -A2 requests deployment/*/*/*yaml
 
-#. Log in to your cluster, create a service account, grant permissions to push
-   images and apply configurations, and get the service account's token value:
+#. With the commands below, create a service account from your terminal
+   (logging in to your cluster first), grant permissions to push images
+   and apply configurations, and get the service account's token value:
    (`APPUiO docs <https://appuio-community-documentation.readthedocs.io/en/latest/services/webserver/50_pushing_to_appuio.html>`_)
 
    .. code-block:: console
@@ -62,8 +63,8 @@ Initial Setup (APPUiO + GitLab)
 {%- endif %}
 
 #. Use the service account token to configure the
-   `Kubernetes integration <https://docs.gitlab.com/ee/user/project/clusters/>`_
-   of your GitLab project:
+   `Kubernetes integration <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/clusters>`_
+   of your GitLab project: (`GitLab docs <https://docs.gitlab.com/ee/user/project/clusters/>`_)
 
    -  Operations > Kubernetes > "APPUiO" > Kubernetes cluster details > Service Token
 
@@ -169,3 +170,23 @@ on our container platform: *development*, *integration*, *production*
     git checkout master
     git tag 1.0.0
     git push --tags
+
+Credits
+^^^^^^^
+
+Made with ♥ by Painless Continuous Delivery Cookiecutter. This project was created with:
+
+.. code-block:: console
+
+    cookiecutter gh:painless-software/painless-continuous-delivery \
+        project_name="{{ cookiecutter.project_name }}" \
+        project_description="{{ cookiecutter.project_description }}" \
+        container_platform={{ cookiecutter.container_platform }} \
+        container_platform_account="{{ cookiecutter.container_platform_account }}" \
+        environment_strategy={{ cookiecutter.environment_strategy }} \
+        vcs_platform={{ cookiecutter.vcs_platform }} \
+        vcs_account={{ cookiecutter.vcs_account }} \
+        framework={{ cookiecutter.framework }} \
+        database={{ cookiecutter.database }} \
+        license={{ cookiecutter.license }} \
+        --no-input
