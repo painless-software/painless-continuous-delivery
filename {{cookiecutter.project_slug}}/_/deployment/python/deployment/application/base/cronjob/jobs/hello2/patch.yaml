@@ -1,0 +1,6 @@
+- op: replace
+  path: /spec/schedule
+  value: "*/3 * * * *"
+- op: replace
+  path: /spec/jobTemplate/spec/template/spec/containers/0/args
+  value: ["/bin/sh", "-c", "date; echo Hello2 from {{ cookiecutter.project_slug }}"]

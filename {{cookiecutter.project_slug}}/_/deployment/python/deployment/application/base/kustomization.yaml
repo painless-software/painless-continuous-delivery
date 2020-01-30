@@ -14,6 +14,10 @@ crds:
 {%- if cookiecutter.environment_strategy == 'shared' %}
 namespace: {{ cookiecutter.project_slug }}
 {%- endif %}
+{%- if cookiecutter.cronjob == 'complex' %}
+bases:
+- cronjob
+{%- endif %}
 resources:
 {%- if cookiecutter.cronjob == 'simple' %}
 - cronjob.yaml
