@@ -47,6 +47,10 @@
         "Postgres",
         "MySQL/MariaDB"
     ],
+    "cronjob": [
+        "simple",
+        "complex"
+    ],
     "checks": "bandit,flake8,pylint,safety",
     "tests": "py37,behave",
     "monitoring": [

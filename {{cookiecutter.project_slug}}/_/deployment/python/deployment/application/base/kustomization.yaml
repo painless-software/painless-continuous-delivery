@@ -15,6 +15,9 @@ crds:
 namespace: {{ cookiecutter.project_slug }}
 {%- endif %}
 resources:
+{%- if cookiecutter.cronjob == 'simple' %}
+- cronjob.yaml
+{%- endif %}
 - deployment.yaml
 - route.yaml
 - secret.yaml
