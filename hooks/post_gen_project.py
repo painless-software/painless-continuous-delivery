@@ -1,5 +1,5 @@
 """Post-generate hook for cookiecutter."""
-from os import listdir
+from os import listdir, remove
 from os.path import join
 from subprocess import CalledProcessError, check_call, check_output, STDOUT
 
@@ -50,6 +50,21 @@ def set_up_framework_and_tests():
             shutil.move(join(testing_folder, file_or_folder), '.')
 
 
+def prune_cronjob_version(deployment_folder):
+    """
+    Based on selected cronjob version, remove the files corresponding
+    to the unused version.
+    """
+    cron_type = '{{ cookiecutter.cronjob }}'
+    base_path = join('deployment', 'application', 'base')
+    if cron_type == 'complex':
+        cron_file = join(deployment_folder, base_path, 'cronjob.yaml')
+        remove(cron_file)
+    elif cron_type == 'simple':
+        cron_folder = join(deployment_folder, base_path, 'cronjob')
+        shutil.rmtree(cron_folder)
+
+
 def set_up_deployment():
     """
     If a framework project was created also move deployment configuration
@@ -72,6 +87,8 @@ def set_up_deployment():
 
     LOG.info('Moving deployment configuration for %s project ...', framework)
     deployment_folder = join('_', 'deployment', technology)
+    if technology == 'python':
+        prune_cronjob_version(deployment_folder)
     for file_or_folder in listdir(deployment_folder):
         shutil.move(join(deployment_folder, file_or_folder), '.')
 
