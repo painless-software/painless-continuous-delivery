@@ -1,6 +1,10 @@
 - op: replace
   path: /spec/schedule
-  value: "*/5 * * * *"
+  value: "1 1 * * *"
 - op: replace
-  path: /spec/jobTemplate/spec/template/spec/containers/0/args
-  value: ["/bin/sh", "-c", "date; echo Hello1 from {{ cookiecutter.project_slug }}"]
+  path: /spec/jobTemplate/spec/template/spec/containers/0/command
+{%- if cookiecutter.framework == 'Django' %}
+  value: ['python', 'manage.py', 'dumpdata']
+{%- else %}
+  command: ['echo', 'hello world']
+{%- endif %}
