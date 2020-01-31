@@ -13,6 +13,6 @@ spec:
         spec:
           containers:
           - name: hello
-            image: busybox
-            args: ARGS
+            image: IMAGE
+            command: ARGS
           restartPolicy: Never

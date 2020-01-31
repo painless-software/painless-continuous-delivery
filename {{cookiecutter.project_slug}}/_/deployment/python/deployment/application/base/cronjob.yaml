@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: cron-example
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "1 1 * * *"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
@@ -11,10 +11,14 @@ spec:
       template:
         spec:
           containers:
-          - name: hello
-            image: busybox
-            args:
-            - /bin/sh
-            - -c
-            - date; echo Hello from {{ cookiecutter.project_slug }}
+          - name: application
+            image: IMAGE
+{%- if cookiecutter.framework == 'Django' %}
+            command: ['python', 'manage.py', 'dumpdata']
+            envFrom:
+            - secretRef:
+                name: application
+{%- else %}
+            command: ['echo', 'hello world']
+{%- endif %}
           restartPolicy: Never
