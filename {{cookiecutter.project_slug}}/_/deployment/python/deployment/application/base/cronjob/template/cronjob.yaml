@@ -12,7 +12,17 @@ spec:
       template:
         spec:
           containers:
-          - name: hello
+          - name: cron-example
             image: IMAGE
-            command: ARGS
+            command: ['/bin/bash', '-c']
+            args: ARGS
+            envFrom:
+              - secretRef:
+                  name: application
+            volumeMounts:
+              - mountPath: /app/backups
+                name: backup-volume
           restartPolicy: Never
+          volumes:
+            - name: backup-volume
+              emptyDir: {}

@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: cron-example
+  name: cron-backup
 spec:
   schedule: "1 1 * * *"
   successfulJobsHistoryLimit: 1
@@ -14,7 +14,10 @@ spec:
           - name: application
             image: IMAGE
 {%- if cookiecutter.framework == 'Django' %}
-            command: ['python', 'manage.py', 'dumpdata']
+            command: ['/bin/bash', '-c']
+            args: 
+              - python manage.py dumpdata -o backups/db.json ;
+              - cat backups/db.json
             envFrom:
             - secretRef:
                 name: application

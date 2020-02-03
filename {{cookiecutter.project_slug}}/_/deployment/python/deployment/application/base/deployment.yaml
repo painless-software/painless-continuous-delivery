@@ -49,9 +49,6 @@ spec:
           preStop:
             exec:
               command: ["sleep", "20"]
-        volumeMounts:
-        - mountPath: /app/backups
-          name: backup-volume        
       - name: nginx
         image: IMAGE
         command: ['nginx']
@@ -87,6 +84,3 @@ spec:
                 matchLabels:
                   name: application
               topologyKey: kubernetes.io/hostname
-      volumes:
-      - name: backup-volume
-        emptyDir: {}
