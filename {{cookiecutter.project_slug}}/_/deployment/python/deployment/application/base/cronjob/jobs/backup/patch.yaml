@@ -2,9 +2,9 @@
   path: /spec/schedule
   value: "1 1 * * *"
 - op: replace
-  path: /spec/jobTemplate/spec/template/spec/containers/0/command
+  path: /spec/jobTemplate/spec/template/spec/containers/0/args
 {%- if cookiecutter.framework == 'Django' %}
-  value: ['python', 'manage.py', 'dumpdata']
+  value: ['python', 'manage.py', 'dumpdata', '-o', 'backups/db.json']
 {%- else %}
   command: ['echo', 'hello world']
 {%- endif %}
