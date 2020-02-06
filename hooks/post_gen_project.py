@@ -57,10 +57,10 @@ def prune_cronjob_version(deployment_folder):
     """
     cron_type = '{{ cookiecutter.cronjob }}'
     base_path = join('deployment', 'application', 'base')
-    if cron_type == 'complex':
+    if cron_type != 'simple':
         cron_file = join(deployment_folder, base_path, 'cronjob.yaml')
         remove(cron_file)
-    elif cron_type == 'simple':
+    if cron_type != 'complex':
         cron_folder = join(deployment_folder, base_path, 'cronjob')
         shutil.rmtree(cron_folder)
 
