@@ -15,5 +15,10 @@ nameSuffix: -production
 {%- else %}
 namespace: {{ cookiecutter.project_slug }}-production
 {%- endif %}
+configMapGenerator:
+- name: application
+  behavior: merge
+  envs:
+  - application.env
 patchesStrategicMerge:
 - deployment.yaml

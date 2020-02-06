@@ -15,3 +15,8 @@ nameSuffix: -integration
 {%- else %}
 namespace: {{ cookiecutter.project_slug }}-integration
 {%- endif %}
+configMapGenerator:
+- name: application
+  behavior: merge
+  envs:
+  - application.env

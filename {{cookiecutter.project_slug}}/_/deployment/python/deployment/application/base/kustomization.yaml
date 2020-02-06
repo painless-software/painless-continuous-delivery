@@ -5,6 +5,10 @@ commonLabels:
   app: {{ cookiecutter.project_slug }}
 {%- endif %}
   component: application
+configMapGenerator:
+- name: application
+  envs:
+  - application.env
 crds:
 - route-crd.yaml
 {%- if cookiecutter.environment_strategy == 'shared' %}
