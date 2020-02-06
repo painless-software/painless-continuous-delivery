@@ -3,6 +3,7 @@ from os import listdir, remove
 from os.path import join
 from subprocess import CalledProcessError, check_call, check_output, STDOUT
 
+import contextlib
 import logging
 import shutil
 import sys
@@ -57,12 +58,13 @@ def prune_cronjob_style(deployment_folder):
     """
     cron_type = '{{ cookiecutter.cronjob }}'
     base_path = join('deployment', 'application', 'base')
-    if cron_type != 'simple':
-        cron_file = join(deployment_folder, base_path, 'cronjob.yaml')
-        remove(cron_file)
-    if cron_type != 'complex':
-        cron_folder = join(deployment_folder, base_path, 'cronjob')
-        shutil.rmtree(cron_folder)
+    with contextlib.suppress(FileNotFoundError):
+        if cron_type != 'simple':
+            cron_file = join(deployment_folder, base_path, 'cronjob.yaml')
+            remove(cron_file)
+        if cron_type != 'complex':
+            cron_folder = join(deployment_folder, base_path, 'cronjob')
+            shutil.rmtree(cron_folder)
 
 
 def set_up_deployment():
@@ -87,8 +89,7 @@ def set_up_deployment():
 
     LOG.info('Moving deployment configuration for %s project ...', framework)
     deployment_folder = join('_', 'deployment', technology)
-    if technology == 'python':
-        prune_cronjob_style(deployment_folder)
+    prune_cronjob_style(deployment_folder)
     for file_or_folder in listdir(deployment_folder):
         shutil.move(join(deployment_folder, file_or_folder), '.')
 
