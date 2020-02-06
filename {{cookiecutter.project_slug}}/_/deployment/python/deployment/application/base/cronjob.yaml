@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: cron-backup
 spec:
-  schedule: "1 1 * * *"
+  schedule: "59 1 * * *"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:

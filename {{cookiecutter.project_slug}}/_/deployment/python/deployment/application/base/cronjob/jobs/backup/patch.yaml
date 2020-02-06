@@ -1,6 +1,6 @@
 - op: replace
   path: /spec/schedule
-  value: "1 1 * * *"
+  value: "59 1 * * *"
 - op: replace
   path: /spec/jobTemplate/spec/template/spec/containers/0/args
 {%- if cookiecutter.framework == 'Django' %}
