@@ -48,6 +48,7 @@
         "MySQL/MariaDB"
     ],
     "cronjob": [
+        "(none)",
         "simple",
         "complex"
     ],
