@@ -15,6 +15,8 @@ spec:
         image: IMAGE
         command: ['python', 'manage.py', 'wait_for_database']
         envFrom:
+        - configMapRef:
+            name: application
         - secretRef:
             name: application
       containers:
@@ -24,6 +26,8 @@ spec:
         - name: uwsgi
           containerPort: 8000
         envFrom:
+        - configMapRef:
+            name: application
         - secretRef:
             name: application
         livenessProbe:
