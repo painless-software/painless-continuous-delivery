@@ -8,5 +8,5 @@ patchesJson6902:
     group: batch
     version: v1beta1
     kind: CronJob
-    name: cron-examples
+    name: application-job
   path: patch.yaml
