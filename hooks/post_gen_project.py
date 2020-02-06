@@ -50,7 +50,7 @@ def set_up_framework_and_tests():
             shutil.move(join(testing_folder, file_or_folder), '.')
 
 
-def prune_cronjob_version(deployment_folder):
+def prune_cronjob_style(deployment_folder):
     """
     Based on selected cronjob version, remove the files corresponding
     to the unused version.
@@ -88,7 +88,7 @@ def set_up_deployment():
     LOG.info('Moving deployment configuration for %s project ...', framework)
     deployment_folder = join('_', 'deployment', technology)
     if technology == 'python':
-        prune_cronjob_version(deployment_folder)
+        prune_cronjob_style(deployment_folder)
     for file_or_folder in listdir(deployment_folder):
         shutil.move(join(deployment_folder, file_or_folder), '.')
 
