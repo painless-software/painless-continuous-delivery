@@ -1,6 +1,5 @@
 """Tests for generating a deployment configuration."""
 from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
-from . import verify_file_matches_repo_root
 
 
 # pylint: disable=too-few-public-methods

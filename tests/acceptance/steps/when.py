@@ -30,6 +30,6 @@ def step_impl(context):
     with context.safe_chdir(context.generated_dir):
         deploy_dir = Path('.') / 'deployment' / 'application' / 'overlays' / 'production'  # noqa
         context.log_run('kustomize build %s' % deploy_dir)
-    
+
     assert context.exit_code == 0, \
         "Command failed with error:\n%s" % context.log
