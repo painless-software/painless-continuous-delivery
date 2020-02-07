@@ -1,5 +1,5 @@
 Feature: Painless Continuous Delivery project setup powered by Cookiecutter
-  As a software developer
+  As a PHP software developer
   I want to run just a simple, single command
   So that I get a working best-practice setup for software development
 

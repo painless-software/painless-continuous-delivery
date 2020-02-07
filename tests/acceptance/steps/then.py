@@ -56,3 +56,8 @@ def step_impl(context, appurl, appcontent):
         "Application doesn't show expected content: {expected}\n" \
         "----------------- (response body follows)\n" \
         "{body}".format(expected=appcontent, body=response_body)
+
+
+@then('it contains the expected Kubernetes objects')  # noqa
+def step_impl(context):
+    assert True == False
