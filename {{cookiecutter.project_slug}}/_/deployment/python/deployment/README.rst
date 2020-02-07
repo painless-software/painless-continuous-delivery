@@ -6,6 +6,8 @@ software, locally for development and on remote servers.
 
 `application/ <application/>`__
     Web server to Python interface configuration
+`database/ <database/>`__
+    Database service deployment configuration
 `webserver/ <webserver/>`__
     Web server configuration for the project
 
