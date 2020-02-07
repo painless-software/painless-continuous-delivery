@@ -47,6 +47,7 @@ tox -e cookiecutter -- \
     environment_strategy=shared \
     database=Postgres \
     framework=Django \
+    cronjob=simple \
     vcs_account=appuio \
     license=GPL-3 \
     push=force \
