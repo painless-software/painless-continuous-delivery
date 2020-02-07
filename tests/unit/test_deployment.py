@@ -29,7 +29,7 @@ class TestDeployment:
         assert result.project.basename == 'myproject'
         assert result.project.isdir()
         assert result.project.join('deployment').isdir()
-        
+
         deployment_base = \
             result.project.join('deployment', 'application', 'base')
 
