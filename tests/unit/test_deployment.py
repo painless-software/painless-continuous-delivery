@@ -10,17 +10,44 @@ class TestDeployment:
     scenarios).
     """
     scenarios = [
-        ('k8s', {}),
-    ]
+        ('no_cronjobs', {
+            'cronjob': '(none))',
+            'files_present': [],
+            'files_absent': [
+                'cronjob.yaml',
+                'cronjob',
+            ],
+        }),
+        ('simple_cronjob', {
+            'cronjob': 'simple',
+            'files_present': [
+                'cronjob.yaml',
+            ],
+            'files_absent': [
+                'cronjob',
+            ],
+        }),
+        ('complex_cronjobs', {
+            'cronjob': 'complex',
+            'files_present': [
+                'cronjob',
+            ],
+            'files_absent': [
+                'cronjob.yaml',
+            ],
+        }),
+   ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
-    def test_deploy_config(self, cookies):
+    def test_deploy_config(self, cookies, cronjob, files_present, 
+                           files_absent):
         """
         Generate a deployment configuration and verify it is complete.
         """
         result = cookies.bake(extra_context={
             'project_slug': 'myproject',
             'framework': 'Django',
+            'cronjob': cronjob,
         })
 
         assert result.exit_code == 0
@@ -39,3 +66,9 @@ class TestDeployment:
             deployment_base.join('kustomization.yaml').readlines(cr=False)
 
         assert 'configMapGenerator:' in kustom_lines
+
+        for filename in files_present:
+            assert deployment_base.join(filename).exists()
+
+        for filename in files_absent:
+            assert not deployment_base.join(filename).exists()
