@@ -2,7 +2,7 @@
   - parallel: &tests
     {%- for env in cookiecutter.tests.split(",") %}
     - step:
-        name: {{ env|replace('py35','Python 3.5')|replace('py36','Python 3.6')|replace('py37','Python 3.7')|replace('pypy3','PyPy 3')|replace('behave','Behave') }}
+        name: {{ env|replace('py35','Python 3.5')|replace('py36','Python 3.6')|replace('py37','Python 3.7')|replace('py38','Python 3.8')|replace('pypy3','PyPy 3')|replace('behave','Behave') }}
         script:
         - tox -e {{ env }}
     {%- endfor %}
