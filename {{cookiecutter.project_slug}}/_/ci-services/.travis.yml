@@ -1,10 +1,11 @@
 # Painless deployment with Travis CI.
 # Visit the docs at https://docs.travis-ci.com/
 
+os: linux
 language: python
 python:
 {%- for env in cookiecutter.tests.split(",") if env not in ["behave", "py37"] %}
-- {{ env|replace('py35','3.5')|replace('py36','3.6')|replace('py37','3.7') }}
+- {{ env|replace('py35','3.5')|replace('py36','3.6')|replace('py37','3.7')|replace('py38','3.8') }}
 {%- endfor %}
 
 stages:

@@ -44,6 +44,10 @@ py37:
   stage: test
   script: tox -e py37
 
+py38:
+  stage: test
+  script: tox -e py38
+
 pypy3:
   stage: test
   script: tox -e pypy3

@@ -1,10 +1,13 @@
 # Painless deployment with Travis CI.
 # Visit the docs at https://docs.travis-ci.com/
 
+os: linux
 language: python
 python:
 - 3.5
 - 3.6
+- 3.7
+- 3.8
 - pypy3
 
 stages:
@@ -13,11 +16,10 @@ stages:
 
 jobs:
   include:
-  - { stage: lint, python: 3.6, env: TOXENV=flake8 }
-  - { stage: lint, python: 3.6, env: TOXENV=pylint }
-  - { stage: lint, python: 3.6, env: TOXENV=bandit }
-  - { stage: test, python: 3.7, dist: xenial, sudo: true }
-  - { stage: test, python: 3.6, env: TOXENV=behave }
+  - { stage: lint, python: 3.7, env: TOXENV=flake8 }
+  - { stage: lint, python: 3.7, env: TOXENV=pylint }
+  - { stage: lint, python: 3.7, env: TOXENV=bandit }
+  - { stage: test, python: 3.7, env: TOXENV=behave }
 
   allow_failures:
   - env: TOXENV=bandit

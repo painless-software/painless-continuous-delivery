@@ -33,6 +33,10 @@ pipelines:
         script:
         - tox -e py37
     - step:
+        name: Python 3.8
+        script:
+        - tox -e py38
+    - step:
         name: PyPy 3
         script:
         - tox -e pypy3
