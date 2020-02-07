@@ -40,15 +40,16 @@ done
 
 log 2 'Create demo project from scratch and push it'
 tox -e cookiecutter -- \
-    project_description="Hello world with Django" \
     project_name="Example Django" \
+    project_description="Hello world with Django" \
+    vcs_platform=GitLab.com \
+    vcs_account=appuio \
     container_platform=APPUiO \
     container_platform_account="demo4501@appuio.ch" \
     environment_strategy=shared \
-    database=Postgres \
+    cronjobs=simple \
     framework=Django \
-    cronjob=simple \
-    vcs_account=appuio \
+    database=Postgres \
     license=GPL-3 \
     push=force \
     --no-input

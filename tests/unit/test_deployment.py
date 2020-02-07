@@ -11,7 +11,7 @@ class TestDeployment:
     """
     scenarios = [
         ('no_cronjobs', {
-            'cronjob': '(none)',
+            'cronjobs': '(none)',
             'files_present': [],
             'files_absent': [
                 'cronjob.yaml',
@@ -19,7 +19,7 @@ class TestDeployment:
             ],
         }),
         ('simple_cronjob', {
-            'cronjob': 'simple',
+            'cronjobs': 'simple',
             'files_present': [
                 'cronjob.yaml',
             ],
@@ -28,7 +28,7 @@ class TestDeployment:
             ],
         }),
         ('complex_cronjobs', {
-            'cronjob': 'complex',
+            'cronjobs': 'complex',
             'files_present': [
                 'cronjob',
             ],
@@ -39,7 +39,7 @@ class TestDeployment:
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
-    def test_deploy_config(self, cookies, cronjob, files_present,
+    def test_deploy_config(self, cookies, cronjobs, files_present,
                            files_absent):
         """
         Generate a deployment configuration and verify it is complete.
@@ -47,7 +47,7 @@ class TestDeployment:
         result = cookies.bake(extra_context={
             'project_slug': 'myproject',
             'framework': 'Django',
-            'cronjob': cronjob,
+            'cronjobs': cronjobs,
         })
 
         assert result.exit_code == 0

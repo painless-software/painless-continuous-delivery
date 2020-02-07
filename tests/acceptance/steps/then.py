@@ -72,4 +72,4 @@ def step_impl(context):
     for kind in expected_kinds:
         needle = 'kind: %s\n' % kind
         assert needle in context.log, \
-            "Kind '%s' missing in configuration" % kind
+            "Kind '%s' missing in configuration\n\n%s" % (kind, context.log)

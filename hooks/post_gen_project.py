@@ -53,10 +53,9 @@ def set_up_framework_and_tests():
 
 def prune_cronjob_style(deployment_folder):
     """
-    Based on selected cronjob version, remove the files corresponding
-    to the unused version.
+    Based on selected cronjob setup style, remove the other unneeded files.
     """
-    cron_type = '{{ cookiecutter.cronjob }}'
+    cron_type = '{{ cookiecutter.cronjobs }}'
     base_path = join('deployment', 'application', 'base')
     with contextlib.suppress(FileNotFoundError):
         if cron_type != 'simple':

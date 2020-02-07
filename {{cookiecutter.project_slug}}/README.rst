@@ -174,19 +174,23 @@ on our container platform: *development*, *integration*, *production*
 Credits
 ^^^^^^^
 
-Made with ♥ by Painless Continuous Delivery Cookiecutter. This project was created with:
+Made with ♥ by `Painless Continuous Delivery`_ Cookiecutter. This project was
+generated via:
 
 .. code-block:: console
 
     cookiecutter gh:painless-software/painless-continuous-delivery \
         project_name="{{ cookiecutter.project_name }}" \
         project_description="{{ cookiecutter.project_description }}" \
+        vcs_platform={{ cookiecutter.vcs_platform }} \
+        vcs_account={{ cookiecutter.vcs_account }} \
         container_platform={{ cookiecutter.container_platform }} \
         container_platform_account="{{ cookiecutter.container_platform_account }}" \
         environment_strategy={{ cookiecutter.environment_strategy }} \
-        vcs_platform={{ cookiecutter.vcs_platform }} \
-        vcs_account={{ cookiecutter.vcs_account }} \
+        cronjobs={{ cookiecutter.cronjobs }} \
         framework={{ cookiecutter.framework }} \
         database={{ cookiecutter.database }} \
         license={{ cookiecutter.license }} \
         --no-input
+
+.. _Painless Continuous Delivery: https://github.com/painless-software/painless-continuous-delivery/
