@@ -3,10 +3,7 @@ Feature: Painless Continuous Delivery project setup powered by Cookiecutter
   I want to run just a simple, single command
   So that I get a working best-practice setup for software development
 
-  Scenario Outline: Default tests pass after project generation
+  Scenario: Default tests pass after project generation
     Given I have just created a Django project
     When I generate the deployment configuration
     Then it contains the expected Kubernetes objects
-
-    Examples: default
-      ||
