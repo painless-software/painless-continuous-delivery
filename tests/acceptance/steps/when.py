@@ -16,3 +16,9 @@ def step_impl(context, commands):
 def step_impl(context, command):
     with context.safe_chdir(context.generated_dir):
         context.log_run(command)
+
+
+@when('I generate the deployment configuration')  # noqa
+def step_impl(context):
+    with context.safe_chdir(context.generated_dir):
+        context.log_run('kustomize build')
