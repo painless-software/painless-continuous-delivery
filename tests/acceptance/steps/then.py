@@ -60,4 +60,15 @@ def step_impl(context, appurl, appcontent):
 
 @then('it contains the expected Kubernetes objects')  # noqa
 def step_impl(context):
-    assert True == False
+    expected_kinds = [
+        'ConfigMap',
+        'Deployment',
+        'RoleBinding',
+        'Route',
+        'Secret',
+        'Service',
+    ]
+    for kind in expected_kinds:
+        needle = 'kind: %s\n' % kind
+        assert needle in context.log, \
+            "Kind '%s' missing in configuration" % kind

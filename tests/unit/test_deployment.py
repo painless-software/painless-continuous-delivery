@@ -31,10 +31,12 @@ class TestDeployment:
         assert result.project.isdir()
         assert result.project.join('deployment').isdir()
         
-        deployment_base = result.project.join('deployment',
-                                                 'application', 
-                                                 'base')
+        deployment_base = \
+            result.project.join('deployment', 'application', 'base')
+
         assert deployment_base.isdir()
-        kustom_lines = deployment_base.join(
-            'kustomization.yaml').readlines(cr=False)
+
+        kustom_lines = \
+            deployment_base.join('kustomization.yaml').readlines(cr=False)
+
         assert 'configMapGenerator:' in kustom_lines

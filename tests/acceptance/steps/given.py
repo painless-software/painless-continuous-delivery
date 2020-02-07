@@ -74,7 +74,7 @@ def step_impl(context, framework, checks='phpcs', tests='phpunit'):
 
 @given('I have just created a Django project')  # noqa
 def step_impl(context):
-    project_slug = 'deployable-project'
+    project_slug = 'painless-deployable-project'
     context.set_logfilename(project_slug)
 
     context.generated_dir = cookiecutter(
@@ -84,7 +84,4 @@ def step_impl(context):
         extra_context={
             'project_slug': project_slug,
             'framework': 'Django',
-            'database': 'MySQL/MariaDB',
-            'vcs_platform': 'GitLab.com',
-            'ci_service': '.gitlab-ci.yml',
         })
