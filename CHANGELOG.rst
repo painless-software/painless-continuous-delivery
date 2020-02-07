@@ -4,7 +4,12 @@ Change Log
 All notable changes to this project are documented in this file.
 This project adheres to `Semantic Versioning <https://semver.org>`__.
 
-0.5.0 (2020-02.07)
+0.6.0 (unreleased)
+------------------
+
+- 
+
+0.5.0 (2020-02-07)
 ------------------
 
 - Add cron jobs with Kubernetes manifests (simple, complex)
