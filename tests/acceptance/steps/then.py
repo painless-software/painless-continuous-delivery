@@ -62,6 +62,7 @@ def step_impl(context, appurl, appcontent):
 def step_impl(context):
     expected_kinds = [
         'ConfigMap',
+        'CronJob',
         'Deployment',
         'RoleBinding',
         'Route',

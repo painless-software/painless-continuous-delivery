@@ -84,4 +84,5 @@ def step_impl(context):
         extra_context={
             'project_slug': project_slug,
             'framework': 'Django',
+            'cronjob': 'complex',
         })
