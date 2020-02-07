@@ -11,7 +11,7 @@ class TestDeployment:
     """
     scenarios = [
         ('no_cronjobs', {
-            'cronjob': '(none))',
+            'cronjob': '(none)',
             'files_present': [],
             'files_absent': [
                 'cronjob.yaml',
