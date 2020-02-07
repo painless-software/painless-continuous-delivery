@@ -11,7 +11,7 @@ def step_impl(context, commands):
     with context.safe_chdir(context.generated_dir):
         for command in testsuite:
             context.log_run(command)
-            
+
             assert context.exit_code == 0, \
                 "Command failed with error:\n%s" % context.log
 
@@ -20,7 +20,7 @@ def step_impl(context, commands):
 def step_impl(context, command):
     with context.safe_chdir(context.generated_dir):
         context.log_run(command)
-    
+
     assert context.exit_code == 0, \
         "Command failed with error:\n%s" % context.log
 
