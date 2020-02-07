@@ -23,7 +23,7 @@ resources:
 - cronjob.yaml
 {%- endif %}
 - deployment.yaml
+- rolebinding.yaml
 - route.yaml
 - secret.yaml
 - service.yaml
-- rolebinding.yaml
