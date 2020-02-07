@@ -36,10 +36,10 @@ class TestDeployment:
                 'cronjob.yaml',
             ],
         }),
-   ]
+    ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
-    def test_deploy_config(self, cookies, cronjob, files_present, 
+    def test_deploy_config(self, cookies, cronjob, files_present,
                            files_absent):
         """
         Generate a deployment configuration and verify it is complete.
