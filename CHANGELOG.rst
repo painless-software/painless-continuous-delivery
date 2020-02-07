@@ -4,10 +4,16 @@ Change Log
 All notable changes to this project are documented in this file.
 This project adheres to `Semantic Versioning <https://semver.org>`__.
 
-0.5.0 (unreleased)
+0.5.0 (2020-02.07)
 ------------------
 
+- Add cron jobs with Kubernetes manifests (simple, complex)
+- Enable environment variables via Kubernetes ConfigMap object
+- Manage cluster permissions via Kubernetes RoleBinding objects
+- Enable GitLab integration with target cluster
 - Use Kustomize for deployments (instead of OpenShift templates)
+- Allow a shared namespace (alternative to 3 dedicated namespaces)
+- Automatically deploy a field test on each change
 
 0.4.0 (2019-06-21)
 ------------------
