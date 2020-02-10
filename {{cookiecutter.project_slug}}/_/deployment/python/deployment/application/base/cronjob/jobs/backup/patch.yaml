@@ -6,5 +6,5 @@
 {%- if cookiecutter.framework == 'Django' %}
   value: ['python', 'manage.py', 'dumpdata', '-o', 'backups/db.json']
 {%- else %}
-  command: ['echo', 'hello world']
+  value: ['echo', 'hello world']
 {%- endif %}
