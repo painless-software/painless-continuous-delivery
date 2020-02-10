@@ -18,7 +18,8 @@ spec:
             command: ['/bin/bash', '-c']
             args:
               - python manage.py dumpdata -o backups/db.json ;
-              - cat backups/db.json
+                echo backups/db.json ;
+                cat backups/db.json
             envFrom:
             - secretRef:
                 name: application
