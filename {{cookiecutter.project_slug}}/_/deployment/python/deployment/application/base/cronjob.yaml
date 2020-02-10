@@ -22,7 +22,15 @@ spec:
             envFrom:
             - secretRef:
                 name: application
+            volumeMounts:
+              - mountPath: /app/backups
+                name: backup-volume          
 {%- else %}
             command: ['echo', 'hello world']
 {%- endif %}
           restartPolicy: Never
+{%- if cookiecutter.framework == 'Django' %}
+          volumes:
+            - name: backup-volume
+              emptyDir: {}
+{%- endif %}
