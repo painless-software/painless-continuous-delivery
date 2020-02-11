@@ -3,4 +3,4 @@
   value: "*/5 * * * *"
 - op: replace
   path: /spec/jobTemplate/spec/template/spec/containers/0/args
-  value: ['echo', 'hello world']
+  value: ['echo hello world']
