@@ -61,6 +61,8 @@ tox -e cookiecutter -- \
     push=force \
     --no-input
 
+cd /tmp/painless-generated-projects/example-django
+
 log 3 'Prepare feature branch'
 git checkout -b feature/welcome-page
 
