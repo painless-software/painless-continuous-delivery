@@ -13,14 +13,18 @@ spec:
       initContainers:
       - name: wait-for-database
         image: IMAGE
-        command: ['python', 'manage.py', 'wait_for_database']
+        command: {% if cookiecutter.framework == 'Django' -%}
+            ["python", "manage.py", "wait_for_database"]
+          {%- else -%}
+            ["sleep", "20"]
+          {%- endif %}
         envFrom:
         - configMapRef:
             name: application
         - secretRef:
             name: application
       containers:
-      - name: django
+      - name: {{ cookiecutter.framework|lower }}
         image: IMAGE
         ports:
         - name: uwsgi
@@ -51,7 +55,7 @@ spec:
               command: ["sleep", "20"]
       - name: nginx
         image: IMAGE
-        command: ['nginx']
+        command: ["nginx"]
         ports:
         - name: http
           containerPort: 8080
