@@ -8,12 +8,11 @@
 #
 # To run this field test locally:
 #  (1) Generate a Personal Access Token on GitLab 
-#      Top-right usesr menu > Settings > Access Tokens
+#      Top-right user menu > Settings > Access Tokens
 #  (2) export GITLAB_API_TOKEN=<your personal access token>
-#  (3) run ./tests/field/example-django.sh
-# The generated files are found in /tmp/painless-generated-project
+#  (3) run this script
+# The generated files are found in /tmp/painless-generated-projects
 # 
-
 set -e
 
 log() {
@@ -48,7 +47,6 @@ done
 
 log 2 'Create demo project from scratch and push it'
 tox -e cookiecutter -- \
-    -o /tmp/painless-generated-project \
     project_name="Example Django" \
     project_description="Hello world with Django" \
     vcs_platform=GitLab.com \
@@ -62,8 +60,6 @@ tox -e cookiecutter -- \
     license=GPL-3 \
     push=force \
     --no-input
-
-cd /tmp/painless-generated-project/example-django
 
 log 3 'Prepare feature branch'
 git checkout -b feature/welcome-page
