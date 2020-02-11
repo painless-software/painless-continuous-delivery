@@ -4,7 +4,7 @@
 - op: replace
   path: /spec/jobTemplate/spec/template/spec/containers/0/args
 {%- if cookiecutter.framework == 'Django' %}
-  value: ['python', 'manage.py', 'dumpdata', '-o', '/app/backups/db.json']
+  value: ['python manage.py dumpdata -o /app/backups/db.json ; cat /app/backups/db.json']
 {%- else %}
-  value: ['echo', 'hello world']
+  value: ['echo hello world']
 {%- endif %}
