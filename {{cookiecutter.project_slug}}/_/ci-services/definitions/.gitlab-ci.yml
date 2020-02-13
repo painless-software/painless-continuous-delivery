@@ -56,7 +56,7 @@ stages:
   - oc -n ${TARGET} get secret ${DATABASE_NAME} ||
     oc -n ${TARGET} create secret generic ${DATABASE_NAME}
     --from-literal=POSTGRESQL_DATABASE={{ cookiecutter.project_slug.replace('-', '_') }}
-    --from-literal=POSTGRESQL_USER={{ cookiecutter.project_slug.replace('-', '_') }}
+    --from-literal=POSTGRESQL_USERNAME={{ cookiecutter.project_slug.replace('-', '_') }}
     --from-literal=POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
 
 .deploy:

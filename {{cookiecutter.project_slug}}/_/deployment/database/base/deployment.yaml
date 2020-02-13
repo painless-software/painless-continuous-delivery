@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: docker-registry.default.svc:5000/openshift/postgresql:9.6
+        image: docker.io/bitnami/postgresql:9.6
         imagePullPolicy: Always
         ports:
         - name: postgres
@@ -28,7 +28,8 @@ spec:
             - /bin/sh
             - -i
             - -c
-            - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+            - PGPASSWORD=$POSTGRESQL_PASSWORD 
+              psql -h 127.0.0.1 -U $POSTGRESQL_USERNAME -q -d $POSTGRESQL_DATABASE -c
               'SELECT 1'
           initialDelaySeconds: 8
         resources:
@@ -40,7 +41,7 @@ spec:
             memory: 1Gi
         volumeMounts:
         - name: data
-          mountPath: /var/lib/pgsql/data
+          mountPath: /bitnami/postgresql
       restartPolicy: Always
   volumeClaimTemplates:
     - metadata:
