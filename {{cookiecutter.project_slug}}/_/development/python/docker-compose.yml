@@ -26,11 +26,11 @@ services:
 
 {%- if cookiecutter.database == 'Postgres' %}
   database:
-    image: docker.io/library/postgres:9.6
+    image: docker.io/bitnami/postgresql:9.6
     ports:
       - "5432:5432"
     volumes:
-      - database_data:/var/lib/postgresql/data
+      - database_data:/bitnami/postgresql
     restart: on-failure
 {%- elif cookiecutter.database == 'MySQL/MariaDB' %}
   database:
