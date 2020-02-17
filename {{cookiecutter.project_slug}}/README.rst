@@ -159,6 +159,15 @@ We have 3 environments corresponding to 3 deployments in a single namespace
 on our container platform: *development*, *integration*, *production*
 {%- endif %}
 
+- **development** 
+  is used for internal testing of infrastructure, such as endpoints, 
+  pipelines, backend authentication, load tests, and database configuration.
+- **integration** 
+  is used to develop and test the integration of external applications
+  that access the application.
+- **production** 
+  should be self-explanatory: It is used as the live, productive system.
+
 - Any merge request triggers a deployment (of the feature branch) on
   *development*.
 - Any change on the main branch, e.g. when a merge request is merged into
