@@ -34,7 +34,7 @@ services:
     restart: on-failure
 {%- elif cookiecutter.database == 'MySQL' %}
   database:
-    image: docker.io/library/MySQL
+    image: docker.io/library/mariadb:10
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: mysql

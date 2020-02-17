@@ -17,12 +17,12 @@ services:
 
 {%- if cookiecutter.database == 'Postgres' %}
   database:
-    image: postgres
+    image: docker.io/library/postgres:12
     volumes:
       - database_data:/var/lib/postgresql/data
 {%- elif cookiecutter.database == 'MySQL' %}
   database:
-    image: MySQL
+    image: docker.io/library/mariadb:10
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: mysql
