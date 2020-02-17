@@ -48,17 +48,17 @@ stages:
     DATABASE_NAME: postgres{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
   before_script:
   - export DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
-  - export POSTGRES_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
+  - export POSTGRESQL_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
   - export POSTGRESQL_USERNAME={{ cookiecutter.project_slug.replace('-', '_') }}
   - oc -n ${TARGET} get secret ${APPLICATION_NAME} ||
     oc -n ${TARGET} create secret generic ${APPLICATION_NAME}
-    --from-literal=DJANGO_DATABASE_URL=postgres://${POSTGRESQL_USERNAME}:${POSTGRES_PASSWORD}@${DATABASE_NAME}/{{ cookiecutter.project_slug.replace('-', '_') }}
+    --from-literal=DJANGO_DATABASE_URL=postgres://${POSTGRESQL_USERNAME}:${POSTGRESQL_PASSWORD}@${DATABASE_NAME}/{{ cookiecutter.project_slug.replace('-', '_') }}
     --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
   - oc -n ${TARGET} get secret ${DATABASE_NAME} ||
     oc -n ${TARGET} create secret generic ${DATABASE_NAME}
     --from-literal=POSTGRESQL_DATABASE={{ cookiecutter.project_slug.replace('-', '_') }}
     --from-literal=POSTGRESQL_USERNAME=${POSTGRESQL_USERNAME}
-    --from-literal=POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
+    --from-literal=POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
 
 .deploy:
   stage: deploy
