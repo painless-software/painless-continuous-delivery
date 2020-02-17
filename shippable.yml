@@ -3,7 +3,7 @@
 
 language: python
 python:
-- 3.7
+- 3.8
 
 env:
   matrix:  # tox -l | xargs -I ARG echo '    - TOXENV=ARG'
@@ -19,7 +19,7 @@ env:
 
 matrix:
   allow_failures:
-  - env: TOXENV=bandit
+  - TOXENV=bandit
 
 build:
   ci:
