@@ -37,7 +37,7 @@ services:
     # If you use docker-machine configure port forwarding in addition!
     ports:
       - '5432:5432'
-{%- elif cookiecutter.database == 'MySQL/MariaDB' %}
+{%- elif cookiecutter.database == 'MySQL' %}
   database:
     # Make database accessible on localhost during development
     # If you use docker-machine configure port forwarding in addition!

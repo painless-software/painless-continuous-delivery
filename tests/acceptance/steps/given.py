@@ -20,7 +20,7 @@ def step_impl(context, framework, checks, tests):
             'framework': framework,
             'checks': checks,
             'tests': tests,
-            'database': 'MySQL/MariaDB',
+            'database': 'MySQL',
             'vcs_platform': 'GitLab.com',
             'ci_service': '.gitlab-ci.yml',
         })

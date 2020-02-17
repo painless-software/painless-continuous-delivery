@@ -6,7 +6,7 @@ variables:
 {%- endif %}
 
 services:
-  - name: docker:dind
+- name: docker:dind
 
 stages:
 - check
@@ -45,22 +45,21 @@ stages:
 .generate-secrets:
   variables:
     APPLICATION_NAME: application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
-    POSTGRESQL_HOST: postgres{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
+    DATABASE_HOST: {{ cookiecutter.database|lower }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
+    DATABASE_NAME: {{ cookiecutter.project_slug.replace('-', '_') }}
+    DATABASE_USERNAME: {{ cookiecutter.project_slug.replace('-', '_') }}
   before_script:
   - export DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
-  - export POSTGRESQL_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
-  - export SANITIZED_NAME={{ cookiecutter.project_slug.replace('-', '_') }}
-  - export POSTGRESQL_USERNAME=${SANITIZED_NAME}
-  - export POSTGRESQL_DATABASE=${SANITIZED_NAME}
+  - export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
   - oc -n ${TARGET} get secret ${APPLICATION_NAME} ||
     oc -n ${TARGET} create secret generic ${APPLICATION_NAME}
-    --from-literal=DJANGO_DATABASE_URL=postgresql://${POSTGRESQL_USERNAME}:${POSTGRESQL_PASSWORD}@${POSTGRESQL_HOST}/${POSTGRESQL_DATABASE}
-    --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-  - oc -n ${TARGET} get secret ${POSTGRESQL_HOST} ||
-    oc -n ${TARGET} create secret generic ${POSTGRESQL_HOST}
-    --from-literal=POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE}
-    --from-literal=POSTGRESQL_USERNAME=${POSTGRESQL_USERNAME}
-    --from-literal=POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
+      --from-literal=DJANGO_DATABASE_URL={{ cookiecutter.database|lower }}://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}
+      --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+  - oc -n ${TARGET} get secret ${DATABASE_HOST} ||
+    oc -n ${TARGET} create secret generic ${DATABASE_HOST}
+      --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}
+      --from-literal=POSTGRESQL_USERNAME=${DATABASE_USERNAME}
+      --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
 
 .deploy:
   stage: deploy

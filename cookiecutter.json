@@ -45,7 +45,7 @@
     "database": [
         "(none)",
         "Postgres",
-        "MySQL/MariaDB"
+        "MySQL"
     ],
     "cronjobs": [
         "(none)",

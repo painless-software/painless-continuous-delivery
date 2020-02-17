@@ -10,7 +10,7 @@ services:
   application:
     ports:
       - '80:80'
-{%- if cookiecutter.database in ['Postgres', 'MySQL/MariaDB'] %}
+{%- if cookiecutter.database in ['Postgres', 'MySQL'] %}
     depends_on:
       - database
 {% endif %}
@@ -20,9 +20,9 @@ services:
     image: postgres
     volumes:
       - database_data:/var/lib/postgresql/data
-{%- elif cookiecutter.database == 'MySQL/MariaDB' %}
+{%- elif cookiecutter.database == 'MySQL' %}
   database:
-    image: mariadb
+    image: MySQL
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: mysql
