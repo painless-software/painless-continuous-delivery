@@ -12,7 +12,7 @@ sqlparse==0.3.0           # via django
 uwsgi==2.0.18
 {% if cookiecutter.database == 'Postgres' -%}
 psycopg2==2.8.4
-{% elif cookiecutter.database == 'MySQL/MariaDB' -%}
+{% elif cookiecutter.database == 'MySQL' -%}
 mysql-connector==2.2.9
 {% endif -%}
 {% if cookiecutter.monitoring == 'Datadog' -%}

@@ -3,7 +3,7 @@ django-environ
 django-probes
 {% if cookiecutter.database == 'Postgres' -%}
 psycopg2
-{% elif cookiecutter.database == 'MySQL/MariaDB' -%}
+{% elif cookiecutter.database == 'MySQL' -%}
 mysql-connector
 {% endif -%}
 {% if cookiecutter.monitoring == 'Datadog' -%}

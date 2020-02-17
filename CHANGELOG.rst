@@ -7,7 +7,7 @@ This project adheres to `Semantic Versioning <https://semver.org>`__.
 0.6.0 (unreleased)
 ------------------
 
-- 
+- Rename database option 'MySQL/MariaDB' to just 'MySQL'
 
 0.5.0 (2020-02-07)
 ------------------
@@ -59,7 +59,7 @@ This project adheres to `Semantic Versioning <https://semver.org>`__.
 - Generate project skeletons for Django, Flask
 - Generate Docker Compose setup for local development
 - Support uWSGI and Nginx for deployment
-- Support Posgres and MariaDB/MySQL databases
+- Support Postgres and MySQL/MariaDB databases
 - Support generation of common licenses
 - Set Git remote for GitHub, GitLab, Bitbucket
 - Add Landscape badge to README for monitoring software health of this project

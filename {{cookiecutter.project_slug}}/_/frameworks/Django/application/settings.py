@@ -102,7 +102,7 @@ DATABASES = {
         default='sqlite://%s' % join(BASE_DIR, 'db.sqlite3')
         {%- elif cookiecutter.database == 'Postgres' %}
         default='postgres://postgres:postgres@database/postgres'
-        {%- elif cookiecutter.database == 'MySQL/MariaDB' %}
+        {%- elif cookiecutter.database == 'MySQL' %}
         default='mysql://mysql:mysql@database/mysql'
         {%- endif %}
     ),

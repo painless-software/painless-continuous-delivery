@@ -45,10 +45,10 @@ class TestDatabase:
                 'psycopg2',
             ],
         }),
-        ('MySQL/MariaDB', {
+        ('MySQL', {
             'project_slug': 'django-project-mysql',
             'framework': 'Django',
-            'database': 'MySQL/MariaDB',
+            'database': 'MySQL',
             'required_settings': {
                 'DATABASES': {
                     'default': env_db(
