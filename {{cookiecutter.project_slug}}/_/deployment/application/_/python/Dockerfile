@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.7-slim
+FROM docker.io/library/python:3.8-slim
 
 ARG REQUIREMENTS=requirements/production.txt
 
