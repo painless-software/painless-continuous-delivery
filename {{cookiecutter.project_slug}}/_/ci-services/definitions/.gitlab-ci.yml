@@ -24,6 +24,9 @@ stages:
 .test:
   stage: test
   image: docker.io/painless/tox
+  artifacts:
+    reports:
+      junit: tests/reports/*.xml
   only:
   - merge_requests
   - master

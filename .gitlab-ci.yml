@@ -14,6 +14,12 @@ image: painless/tox:multi
   only:
   - master
 
+.test:
+  stage: test
+  artifacts:
+    reports:
+      junit: tests/reports/*.xml
+
 stages:
 - check
 - test
@@ -33,27 +39,27 @@ bandit:
   allow_failure: true
 
 py35:
-  stage: test
+  extends: .test
   script: tox -e py35
 
 py36:
-  stage: test
+  extends: .test
   script: tox -e py36
 
 py37:
-  stage: test
+  extends: .test
   script: tox -e py37
 
 py38:
-  stage: test
+  extends: .test
   script: tox -e py38
 
 pypy3:
-  stage: test
+  extends: .test
   script: tox -e pypy3
 
 behave:
-  stage: test
+  extends: .test
   script: tox -e behave
 
 example-django:
