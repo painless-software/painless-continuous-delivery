@@ -59,6 +59,9 @@ stages:
     oc -n ${TARGET} create secret generic ${APPLICATION_NAME}
       --from-literal=DJANGO_DATABASE_URL={{ cookiecutter.database|lower }}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}
       --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+{%- if cookiecutter.monitoring == 'Sentry' %}
+      --from-literal=SENTRY_DSN=${SENTRY_DSN}
+{%- endif %}
   - oc -n ${TARGET} get secret ${DATABASE_HOST} ||
     oc -n ${TARGET} create secret generic ${DATABASE_HOST}
       --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}

@@ -54,8 +54,8 @@ tox -e cookiecutter -- \
     cronjobs=simple \
     framework=Django \
     database=Postgres \
-    license=GPL-3 \
     monitoring=Sentry \
+    license=GPL-3 \
     push=force \
     ${*} \
     --no-input
