@@ -171,6 +171,25 @@ on our container platform: *development*, *integration*, *production*
     git tag 1.0.0
     git push --tags
 
+{% if cookiecutter.monitoring == 'Sentry' -%}
+Configure Error-Tracking with Sentry
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In order to use Sentry for error-tracking, you need to create an account 
+on sentry.io and integrate it with your project on GitLab. You can find 
+the instructions in the sidebar of your GitLab project under Settings > Operations > Error Tracking.
+
+See the `GitLab Sentry error tracking documentation`_ for more details.
+
+.. _GitLab Sentry error tracking documentation: https://gitlab.com/help/user/project/operations/error_tracking
+
+You will also need to pass your Sentry account's DSN to your application. You can 
+find your DSN in your Sentry project dashboard under Settings > Client Keys. This 
+DSN should be a URL. Add this DSN to your GitLab project in Settings > CI/CD > Variables. 
+Add it as the value of a variable with key "SENTRY_DSN". Do not set the variable as
+Protected or Masked.
+
+{% endif -%}
 Credits
 ^^^^^^^
 
