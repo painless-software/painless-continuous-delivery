@@ -20,7 +20,7 @@ django-datadog==1.0.1
 {% elif cookiecutter.monitoring == 'NewRelic' -%}
 newrelic==5.4.1.134
 {% elif cookiecutter.monitoring == 'Sentry' -%}
-sentry-sdk==0.14.0
+sentry-sdk==0.14.1
 certifi==2019.11.28       # via sentry-sdk
 urllib3==1.25.7           # via sentry-sdk
 {% endif -%}

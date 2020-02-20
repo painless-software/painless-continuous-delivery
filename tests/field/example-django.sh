@@ -55,6 +55,7 @@ tox -e cookiecutter -- \
     framework=Django \
     database=Postgres \
     license=GPL-3 \
+    monitoring=Sentry \
     push=force \
     ${*} \
     --no-input
