@@ -75,8 +75,8 @@ stages:
     url: "${KUBE_URL}/console/project/{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}/overview"
   image: docker.io/appuio/oc:v3.11
   script:
+  - echo "ENVIRONMENT=${CI_ENVIRONMENT_NAME}" >> deployment/application/base/application.env
   - echo "REVISION=$(git rev-parse --short HEAD)" >> deployment/application/base/application.env
-  - echo "CI_ENVIRONMENT_NAME=${CI_ENVIRONMENT_NAME}" >> deployment/application/base/application.env
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
   - oc tag "${SOURCE}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
            "${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
