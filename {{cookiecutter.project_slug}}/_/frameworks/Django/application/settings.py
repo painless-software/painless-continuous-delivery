@@ -11,9 +11,10 @@ SENTRY_DSN = env('SENTRY_DSN', default=None)
 
 if SENTRY_DSN:
     import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
 
     sentry_sdk.init(dsn=SENTRY_DSN, integrations=[
-        sentry_sdk.integrations.django.DjangoIntegration(),
+        DjangoIntegration(),
     ])
 {%- endif %}
 
