@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 #
 # NOTE: For the very first deployment please follow
 # the steps in the README for the target platform setup.
@@ -7,13 +7,10 @@
 # pipeline in GitLab > CI/CD > Schedules.
 #
 # To run this field test locally:
-#  (1) Generate a Personal Access Token on GitLab 
-#      Top-right user menu > Settings > Access Tokens
-#  (2) export GITLAB_API_TOKEN=<your personal access token>
-#  (3) run this script
-# The generated files are found in /tmp/painless-generated-projects
-# 
-set -e
+#  (1) Generate a Personal Access Token on GitLab. Top-right user menu > Settings > Access Tokens
+#  (2) `export GITLAB_API_TOKEN=<your personal access token>` in your terminal
+#  (3) Run this script. Additional parameters will be passed to cookiecutter (try `checks= tests=`).
+#  (4) Generated files are found in /tmp/painless-generated-projects
 
 log() {
     NOCOLOR='\033[0m'
@@ -59,6 +56,7 @@ tox -e cookiecutter -- \
     database=Postgres \
     license=GPL-3 \
     push=force \
+    ${*} \
     --no-input
 
 cd /tmp/painless-generated-projects/example-django

@@ -52,7 +52,7 @@
         "simple",
         "complex"
     ],
-    "checks": "bandit,flake8,pylint,safety",
+    "checks": "bandit,flake8,pylint,safety,kubernetes",
     "tests": "py37,behave",
     "monitoring": [
         "(none)",
