@@ -5,10 +5,10 @@ from os.path import abspath, dirname, join
 from environ import Env
 
 env = Env()  # pylint: disable=invalid-name
-REVISION = env('REVISION', default=None)
-CI_ENVIRONMENT_NAME = env('CI_ENVIRONMENT_NAME', default=None)
-{%- if cookiecutter.monitoring == 'Sentry' %}
 
+ENVIRONMENT = env('ENVIRONMENT', default='local')
+REVISION = env('REVISION', default=None)
+{%- if cookiecutter.monitoring == 'Sentry' %}
 SENTRY_DSN = env('SENTRY_DSN', default=None)
 
 if SENTRY_DSN:
@@ -18,8 +18,8 @@ if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         integrations=[DjangoIntegration()],
-        release=REVISION,
-        environment=CI_ENVIRONMENT_NAME)
+        environment=ENVIRONMENT,
+        release=REVISION)
 {%- endif %}
 
 BASE_DIR = dirname(dirname(abspath(__file__)))

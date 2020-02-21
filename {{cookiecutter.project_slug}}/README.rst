@@ -91,9 +91,12 @@ Initial Setup (APPUiO + GitLab)
 Integrate External Tools
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Sentry:
-  - Configure `Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/error_tracking>`_.
-  - Add environment variable `SENTRY_DSN` in `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/settings/ci_cd>`_.
+:Sentry:
+  - Add environment variable ``SENTRY_DSN`` in
+    `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/settings/ci_cd>`_
+  - Delete secrets in your namespace and run a deployment (to recreate them)
+  - Configure `Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/error_tracking>`_
+    in your GitLab project
 
 {% endif -%}
 Working with Docker
