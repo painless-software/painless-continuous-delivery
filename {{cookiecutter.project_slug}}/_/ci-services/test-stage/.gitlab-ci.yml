@@ -1,5 +1,5 @@
-{% for env in cookiecutter.tests.split(",") %}
+{% if cookiecutter.tests %}{% for env in cookiecutter.tests.split(",") | unique %}
 {{ env }}:
   extends: .test
   script: tox -e {{ env }}
-{% endfor -%}
+{% endfor %}{% endif -%}
