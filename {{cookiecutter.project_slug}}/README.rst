@@ -96,7 +96,7 @@ Integrate External Tools
     `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/settings/ci_cd>`_
   - Delete secrets in your namespace and run a deployment (to recreate them)
   - Configure `Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/error_tracking>`_
-    in your GitLab project
+    in `Settings > Operations > Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/settings/operations>`_
 
 {% endif -%}
 Working with Docker
