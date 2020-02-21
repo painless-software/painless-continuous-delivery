@@ -27,6 +27,9 @@ services:
 {%- if cookiecutter.database == 'Postgres' %}
   database:
     image: docker.io/bitnami/postgresql:12
+    environment:
+      POSTGRESQL_PASSWORD: postgres
+      PGPASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
