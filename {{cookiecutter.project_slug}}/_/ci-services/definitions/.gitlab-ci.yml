@@ -76,7 +76,7 @@ stages:
   image: docker.io/appuio/oc:v3.11
   script:
   - echo "ENVIRONMENT=${CI_ENVIRONMENT_NAME}" >> deployment/application/base/application.env
-  - echo "REVISION=$(git rev-parse --short HEAD)" >> deployment/application/base/application.env
+  - echo "REVISION=${CI_COMMIT_SHORT_SHA}" >> deployment/application/base/application.env
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
   - oc tag "${SOURCE}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
            "${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
