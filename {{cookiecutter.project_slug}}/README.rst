@@ -29,8 +29,8 @@ For running tests, linting, security checks, etc. see instructions in the
 `tests/ <tests/README.rst>`_ folder.
 
 {% if cookiecutter.container_platform == 'APPUiO' -%}
-Initial Setup (APPUiO + GitLab)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Initial Setup
+^^^^^^^^^^^^^
 
 {% if cookiecutter.environment_strategy == 'dedicated' -%}
 #. Create a *production*, *integration* and *development* project at the
@@ -52,27 +52,42 @@ Initial Setup (APPUiO + GitLab)
    (`APPUiO docs <https://appuio-community-documentation.readthedocs.io/en/latest/services/webserver/50_pushing_to_appuio.html>`_)
 
    .. code-block:: console
-{% if cookiecutter.environment_strategy == 'dedicated' %}
-        oc -n {{ cookiecutter.project_slug }}-production create sa gitlab-ci
-        oc -n {{ cookiecutter.project_slug }}-production policy add-role-to-user admin -z gitlab-ci
-        oc -n {{ cookiecutter.project_slug }}-production sa get-token gitlab-ci
+{% set service_account = cookiecutter.ci_service|replace('.yml', '')|replace('.', '')|replace('-steps', '')|replace('travis', 'travis-ci') %}
+{%- if cookiecutter.environment_strategy == 'dedicated' %}
+        oc -n {{ cookiecutter.project_slug }}-production create sa {{ service_account }}
+        oc -n {{ cookiecutter.project_slug }}-production policy add-role-to-user admin -z {{ service_account }}
+        oc -n {{ cookiecutter.project_slug }}-production sa get-token {{ service_account }}
 {%- else %}
-        oc -n {{ cookiecutter.project_slug }} create sa gitlab-ci
-        oc -n {{ cookiecutter.project_slug }} policy add-role-to-user admin -z gitlab-ci
-        oc -n {{ cookiecutter.project_slug }} sa get-token gitlab-ci
+        oc -n {{ cookiecutter.project_slug }} create sa {{ service_account }}
+        oc -n {{ cookiecutter.project_slug }} policy add-role-to-user admin -z {{ service_account }}
+        oc -n {{ cookiecutter.project_slug }} sa get-token {{ service_account }}
 {%- endif %}
+{%- if service_account == 'bitbucket-pipelines' %}
+
+#. Note down service account token and your cluster's URL, go to
+
+   - `Settings > Repository variables
+     <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/admin/addon/admin/pipelines/repository-variables>`_
+
+   and configure the following environment variables, which allow the pipeline
+   to integrate with your container platform:
+
+   - KUBE_TOKEN
+   - KUBE_URL
+{%- elif service_account == 'gitlab-ci' %}
 
 #. Use the service account token to configure the
    `Kubernetes integration <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/clusters>`_
    of your GitLab project: (`GitLab docs <https://docs.gitlab.com/ee/user/project/clusters/>`_)
 
-   -  Operations > Kubernetes > "APPUiO" > Kubernetes cluster details > Service Token
+   - Operations > Kubernetes > "APPUiO" > Kubernetes cluster details > Service Token
 
    and ensure the following values are set in the cluster details:
 
    - RBAC-enabled cluster: *(checked)*
    - GitLab-managed cluster: *(unchecked)*
    - Project namespace: {% if cookiecutter.environment_strategy == 'shared' %}"{{ cookiecutter.project_slug }}"{% else %}*(empty)*{% endif %}
+{%- endif %}
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
 
 #. Grant the service account permissions on the *development* and *integration*
@@ -81,13 +96,13 @@ Initial Setup (APPUiO + GitLab)
    .. code-block:: console
 
         oc -n {{ cookiecutter.project_slug }}-integration policy add-role-to-user \
-          edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:gitlab-ci
+          edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:{{ service_account }}
         oc -n {{ cookiecutter.project_slug }}-development policy add-role-to-user \
-          edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:gitlab-ci
+          edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:{{ service_account }}
 {%- endif %}
 {%- endif %}
+{%- if cookiecutter.monitoring == 'Sentry' %}
 
-{% if cookiecutter.monitoring == 'Sentry' -%}
 Integrate External Tools
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -97,8 +112,8 @@ Integrate External Tools
   - Delete secrets in your namespace and run a deployment (to recreate them)
   - Configure `Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/error_tracking>`_
     in `Settings > Operations > Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/settings/operations>`_
+{%- endif %}
 
-{% endif -%}
 Working with Docker
 ^^^^^^^^^^^^^^^^^^^
 

@@ -1,23 +1,60 @@
+  - step: &deploy-review-app
+      name: Deploy Review App
+      deployment: development
+      image: docker.io/appuio/oc:v3.11
+      script:
+      - TARGET=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
+        APP_NAME=${BITBUCKET_REPO_SLUG}-review-${BITBUCKET_COMMIT:0:7}
+      - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
+      - pushd deployment/application/base &&
+        kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}" &&
+        popd
+      - kustomize build deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
+      - kustomize build deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
+      - echo -e "\n"
+                "Review App has been deployed to:\n"
+                "- ${KUBE_URL}/console/project/${TARGET}/overview\n"
+                "\n"
+                "Review App is available at:\n"
+                "- https://${APP_NAME}-${TARGET}.appuioapp.ch/\n"
+                "\n"
+                "Remove all related resources with >   ++ USE WITH CAUTION ++\n"
+                "  oc -n ${TARGET} delete all -l app=${APP_NAME}"
 
-  branches:
-    master:
-    - parallel: *checks
-    - parallel: *tests
+  - step: &deploy-integration
+      name: Deploy to Integration
+      deployment: integration
+      image: docker.io/appuio/oc:v3.11
+      script:
+      - TARGET=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
+      - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
+      - pushd deployment/application/base &&
+        kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}" &&
+        popd
+      - kustomize build deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
+      - kustomize build deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
+      - echo -e "\n"
+                "Application has been deployed to:\n"
+                "- ${KUBE_URL}/console/project/${TARGET}/overview\n"
+                "\n"
+                "Application is available at:\n"
+                "- https://${BITBUCKET_REPO_SLUG}-${TARGET}.appuioapp.ch/"
 
-    - step:
-        name: Integration
-        deployment: Integration
-        script:
-        - echo 'This build would deploy to Integration now.'
-
-  tags:
-    '*':
-    - parallel: *checks
-    - parallel: *tests
-
-    - step:
-        name: Production
-        deployment: Production
-        trigger: manual
-        script:
-        - echo 'This build would deploy to Production now.'
+  - step: &deploy-production
+      name: Deploy to Production
+      deployment: production
+      image: docker.io/appuio/oc:v3.11
+      script:
+      - SOURCE=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-integration{% endif %}
+        TARGET=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
+      - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
+      - oc tag "${SOURCE}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
+               "${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_TAG}"
+      - pushd deployment/application/base &&
+        kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_TAG}" &&
+        popd
+      - kustomize build deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
+      - kustomize build deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
+      - echo -e "\n"
+                "Application has been deployed to:\n"
+                "- ${KUBE_URL}/console/project/${TARGET}/overview\n"
