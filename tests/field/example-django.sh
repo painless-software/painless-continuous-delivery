@@ -119,7 +119,23 @@ git add -v .
 git commit -m 'Add friendly welcome page'
 git push -u origin feature/welcome-page --force
 
-log 4 'Create merge request'
+log 4 'Add an untested feature'
+sed -E \
+    -e "s|^(from hello import views)$|\1\n\n\ndef trigger_error(request):\n\
+    \"\"\"Generate an error to demonstrate Sentry\"\"\"\n\
+    division_by_zero = 1 / 0\n\
+    return division_by_zero\n|" \
+    -i application/urls.py
+
+sed -E \
+    -e "s|^(urlpatterns = \[)$|\1\n    path('sentry-debug/', trigger_error),|" \
+    -i application/urls.py
+
+git add -v .
+git commit -m 'Add a very special additional feature'
+git push -u origin feature/welcome-page --force
+
+log 5 'Create merge request'
 gitlab POST merge_requests \
     --form "source_branch=feature/welcome-page" \
     --form "target_branch=master" \
@@ -127,13 +143,22 @@ gitlab POST merge_requests \
     --form "description=A minimal Django application that shows some text. Tests are included." \
     > /dev/null
 
-log 5 'Allow pipeline to build and push an image'
+log 6 'Allow pipeline to build and push an image'
 for minutes in $(seq 13 -1 1); do
     echo "- Waiting... ($minutes' remaining)"
     sleep 1m
 done
 
-log 6 'Trigger production relase'
+log 7 'Trigger production relase'
 git checkout master
 git tag 1.0.0
 git push --tags --force
+
+log 8 'Allow pipeline to deploy an image'
+for minutes in $(seq 3 -1 1); do
+    echo "- Waiting... ($minutes' remaining)"
+    sleep 1m
+done
+
+log 9 'Trigger an error incident'
+curl -X GET https://application-route-development-example-django.appuioapp.ch/sentry-debug/
