@@ -1,0 +1,11 @@
+options:
+  docker: true
+
+definitions:
+  services:
+    docker
+  steps:
+{% include '_/ci-services/lint-stage/%s' % cookiecutter.ci_service %}
+{% include '_/ci-services/test-stage/%s' % cookiecutter.ci_service %}
+{% include '_/ci-services/build-stage/%s' % cookiecutter.ci_service %}
+{% include '_/ci-services/deploy-stage/%s' % cookiecutter.ci_service -%}

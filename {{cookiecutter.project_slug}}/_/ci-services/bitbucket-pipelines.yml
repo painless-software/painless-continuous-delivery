@@ -1,12 +1,29 @@
 # Painless deployment with Bitbucket Pipelines.
-# Visit the docs at https://confluence.atlassian.com/x/VYk8Lw
+# Visit the docs at https://confluence.atlassian.com/bitbucket/configure-bitbucket-pipelines-yml-792298910.html
 
-image: painless/tox:multi
-
+{% include '_/ci-services/definitions/%s' % cookiecutter.ci_service %}
 pipelines:
-  default:
-{% include '_/ci-services/definitions/%s' % cookiecutter.ci_service -%}
-{% include '_/ci-services/lint-stage/%s' % cookiecutter.ci_service -%}
-{% include '_/ci-services/test-stage/%s' % cookiecutter.ci_service -%}
-{% include '_/ci-services/build-stage/%s' % cookiecutter.ci_service -%}
-{% include '_/ci-services/deploy-stage/%s' % cookiecutter.ci_service -%}
+  pull-requests:
+    '**':
+      - step: *checks
+      - step: *tests
+
+  custom:
+    review-app:
+      - step:
+          <<: *build
+          deployment: development
+      - step: *deploy-review-app
+
+  branches:
+    master:
+      - step: *checks
+      - step: *tests
+      - step:
+          <<: *build
+          deployment: integration
+      - step: *deploy-integration
+
+  tags:
+    '*':
+      - step: *deploy-production
