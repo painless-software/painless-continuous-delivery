@@ -72,8 +72,18 @@ Initial Setup
    and configure the following environment variables, which allow the pipeline
    to integrate with your container platform:
 
-   - KUBE_TOKEN
-   - KUBE_URL
+   - ``KUBE_TOKEN``
+   - ``KUBE_URL``
+
+#. Rename the default deployment environments at
+
+   - `Settings > Deployments
+     <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/admin/addon/admin/pipelines/deployment-settings>`_
+
+   as follows:
+
+   - *Test* ➜ *Development*
+   - *Staging* ➜ *Integration*
 {%- elif service_account == 'gitlab-ci' %}
 
 #. Use the service account token to configure the
@@ -96,9 +106,9 @@ Initial Setup
    .. code-block:: console
 
         oc -n {{ cookiecutter.project_slug }}-integration policy add-role-to-user \
-          edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:{{ service_account }}
+          admin system:serviceaccount:{{ cookiecutter.project_slug }}-production:{{ service_account }}
         oc -n {{ cookiecutter.project_slug }}-development policy add-role-to-user \
-          edit system:serviceaccount:{{ cookiecutter.project_slug }}-production:{{ service_account }}
+          admin system:serviceaccount:{{ cookiecutter.project_slug }}-production:{{ service_account }}
 {%- endif %}
 {%- endif %}
 {%- if cookiecutter.monitoring == 'Sentry' %}

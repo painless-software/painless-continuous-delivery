@@ -26,8 +26,11 @@
       deployment: integration
       image: docker.io/appuio/oc:v3.11
       script:
-      - TARGET=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
+      - SOURCE=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
+        TARGET=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
+      - oc tag "${SOURCE}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
+               "${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
       - pushd deployment/application/base &&
         kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}" &&
         popd
