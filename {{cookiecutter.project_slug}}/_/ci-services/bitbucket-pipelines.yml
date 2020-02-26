@@ -5,25 +5,21 @@
 pipelines:
   pull-requests:
     '**':
-      - step: *checks
-      - step: *tests
+    - parallel: *checks
+    - parallel: *tests
 
   custom:
     review-app:
-      - step:
-          <<: *build
-          deployment: development
-      - step: *deploy-review-app
+    - step: *build
+    - step: *deploy-review-app
 
   branches:
     master:
-      - step: *checks
-      - step: *tests
-      - step:
-          <<: *build
-          deployment: integration
-      - step: *deploy-integration
+    - parallel: *checks
+    - parallel: *tests
+    - step: *build
+    - step: *deploy-integration
 
   tags:
     '*':
-      - step: *deploy-production
+    - step: *deploy-production
