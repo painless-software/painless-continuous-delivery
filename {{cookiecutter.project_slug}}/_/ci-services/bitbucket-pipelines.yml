@@ -3,13 +3,15 @@
 
 {% include '_/ci-services/definitions/%s' % cookiecutter.ci_service %}
 pipelines:
+  custom:
+    review-app:
+    - step: *build
+    - step: *deploy-review-app
+
   pull-requests:
     '**':
     - parallel: *checks
     - parallel: *tests
-
-  custom:
-    review-app:
     - step: *build
     - step: *deploy-review-app
 
