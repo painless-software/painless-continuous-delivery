@@ -14,12 +14,14 @@ spec:
           containers:
           - name: application
             image: IMAGE
-{%- if cookiecutter.framework == 'Django' %}
+{%- if cookiecutter.monitoring == 'Sentry' %}
+            command: ['curl', 'http://localhost:8080/sentry-debug/']
+{%- elif cookiecutter.framework == 'Django'  %}
             command: ['/bin/bash', '-c']
             args:
               - python manage.py dumpdata -o /app/backups/db.json ;
-                echo /app/backups/db.json ;
-                cat /app/backups/db.json
+                echo backup to /app/backups/db.json ;
+                cat /app/backups/db.json ;
             envFrom:
             - secretRef:
                 name: application

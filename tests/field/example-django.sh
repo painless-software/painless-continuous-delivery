@@ -153,12 +153,3 @@ log 7 'Trigger production relase'
 git checkout master
 git tag 1.0.0
 git push --tags --force
-
-log 8 'Allow pipeline to deploy an image'
-for minutes in $(seq 3 -1 1); do
-    echo "- Waiting... ($minutes' remaining)"
-    sleep 1m
-done
-
-log 9 'Trigger an error incident'
-curl -X GET https://application-route-development-example-django.appuioapp.ch/sentry-debug/
