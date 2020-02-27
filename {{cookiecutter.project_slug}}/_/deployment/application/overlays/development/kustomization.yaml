@@ -1,22 +1,26 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-resources:
-- ../../base
+{%- if cookiecutter.environment_strategy == 'shared' %}
+nameSuffix: -development
+{%- else %}
+namespace: {{ cookiecutter.project_slug }}-development
+{%- endif %}
 {%- if cookiecutter.vcs_platform == 'GitLab.com' and cookiecutter.environment_strategy == 'shared' %}
 commonAnnotations:
   app.gitlab.com/app: {{ cookiecutter.vcs_account|lower }}-{{ cookiecutter.project_slug }}
   app.gitlab.com/env: development
 {%- endif %}
 commonLabels:
-  environment: development
 {%- if cookiecutter.environment_strategy == 'shared' %}
   app: {{ cookiecutter.project_slug }}-development
-nameSuffix: -development
-{%- else %}
-namespace: {{ cookiecutter.project_slug }}-development
 {%- endif %}
+  environment: development
 configMapGenerator:
 - name: application
   behavior: merge
   envs:
   - application.env
+resources:
+- ../../base
+patchesStrategicMerge:
+- deployment.yaml
