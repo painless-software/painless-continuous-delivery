@@ -1,3 +1,26 @@
+  - script:
+    - &generate-secrets-vars
+      DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
+      DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
+      APPLICATION_NAME=application{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
+      DATABASE_HOST={{ cookiecutter.database|lower }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
+      DATABASE_NAME={{ cookiecutter.project_slug.replace('-', '_') }}
+      DATABASE_USER={{ cookiecutter.project_slug.replace('-', '_') }}
+    - &generate-secrets-app
+      oc -n ${TARGET} get secret ${APPLICATION_NAME} ||
+      oc -n ${TARGET} create secret generic ${APPLICATION_NAME}
+        --from-literal=DJANGO_DATABASE_URL={{ cookiecutter.database|lower }}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}
+        --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+  {%- if cookiecutter.monitoring == 'Sentry' %}
+        --from-literal=SENTRY_DSN=${SENTRY_DSN}
+  {%- endif %}
+    - &generate-secrets-db
+      oc -n ${TARGET} get secret ${DATABASE_HOST} ||
+      oc -n ${TARGET} create secret generic ${DATABASE_HOST}
+        --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}
+        --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}
+        --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
+
   - step: &deploy-review-app
       name: Deploy Review App
       deployment: development
@@ -6,6 +29,9 @@
       - TARGET=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
         APP_NAME=${BITBUCKET_REPO_SLUG}-review-${BITBUCKET_COMMIT:0:7}
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
+      - *generate-secrets-vars
+      - *generate-secrets-app
+      - *generate-secrets-db
       - pushd deployment/application/base &&
         kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}" &&
         popd
@@ -31,6 +57,9 @@
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
       - oc tag "${SOURCE}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
                "${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
+      - *generate-secrets-vars
+      - *generate-secrets-app
+      - *generate-secrets-db
       - pushd deployment/application/base &&
         kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}" &&
         popd
@@ -53,6 +82,9 @@
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
       - oc tag "${SOURCE}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
                "${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_TAG}"
+      - *generate-secrets-vars
+      - *generate-secrets-app
+      - *generate-secrets-db
       - pushd deployment/application/base &&
         kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_TAG}" &&
         popd
