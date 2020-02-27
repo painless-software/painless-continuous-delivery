@@ -49,25 +49,20 @@ definitions:
         script:
         - tox -e behave
 
+  - steps: &field-test
+      name: Deploy example-bitbucket
+      deployment: Production
+      script:
+      - tests/field/example-bitbucket.sh
+
+pipelines:
+  pull-requests:
+    '**':
+    - parallel: *checks
+    - parallel: *tests
+
   branches:
     master:
     - parallel: *checks
     - parallel: *tests
-
-    - step:
-        name: Integration
-        deployment: Integration
-        script:
-        - echo 'This build would deploy to Integration now.'
-
-  tags:
-    '*':
-    - parallel: *checks
-    - parallel: *tests
-
-    - step:
-        name: Production
-        deployment: Production
-        trigger: manual
-        script:
-        - echo 'This build would deploy to Production now.'
+    - step: *field-test
