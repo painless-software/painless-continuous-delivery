@@ -21,16 +21,27 @@ can test only against the versions you already have installed on your machine
 as follows, wait for the build servers to cover the missing pieces and fix
 identified issues with additional commits:
 
-.. code-block:: bash
+.. code-block:: console
 
     tox -e flake8,pylint,py36,py37
+
+We have field tests to generate and deploy an example project from your
+current working version.  In order to run the deployment, you need to have
+access to the GitLab repository of your target generated project (such as
+`example django`_), and you need to generate a Personal Access Token on 
+GitLab. (Top-right user menu > Settings > Access Tokens)
+
+.. code-block:: console
+
+    export GITLAB_API_TOKEN=<your personal access token>
+    tox -e clean,fieldtest -- django
 
 Tests that require Docker must be run locally on your developer machine,
 because not all CI servers allow running Docker (inside Docker) on their
 infrastructure.  In `behave`_ tests the related scenarios are tagged with
 ``@docker``.  Run them with:
 
-.. code-block:: bash
+.. code-block:: console
 
     tox -e behave -- --tags=docker
 
@@ -42,3 +53,4 @@ infrastructure.  In `behave`_ tests the related scenarios are tagged with
 .. _tox: http://tox.readthedocs.io/en/latest/
 .. _pyenv: https://github.com/yyuu/pyenv#basic-github-checkout
 .. _behave: https://behave.readthedocs.io/en/latest/
+.. _example django: https://gitlab.com/appuio/example-django
