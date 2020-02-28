@@ -6,11 +6,8 @@
 # The periodic regeneration is configured as a scheduled
 # pipeline in GitLab > CI/CD > Schedules.
 #
-# To run this field test locally:
-#  (1) Generate a Personal Access Token on GitLab. Top-right user menu > Settings > Access Tokens
-#  (2) `export GITLAB_API_TOKEN=<your personal access token>` in your terminal
-#  (3) Run this script. Additional parameters will be passed to cookiecutter (try `checks= tests=`).
-#  (4) Generated files are found in /tmp/painless-generated-projects
+# To run this field test locally, see the instructions
+# in the CONTRIBUTING.rst document.
 
 log() {
     NOCOLOR='\033[0m'
