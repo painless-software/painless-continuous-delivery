@@ -64,4 +64,7 @@ behave:
 
 example-django:
   extends: .cookiecutter
+  variables:
+    FIELDTEST_CHECKS: bandit,flake8,pylint,safety,kubernetes
+    FIELDTEST_TESTS: py37,behave
   script: tox -e fieldtest -- django
