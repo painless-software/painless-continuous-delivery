@@ -14,9 +14,7 @@ spec:
           containers:
           - name: application
             image: IMAGE
-{%- if cookiecutter.monitoring == 'Sentry' %}
-            command: ['curl', 'http://localhost:8080/sentry-debug/']
-{%- elif cookiecutter.framework == 'Django'  %}
+{%- if cookiecutter.framework == 'Django'  %}
             command: ['/bin/bash', '-c']
             args:
               - python manage.py dumpdata -o /app/backups/db.json ;
@@ -29,7 +27,7 @@ spec:
               - mountPath: /app/backups
                 name: backup-volume          
 {%- else %}
-            command: ['echo', 'hello world']
+            command: ['curl', 'http://localhost:8080/sentry-debug/']
 {%- endif %}
           restartPolicy: Never
 {%- if cookiecutter.framework == 'Django' %}
