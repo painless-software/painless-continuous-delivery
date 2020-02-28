@@ -36,6 +36,8 @@ GitLab. (Top-right user menu > Settings > Access Tokens)
     export GITLAB_API_TOKEN=<your personal access token>
     tox -e clean,fieldtest -- django
 
+Generated files are found in `/tmp/painless-generated-projects`
+
 Tests that require Docker must be run locally on your developer machine,
 because not all CI servers allow running Docker (inside Docker) on their
 infrastructure.  In `behave`_ tests the related scenarios are tagged with
