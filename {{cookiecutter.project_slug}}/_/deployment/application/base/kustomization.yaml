@@ -1,5 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+{%- if cookiecutter.environment_strategy == 'shared' %}
+namespace: {{ cookiecutter.project_slug }}
+{%- endif %}
 commonLabels:
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
   app: {{ cookiecutter.project_slug }}
@@ -9,15 +12,14 @@ configMapGenerator:
 - name: application
   envs:
   - application.env
-crds:
-- route-crd.yaml
-{%- if cookiecutter.environment_strategy == 'shared' %}
-namespace: {{ cookiecutter.project_slug }}
-{%- endif %}
+generatorOptions:
+  disableNameSuffixHash: true
 {%- if cookiecutter.cronjobs == 'complex' %}
 bases:
 - cronjob
 {%- endif %}
+crds:
+- route-crd.yaml
 resources:
 {%- if cookiecutter.cronjobs == 'simple' %}
 - cronjob.yaml
