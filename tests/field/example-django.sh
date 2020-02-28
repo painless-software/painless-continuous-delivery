@@ -147,7 +147,7 @@ for minutes in $(seq 13 -1 1); do
     sleep 1m
 done
 
-log 7 'Trigger production relase'
+log 7 'Trigger production release'
 git checkout master
 git tag 1.0.0
 git push --tags --force
