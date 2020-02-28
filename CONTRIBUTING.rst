@@ -26,7 +26,7 @@ identified issues with additional commits:
     tox -e flake8,pylint,py36,py37
 
 We have field tests to generate and deploy an example project from your
-current working version.  In order to run the deployment, you need to have
+local working version.  In order to run the deployment, you need to have
 access to the GitLab repository of your target generated project (such as
 `example django`_), and you need to generate a Personal Access Token on 
 GitLab. (Top-right user menu > Settings > Access Tokens)
