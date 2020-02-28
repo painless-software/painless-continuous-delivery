@@ -64,5 +64,4 @@ behave:
 
 example-django:
   extends: .cookiecutter
-  script:
-  - tests/field/example-django.sh
+  script: tox -e fieldtest -- django
