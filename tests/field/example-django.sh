@@ -110,7 +110,6 @@ sed -E \
     -e "s/^(from django.urls import include, path)$/\1\n\nfrom hello import views/" \
     -e "s/^(    path.'admin.', admin.site.urls.,)$/\1\n    path('', views.index, name='hello')/" \
     -i application/urls.py
-
 sed -E \
     -e "s/^(commands = pylint --rcfile tox.ini .posargs:application)/\1 hello/" \
     -i tox.ini
@@ -126,7 +125,6 @@ sed -E \
     division_by_zero = 1 / 0\n\
     return division_by_zero\n|" \
     -i application/urls.py
-
 sed -E \
     -e "s|^(urlpatterns = \[)$|\1\n    path('sentry-debug/', trigger_error),|" \
     -i application/urls.py
