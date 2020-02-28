@@ -64,16 +64,18 @@ Initial Setup
 {%- endif %}
 {%- if service_account == 'bitbucket-pipelines' %}
 
-#. Note down service account token and your cluster's URL, go to
+#. Note down service account token and your cluster's URL, and
 
-   - `Settings > Repository variables
+   - at `Settings > Pipelines > Settings
+     <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/admin/addon/admin/pipelines/settings>`_,
+     check "Enable Pipelines",
+   - at `Settings > Pipelines > Repository variables
      <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/admin/addon/admin/pipelines/repository-variables>`_
+     configure the following environment variables, which allow the pipeline
+     to integrate with your container platform:
 
-   and configure the following environment variables, which allow the pipeline
-   to integrate with your container platform:
-
-   - ``KUBE_TOKEN``
-   - ``KUBE_URL``
+     - ``KUBE_TOKEN``
+     - ``KUBE_URL``
 
 #. Rename the default deployment environments at
 
