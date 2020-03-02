@@ -1,15 +1,13 @@
-Django>=2.2.9,<3.0
+Django>=2.2.10,<3.0
+{%- if cookiecutter.monitoring == 'Datadog' %}
+django-datadog{% endif %}
 django-environ
 django-probes
-{% if cookiecutter.database == 'Postgres' -%}
-psycopg2
-{% elif cookiecutter.database == 'MySQL' -%}
-mysql-connector
-{% endif -%}
-{% if cookiecutter.monitoring == 'Datadog' -%}
-django-datadog
-{% elif cookiecutter.monitoring == 'NewRelic' -%}
-newrelic
-{% elif cookiecutter.monitoring == 'Sentry' -%}
-sentry-sdk
-{% endif -%}
+{%- if cookiecutter.database == 'MySQL' %}
+mysql-connector{% endif %}
+{%- if cookiecutter.monitoring == 'NewRelic' %}
+newrelic{% endif %}
+{%- if cookiecutter.database == 'Postgres' %}
+psycopg2{% endif %}
+{%- if cookiecutter.monitoring == 'Sentry' %}
+sentry-sdk{% endif %}
