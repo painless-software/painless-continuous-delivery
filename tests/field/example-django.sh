@@ -9,23 +9,10 @@
 # To run this field test locally, see the instructions
 # in the CONTRIBUTING.rst document.
 
-log() {
-    NOCOLOR='\033[0m'
-    BLUE='\033[1;34m'
-    echo -e "$1) ${BLUE}${@:2}${NOCOLOR} ..."
-}
+BASEDIR=$(dirname $0)
 
-gitlab() {
-    COMMAND="$1"
-    RESOURCE="$2"
-    PROJECT_NAME="appuio%2Fexample-django"
-    PROJECT_URL="https://gitlab.com/api/v4/projects/${PROJECT_NAME}"
-    set -e
-    curl --silent \
-        --header "Authorization: Bearer $GITLAB_API_TOKEN" \
-        --request $COMMAND \
-        "${PROJECT_URL}/${RESOURCE}" "${@:3}"
-}
+source ${BASEDIR}/include/logging.sh
+source ${BASEDIR}/include/api/gitlab.sh
 
 log 1 'Delete existing merge requests, Git tags, etc.'
 for IID in $(gitlab GET 'merge_requests?state=all&scope=all' \
