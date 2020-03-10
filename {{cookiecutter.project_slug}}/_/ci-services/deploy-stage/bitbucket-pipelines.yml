@@ -21,9 +21,9 @@
         --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}
         --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
     - &cleanup-configmaps
-      for OBSOLETE in $(oc get configmap --sort-by='.metadata.creationTimestamp' -o name
-        -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %} | tail -n +5);
-        do oc delete $OBSOLETE; done
+      oc get configmap -o name --sort-by='.metadata.creationTimestamp'
+         -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %} |
+        tail -n +5 | xargs -r oc delete
 
   - step: &deploy-review-app
       name: Deploy Review App

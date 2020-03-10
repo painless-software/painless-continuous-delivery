@@ -81,9 +81,9 @@ stages:
   - oc tag "${SOURCE}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
            "${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
 {%- endif %}
-  - for OBSOLETE in $(oc -n ${TARGET} get configmap --sort-by='.metadata.creationTimestamp' -o name
-      -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %} | tail -n +5);
-      do oc -n ${TARGET} delete $OBSOLETE; done
+  - oc -n ${TARGET} get configmap -o name --sort-by='.metadata.creationTimestamp'
+       -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %} |
+      tail -n +5 | xargs -r oc -n ${TARGET} delete
   - pushd deployment/application/base &&
     kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
     popd
