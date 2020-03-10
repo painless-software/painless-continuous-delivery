@@ -10,17 +10,31 @@ class TestCISetup:
     executed several times with different values (test scenarios).
     """
     scenarios = [
-        ('bitbucket', {
+        ('bitbucket-shared', {
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'Bitbucket.org',
             'ci_service': 'bitbucket-pipelines.yml',
             'ci_testcommand': '        - tox -e py37',
-            'checks': 'flake8,pylint,bandit',
+            'checks': 'flake8,pylint,bandit,kubernetes',
             'tests': 'py35,py36,py37,pypy3,behave',
             'container_platform': 'APPUiO',
             'environment_strategy': 'shared',
-            'expected_ci_target': '',
+            'expected_ci_target':
+                '        TARGET=${BITBUCKET_REPO_SLUG}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}',
+        }),
+        ('bitbucket-dedicated', {
+            'project_slug': 'myproject',
+            'vcs_account': 'painless-software',
+            'vcs_platform': 'Bitbucket.org',
+            'ci_service': 'bitbucket-pipelines.yml',
+            'ci_testcommand': '        - tox -e py37',
+            'checks': 'flake8,pylint,bandit,kubernetes',
+            'tests': 'py35,py36,py37,pypy3,behave',
+            'container_platform': 'APPUiO',
+            'environment_strategy': 'dedicated',
+            'expected_ci_target':
+                '        ${BITBUCKET_DEPLOYMENT_ENVIRONMENT}',
         }),
         ('codeship', {
             'project_slug': 'myproject',
