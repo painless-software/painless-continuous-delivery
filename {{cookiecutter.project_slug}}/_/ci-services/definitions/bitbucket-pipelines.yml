@@ -1,9 +1,13 @@
 options:
   docker: true
 
+image: docker.io/painless/tox
+
 definitions:
   steps:
-{% include '_/ci-services/lint-stage/%s' % cookiecutter.ci_service %}
-{% include '_/ci-services/test-stage/%s' % cookiecutter.ci_service %}
+{%- if cookiecutter.checks %}
+{% include '_/ci-services/lint-stage/%s' % cookiecutter.ci_service %}{% endif %}
+{%- if cookiecutter.tests %}
+{% include '_/ci-services/test-stage/%s' % cookiecutter.ci_service %}{% endif %}
 {% include '_/ci-services/build-stage/%s' % cookiecutter.ci_service %}
 {% include '_/ci-services/deploy-stage/%s' % cookiecutter.ci_service -%}

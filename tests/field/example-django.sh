@@ -32,8 +32,9 @@ tox -e cookiecutter -- \
     project_description="Hello world with Django" \
     vcs_platform=GitLab.com \
     vcs_account=appuio \
-    container_platform=APPUiO \
-    container_platform_account="demo4501@appuio.ch" \
+    ci_service=.gitlab-ci.yml \
+    cloud_platform=APPUiO \
+    cloud_account="demo4501@appuio.ch" \
     environment_strategy=shared \
     cronjobs=simple \
     framework=Django \

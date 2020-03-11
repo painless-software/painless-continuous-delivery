@@ -28,7 +28,7 @@ you're developing.  Log output will be displayed in the terminal, as usual.
 For running tests, linting, security checks, etc. see instructions in the
 `tests/ <tests/README.rst>`_ folder.
 
-{% if cookiecutter.container_platform == 'APPUiO' -%}
+{% if cookiecutter.cloud_platform == 'APPUiO' -%}
 Initial Setup
 ^^^^^^^^^^^^^
 
@@ -223,8 +223,11 @@ generated via:
         project_description="{{ cookiecutter.project_description }}" \
         vcs_platform="{{ cookiecutter.vcs_platform }}" \
         vcs_account="{{ cookiecutter.vcs_account }}" \
-        container_platform="{{ cookiecutter.container_platform }}" \
-        container_platform_account="{{ cookiecutter.container_platform_account }}" \
+        vcs_project="{{ cookiecutter.vcs_project }}" \
+        ci_service="{{ cookiecutter.ci_service }}" \
+        cloud_platform="{{ cookiecutter.cloud_platform }}" \
+        cloud_account="{{ cookiecutter.cloud_account }}" \
+        cloud_project="{{ cookiecutter.cloud_project }}" \
         environment_strategy="{{ cookiecutter.environment_strategy }}" \
         docker_registry="{{ cookiecutter.docker_registry }}" \
         framework="{{ cookiecutter.framework }}" \

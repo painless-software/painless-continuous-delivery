@@ -4,22 +4,21 @@
 options:
     docker: true
 
+image: docker.io/painless/tox
+
 definitions:
   steps:
   - parallel: &checks
     - step:
         name: Flake8
-        image: docker.io/painless/tox
         script:
         - tox -e flake8
     - step:
         name: Pylint
-        image: docker.io/painless/tox
         script:
         - tox -e pylint
     - step:
         name: Bandit
-        image: docker.io/painless/tox
         script:
         - tox -e bandit || true
 
@@ -49,7 +48,7 @@ definitions:
         script:
         - tox -e behave
 
-  - steps: &field-test
+  - step: &field-test
       name: Deploy example-bitbucket
       deployment: Production
       script:

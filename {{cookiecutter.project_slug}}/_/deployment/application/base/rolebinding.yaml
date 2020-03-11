@@ -19,4 +19,4 @@ roleRef:
   name: edit
 subjects:
 - kind: User
-  name: {{ cookiecutter.container_platform_account }}
+  name: {{ cookiecutter.cloud_account }}

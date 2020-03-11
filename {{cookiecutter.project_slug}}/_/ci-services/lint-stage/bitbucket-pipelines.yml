@@ -2,7 +2,6 @@
     {%- for env in cookiecutter.checks.split(",") %}
     - step:
         name: {{ env|capitalize }}
-        image: docker.io/painless/tox
         script:
         - tox -e {{ env }}
     {%- endfor %}

@@ -18,10 +18,10 @@ class TestCISetup:
             'ci_testcommand': '        - tox -e py37',
             'checks': 'flake8,pylint,bandit,kubernetes',
             'tests': 'py35,py36,py37,pypy3,behave',
-            'container_platform': 'APPUiO',
+            'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'expected_ci_target':
-                '        TARGET=${BITBUCKET_REPO_SLUG}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}',
+                '        TARGET=${BITBUCKET_REPO_SLUG}',
         }),
         ('bitbucket-dedicated', {
             'project_slug': 'myproject',
@@ -31,10 +31,10 @@ class TestCISetup:
             'ci_testcommand': '        - tox -e py37',
             'checks': 'flake8,pylint,bandit,kubernetes',
             'tests': 'py35,py36,py37,pypy3,behave',
-            'container_platform': 'APPUiO',
+            'cloud_platform': 'APPUiO',
             'environment_strategy': 'dedicated',
             'expected_ci_target':
-                '        ${BITBUCKET_DEPLOYMENT_ENVIRONMENT}',
+                '        TARGET=${BITBUCKET_REPO_SLUG}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}',  # noqa
         }),
         ('codeship', {
             'project_slug': 'myproject',
@@ -44,7 +44,7 @@ class TestCISetup:
             'ci_testcommand': '  service: app',
             'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
-            'container_platform': 'APPUiO',
+            'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'expected_ci_target': '',
         }),
@@ -56,7 +56,7 @@ class TestCISetup:
             'ci_testcommand': '  script: tox -e py37',
             'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
-            'container_platform': 'APPUiO',
+            'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'expected_ci_target':
                 '  TARGET: myproject',
@@ -69,7 +69,7 @@ class TestCISetup:
             'ci_testcommand': '  script: tox -e py37',
             'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
-            'container_platform': 'APPUiO',
+            'cloud_platform': 'APPUiO',
             'environment_strategy': 'dedicated',
             'expected_ci_target':
                 '    TARGET: myproject-production',
@@ -82,7 +82,7 @@ class TestCISetup:
             'ci_testcommand': '  - tox',
             'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
-            'container_platform': 'APPUiO',
+            'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'expected_ci_target': '',
         }),
@@ -94,7 +94,7 @@ class TestCISetup:
             'ci_testcommand': 'script: tox',
             'checks': 'flake8,pylint,bandit',
             'tests': 'py35,py36,py37,pypy3,behave',
-            'container_platform': 'APPUiO',
+            'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'expected_ci_target': '',
         }),
@@ -103,7 +103,7 @@ class TestCISetup:
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
     def test_ci_setup(self, cookies, project_slug, vcs_account, vcs_platform,
                       ci_service, ci_testcommand, checks, tests,
-                      container_platform, environment_strategy,
+                      cloud_platform, environment_strategy,
                       expected_ci_target):
         """
         Generate a CI setup with specific settings and verify it is complete.
@@ -115,7 +115,7 @@ class TestCISetup:
             'ci_service': ci_service,
             'checks': checks,
             'tests': tests,
-            'container_platform': container_platform,
+            'cloud_platform': cloud_platform,
             'environment_strategy': environment_strategy,
         })
 
