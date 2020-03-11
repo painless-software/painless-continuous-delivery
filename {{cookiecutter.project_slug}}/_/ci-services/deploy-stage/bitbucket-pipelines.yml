@@ -7,19 +7,23 @@
       DATABASE_NAME={{ cookiecutter.project_slug.replace('-', '_') }}
       DATABASE_USER={{ cookiecutter.project_slug.replace('-', '_') }}
     - &generate-secrets-app
-      oc -n ${TARGET} get secret ${APPLICATION} ||
-      oc -n ${TARGET} create secret generic ${APPLICATION}
+      oc get secret ${APPLICATION} ||
+      oc create secret generic ${APPLICATION}
         --from-literal=DJANGO_DATABASE_URL={{ cookiecutter.database|lower }}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}
         --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
   {%- if cookiecutter.monitoring == 'Sentry' %}
         --from-literal=SENTRY_DSN=${SENTRY_DSN}
   {%- endif %}
     - &generate-secrets-db
-      oc -n ${TARGET} get secret ${DATABASE_HOST} ||
-      oc -n ${TARGET} create secret generic ${DATABASE_HOST}
+      oc get secret ${DATABASE_HOST} ||
+      oc create secret generic ${DATABASE_HOST}
         --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}
         --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}
         --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
+    - &cleanup-configmaps
+      oc get configmap -o name --sort-by='.metadata.creationTimestamp'
+         -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %} |
+        tail -n +5 | xargs -r oc delete
 
   - step: &deploy-review-app
       name: Deploy Review App
@@ -67,6 +71,7 @@
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
       - oc tag "${SOURCE}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
                "${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
+      - *cleanup-configmaps
       - *generate-secrets-vars
       - *generate-secrets-app
       - *generate-secrets-db
@@ -92,6 +97,7 @@
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
       - oc tag "${SOURCE}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
                "${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_TAG}"
+      - *cleanup-configmaps
       - *generate-secrets-vars
       - *generate-secrets-app
       - *generate-secrets-db
