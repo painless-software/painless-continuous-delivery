@@ -18,6 +18,7 @@
         "GitHub.com"
     ],
     "vcs_account": "company-or-username",
+    "vcs_project": "{{ cookiecutter.project_slug }}",
     "ci_service": [
         ".gitlab-ci.yml",
         "bitbucket-pipelines.yml",
@@ -25,16 +26,17 @@
         "codeship-steps.yml",
         "shippable.yml"
     ],
-    "container_platform": [
+    "cloud_platform": [
         "(none)",
         "APPUiO"
     ],
-    "container_platform_account": "platform-username",
+    "cloud_account": "platform-username",
+    "cloud_project": "{{ cookiecutter.project_slug }}",
     "environment_strategy": [
         "shared",
         "dedicated"
     ],
-    "docker_registry": "{{ cookiecutter.container_platform.replace('APPUiO', 'registry.appuio.ch').replace('(none)', cookiecutter.vcs_platform.replace('Bitbucket.org', 'hub.docker.com').replace('GitHub.com', 'quay.io').replace('GitLab.com', 'registry.gitlab.com') + '/' + cookiecutter.vcs_account) }}",
+    "docker_registry": "{{ cookiecutter.cloud_platform.replace('APPUiO', 'registry.appuio.ch').replace('(none)', cookiecutter.vcs_platform.replace('Bitbucket.org', 'hub.docker.com').replace('GitHub.com', 'quay.io').replace('GitLab.com', 'registry.gitlab.com') + '/' + cookiecutter.vcs_account) }}",
     "framework": [
         "(none)",
         "Django",

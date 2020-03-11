@@ -5,15 +5,23 @@
 pipelines:
   pull-requests:
     '**':
+    {%- if cookiecutter.checks %}
     - parallel: *checks
+    {%- endif %}
+    {%- if cookiecutter.tests %}
     - parallel: *tests
+    {%- endif %}
     - step: *build
     - step: *deploy-review-app
 
   branches:
     master:
+    {%- if cookiecutter.checks %}
     - parallel: *checks
+    {%- endif %}
+    {%- if cookiecutter.tests %}
     - parallel: *tests
+    {%- endif %}
     - step: *build
     - step: *deploy-integration
 
