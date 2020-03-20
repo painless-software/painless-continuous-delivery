@@ -83,7 +83,7 @@ stages:
 {%- endif %}
   - oc -n ${TARGET} get configmap -o name --sort-by='.metadata.creationTimestamp'
        -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %} |
-      tail -n +5 | xargs -r oc -n ${TARGET} delete
+      head -n -5 | xargs -r oc -n ${TARGET} delete
   - pushd deployment/application/base &&
     kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
     popd
