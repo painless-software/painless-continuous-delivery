@@ -20,7 +20,8 @@
         --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}
         --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}
         --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
-    - &cleanup-configmaps
+    - &cleanup-resources
+      seiso images history "${TARGET}/${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}" --force &&
       oc get configmap -o name --sort-by='.metadata.creationTimestamp'
          -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %} |
         tail -n +5 | xargs -r oc delete
@@ -71,7 +72,7 @@
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
       - oc tag "${SOURCE}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
                "${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
-      - *cleanup-configmaps
+      - *cleanup-resource
       - *generate-secrets-vars
       - *generate-secrets-app
       - *generate-secrets-db
@@ -97,7 +98,7 @@
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
       - oc tag "${SOURCE}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
                "${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_TAG}"
-      - *cleanup-configmaps
+      - *cleanup-resources
       - *generate-secrets-vars
       - *generate-secrets-app
       - *generate-secrets-db
