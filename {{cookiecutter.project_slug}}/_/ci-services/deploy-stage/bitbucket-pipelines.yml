@@ -21,7 +21,7 @@
         --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}
         --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
     - &cleanup-resources
-      seiso images history "${TARGET}/${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}" --force &&
+      seiso images history "${TARGET}/${BITBUCKET_REPO_SLUG}" --force &&
       oc get configmap -o name --sort-by='.metadata.creationTimestamp'
          -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %} |
         tail -n +5 | xargs -r oc delete

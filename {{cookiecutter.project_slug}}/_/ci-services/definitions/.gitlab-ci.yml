@@ -80,10 +80,8 @@ stages:
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
   - oc tag "${SOURCE}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
            "${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
-  - seiso images history "${TARGET}/${CI_PROJECT_NAME}" --force
-{%- else %}
-  - seiso images history "${TARGET}/${CI_PROJECT_NAME}-${CI_ENVIRONMENT_NAME}" --force
 {%- endif %}
+  - seiso images history "${TARGET}/${CI_PROJECT_NAME}" --force
   - oc -n ${TARGET} get configmap -o name --sort-by='.metadata.creationTimestamp'
        -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %} |
       head -n -5 | xargs -r oc -n ${TARGET} delete
