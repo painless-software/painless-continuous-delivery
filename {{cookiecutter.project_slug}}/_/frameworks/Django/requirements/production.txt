@@ -5,22 +5,22 @@
 #    pip-compile --output-file=requirements/production.txt requirements/production.in
 #
 {%- if cookiecutter.monitoring == 'Sentry' %}
-certifi==2019.11.28       # via sentry-sdk{% endif %}
+certifi==2020.4.5.1       # via sentry-sdk{% endif %}
 {%- if cookiecutter.monitoring == 'Datadog' %}
 django-datadog==1.0.1     # via -r requirements/base.in{% endif %}
 django-environ==0.4.5     # via -r requirements/base.in
-django-probes==1.2.0      # via -r requirements/base.in
-django==2.2.10            # via -r requirements/base.in
+django-probes==1.4.0      # via -r requirements/base.in
+django==2.2.12            # via -r requirements/base.in
 {%- if cookiecutter.database == 'MySQL' %}
 mysql-connector==2.2.9    # via -r requirements/base.in{% endif %}
 {%- if cookiecutter.monitoring == 'NewRelic' %}
-newrelic==5.8.0.136       # via -r requirements/base.in{% endif %}
+newrelic==5.12.0.140      # via -r requirements/base.in{% endif %}
 {%- if cookiecutter.database == 'Postgres' %}
-psycopg2==2.8.4           # via -r requirements/base.in{% endif %}
+psycopg2==2.8.5           # via -r requirements/base.in{% endif %}
 pytz==2019.3              # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
-sentry-sdk==0.14.2        # via -r requirements/base.in{% endif %}
+sentry-sdk==0.14.3        # via -r requirements/base.in{% endif %}
 sqlparse==0.3.1           # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
-urllib3==1.25.8           # via sentry-sdk{% endif %}
+urllib3==1.25.9           # via sentry-sdk{% endif %}
 uwsgi==2.0.18             # via -r requirements/production.in
