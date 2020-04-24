@@ -1,6 +1,6 @@
 FROM docker.io/library/python:3.7-slim
 
-ARG REQUIREMENTS=requirements/production.txt
+ARG REQUIREMENTS=requirements.txt
 
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
@@ -8,7 +8,7 @@ ENV LANG=C.UTF-8 \
 
 WORKDIR /app
 
-COPY requirements requirements
+COPY requirements* ./
 
 RUN apt-get update \
  && apt-get install -y \
