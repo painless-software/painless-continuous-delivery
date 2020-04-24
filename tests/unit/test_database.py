@@ -84,7 +84,7 @@ class TestDatabase:
         verify_required_settings(required_settings, settings)
 
         requirements_txt = result.project.join(
-            'requirements', 'base.in').readlines(cr=False)
+            'requirements.in').readlines(cr=False)
         for req in required_packages:
             assert req in requirements_txt
 

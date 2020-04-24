@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: deployment/application/Dockerfile
       args:
-        REQUIREMENTS: requirements/development.in
+        REQUIREMENTS: requirements-dev.txt
     environment:
       - DJANGO_DEBUG=True
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]

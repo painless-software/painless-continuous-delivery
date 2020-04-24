@@ -21,7 +21,9 @@ class TestFramework:
             'required_files': [
                 '.envrc',
                 '.gitignore',
+                'requirements.in',
                 'requirements.txt',
+                'requirements-dev.txt',
                 'manage.py',
                 'application/wsgi.py',
                 'deployment/application/Dockerfile',
@@ -30,6 +32,12 @@ class TestFramework:
                 'deployment/webserver/nginx.conf',
                 'tox.ini',
                 'tests/README.rst',
+            ],
+            'required_content': [
+                ('deployment/application/Dockerfile', [
+                    'ARG REQUIREMENTS=requirements.txt',
+                    'COPY requirements* ./',
+                ]),
             ],
             'install_commands': [
                 ('pip install -r %s', 'requirements.txt'),
@@ -46,7 +54,9 @@ class TestFramework:
             'required_files': [
                 '.envrc',
                 '.gitignore',
+                'requirements.in',
                 'requirements.txt',
+                'requirements-dev.txt',
                 'runserver.py',
                 'application/wsgi.py',
                 'deployment/application/Dockerfile',
@@ -55,6 +65,12 @@ class TestFramework:
                 'deployment/webserver/nginx.conf',
                 'tox.ini',
                 'tests/README.rst',
+            ],
+            'required_content': [
+                ('deployment/application/Dockerfile', [
+                    'ARG REQUIREMENTS=requirements.txt',
+                    'COPY requirements* ./',
+                ]),
             ],
             'install_commands': [
                 ('pip install -r %s', 'requirements.txt'),
@@ -84,6 +100,8 @@ class TestFramework:
                 'web/.htaccess',
                 'web/app.php',
             ],
+            'required_content': [
+            ],
             'install_commands': [
             ],
         }),
@@ -109,6 +127,8 @@ class TestFramework:
                 'web/typo3conf/ext/typo3_console/ext_emconf.php',
                 'web/typo3conf/ext/typo3_console/ext_icon.png',
             ],
+            'required_content': [
+            ],
             'install_commands': [
             ],
         }),
@@ -117,7 +137,7 @@ class TestFramework:
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
     def test_framework(self, cookies, project_slug, vcs_account, vcs_platform,
                        ci_service, framework, checks, tests, required_files,
-                       install_commands):
+                       required_content, install_commands):
         """
         Generate a framework project and verify it is complete and working.
         """
@@ -138,6 +158,13 @@ class TestFramework:
             thefile = result.project.join(filename)
             assert thefile.isfile(), \
                 'File %s missing in generated project.' % filename
+
+        for filename, required_lines in required_content:
+            file_content = result.project.join(filename).readlines(cr=False)
+            for line in required_lines:
+                assert line in file_content, \
+                    'Line not found in generated file %s: "%s"' % \
+                    (filename, line)
 
         for cmd_pattern, project_file in install_commands:
             input_file = result.project.join(project_file)

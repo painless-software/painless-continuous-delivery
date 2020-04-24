@@ -11,3 +11,4 @@ newrelic{% endif %}
 psycopg2{% endif %}
 {%- if cookiecutter.monitoring == 'Sentry' %}
 sentry-sdk{% endif %}
+uwsgi
