@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-click==7.0                # via flask
+click==7.1.2                # via flask
 flask==1.0.3
 itsdangerous==1.1.0       # via flask
 jinja2==2.10.1            # via flask
