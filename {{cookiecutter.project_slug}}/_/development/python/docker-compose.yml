@@ -11,10 +11,23 @@ services:
       args:
         REQUIREMENTS: requirements-dev.txt
     environment:
+{%- if cookiecutter.framework == 'Django' %}
       - DJANGO_DEBUG=True
+{%- elif cookiecutter.framework == 'Flask' %}
+      - FLASK_APP=application
+      - FLASK_ENV=development
+{%- endif %}
+{%- if cookiecutter.framework == 'Django' %}
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+{%- elif cookiecutter.framework == 'Flask' %}
+    command: ["flask", "run", "--host", "0.0.0.0"]
+{%- endif %}
     ports:
+{%- if cookiecutter.framework == 'Django' %}
       - "8000:8000"
+{%- elif cookiecutter.framework == 'Flask' %}
+      - "5000:5000"
+{%- endif %}
     user: "${UID:-1000}:0"
     volumes:
       - .:/app

@@ -38,6 +38,13 @@ class TestFramework:
                     'ARG REQUIREMENTS=requirements.txt',
                     'COPY requirements* ./',
                 ]),
+                ('docker-compose.yml', [
+                    '    environment:',
+                    '      - DJANGO_DEBUG=True',
+                    '    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]',  # noqa
+                    '    ports:',
+                    '      - "8000:8000"',
+                ]),
             ],
             'install_commands': [
                 ('pip install -r %s', 'requirements.txt'),
@@ -70,6 +77,14 @@ class TestFramework:
                 ('deployment/application/Dockerfile', [
                     'ARG REQUIREMENTS=requirements.txt',
                     'COPY requirements* ./',
+                ]),
+                ('docker-compose.yml', [
+                    '    environment:',
+                    '      - FLASK_APP=application',
+                    '      - FLASK_ENV=development',
+                    '    command: ["flask", "run", "--host", "0.0.0.0"]',
+                    '    ports:',
+                    '      - "5000:5000"',
                 ]),
             ],
             'install_commands': [
