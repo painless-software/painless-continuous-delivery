@@ -116,4 +116,4 @@ def verify_file_matches_repo_root(result, *file, max_compare_bytes=-1):
                                     tofile=generated_file))
     assert not diff, \
         "Mother project '{}' not matching template.\n{}".format(
-            os.path.join(*file), diff)
+            os.path.sep.join(file), diff)
