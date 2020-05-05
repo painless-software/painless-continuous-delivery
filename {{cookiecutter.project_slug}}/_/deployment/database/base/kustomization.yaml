@@ -9,6 +9,6 @@ commonLabels:
 namespace: {{ cookiecutter.project_slug }}
 {%- endif %}
 resources:
-- deployment.yaml
+- statefulset.yaml
 - secret.yaml
 - service.yaml
