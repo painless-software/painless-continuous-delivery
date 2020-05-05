@@ -48,6 +48,9 @@ spec:
         name: data
       spec:
         accessModes: ["ReadWriteOnce"]
+{%- if cookiecutter.cloud_platform == 'APPUiO' %}
+        storageClassName: gluster-database
+{%- endif %}
         resources:
           requests:
             storage: 1Gi
