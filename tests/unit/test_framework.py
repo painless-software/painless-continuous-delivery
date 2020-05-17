@@ -64,7 +64,6 @@ class TestFramework:
                 'requirements.in',
                 'requirements.txt',
                 'requirements-dev.txt',
-                'runserver.py',
                 'application/wsgi.py',
                 'deployment/application/Dockerfile',
                 'deployment/application/entrypoint.sh',
