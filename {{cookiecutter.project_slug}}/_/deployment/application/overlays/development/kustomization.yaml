@@ -3,11 +3,11 @@ kind: Kustomization
 {%- if cookiecutter.environment_strategy == 'shared' %}
 nameSuffix: -development
 {%- else %}
-namespace: {{ cookiecutter.project_slug }}-development
+namespace: {{ cookiecutter.cloud_project }}-development
 {%- endif %}
 {%- if cookiecutter.vcs_platform == 'GitLab.com' and cookiecutter.environment_strategy == 'shared' %}
 commonAnnotations:
-  app.gitlab.com/app: {{ cookiecutter.vcs_account|lower }}-{{ cookiecutter.project_slug }}
+  app.gitlab.com/app: {{ cookiecutter.vcs_account|lower }}-{{ cookiecutter.vcs_project|lower }}
   app.gitlab.com/env: development
 {%- endif %}
 commonLabels:

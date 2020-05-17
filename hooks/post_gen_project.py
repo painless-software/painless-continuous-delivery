@@ -143,7 +143,7 @@ def init_version_control():
         'platform_name': '{{ cookiecutter.vcs_platform }}',
         'platform': '{{ cookiecutter.vcs_platform.lower() }}',
         'account': '{{ cookiecutter.vcs_account }}',
-        'project': '{{ cookiecutter.project_slug }}',
+        'project': '{{ cookiecutter.vcs_project }}',
     }
     vcs_info['remote_uri'] = \
         'git@{platform}:{account}/{project}.git'.format(**vcs_info)

@@ -31,7 +31,7 @@
       deployment: development
       image: docker.io/appuio/oc:v3.11
       script:
-      - TARGET=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
+      - TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
         REVIEW_APP=review-pr${BITBUCKET_PR_ID}
         APPLICATION=${REVIEW_APP}-application
         DATABASE_HOST=${REVIEW_APP}-{{ cookiecutter.database|lower }}
@@ -67,8 +67,8 @@
       deployment: integration
       image: docker.io/appuio/oc:v3.11
       script:
-      - SOURCE=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
-        TARGET=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
+      - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
+        TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
       - oc tag "${SOURCE}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
                "${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
@@ -93,8 +93,8 @@
       deployment: production
       image: docker.io/appuio/oc:v3.11
       script:
-      - SOURCE=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-integration{% endif %}
-        TARGET=${BITBUCKET_REPO_SLUG}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
+      - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-integration{% endif %}
+        TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
       - oc tag "${SOURCE}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
                "${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_TAG}"

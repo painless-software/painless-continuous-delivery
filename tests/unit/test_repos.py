@@ -10,7 +10,8 @@ class TestRepos:
     """
     scenarios = [
         ('Bitbucket/DockerHub', {
-            'project_slug': 'myproject',
+            'project_slug': 'custom-app',
+            'vcs_project': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'Bitbucket.org',
             'vcs_remote': 'git@bitbucket.org:painless-software/myproject.git',
@@ -18,7 +19,8 @@ class TestRepos:
             'docker_registry': 'hub.docker.com/painless-software',
         }),
         ('GitHub/Quay.io', {
-            'project_slug': 'myproject',
+            'project_slug': 'custom-app',
+            'vcs_project': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitHub.com',
             'vcs_remote': 'git@github.com:painless-software/myproject.git',
@@ -26,7 +28,8 @@ class TestRepos:
             'docker_registry': 'quay.io/painless-software',
         }),
         ('GitLab/Registry', {
-            'project_slug': 'myproject',
+            'project_slug': 'custom-app',
+            'vcs_project': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitLab.com',
             'vcs_remote': 'git@gitlab.com:painless-software/myproject.git',
@@ -36,8 +39,8 @@ class TestRepos:
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
-    def test_repos(self, cookies, project_slug, vcs_account, vcs_platform,
-                   vcs_remote, ci_service, docker_registry):
+    def test_repos(self, cookies, project_slug, vcs_project, vcs_account,
+                   vcs_platform, vcs_remote, ci_service, docker_registry):
         """
         Generate a Git repository ready to push, and a Docker setup
         referencing images on a Docker container registry service.
@@ -45,10 +48,11 @@ class TestRepos:
         result = cookies.bake(extra_context={
             'project_slug': project_slug,
             'vcs_platform': vcs_platform,
+            'vcs_project': vcs_project,
             'vcs_account': vcs_account,
             'ci_service': ci_service,
             'docker_registry': docker_registry,
-            'framework': 'Symfony',  # replace this once more are supported!!
+            'framework': 'Symfony',  # remove once docker-compose.final is gone
         })
 
         assert result.exit_code == 0
