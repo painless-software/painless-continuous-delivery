@@ -6,11 +6,11 @@ image: painless/tox:multi
 .cookiecutter:
   stage: deploy
   before_script:
-  - git config --global user.name "Cookiecutter"
-  - git config --global user.email "cookiecutter@painless.software"
   - eval $(ssh-agent -s)
   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   - mkdir -p -m 700 ~/.ssh && echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+  - git config --global user.name "Cookiecutter"
+  - git config --global user.email "cookiecutter@painless.software"
   only:
   - master
 

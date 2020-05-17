@@ -5,7 +5,7 @@ application:
     name: development
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
   variables:
-    TARGET: {{ cookiecutter.project_slug }}-development
+    TARGET: {{ cookiecutter.cloud_project }}-development
 {%- endif %}
   only:
   - merge_requests

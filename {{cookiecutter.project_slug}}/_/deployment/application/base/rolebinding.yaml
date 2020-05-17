@@ -9,7 +9,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: gitlab-ci
-  namespace: {{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'dedicated' %}-production{% endif %}
+  namespace: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-production{% endif %}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding

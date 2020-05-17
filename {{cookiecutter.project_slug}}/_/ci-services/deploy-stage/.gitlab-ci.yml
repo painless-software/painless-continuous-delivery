@@ -5,8 +5,8 @@ development:
     name: development
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
   variables:
-    SOURCE: {{ cookiecutter.project_slug }}-development
-    TARGET: {{ cookiecutter.project_slug }}-development
+    SOURCE: {{ cookiecutter.cloud_project }}-development
+    TARGET: {{ cookiecutter.cloud_project }}-development
 {%- endif %}
   only:
   - merge_requests
@@ -17,8 +17,8 @@ integration:
     name: integration
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
   variables:
-    SOURCE: {{ cookiecutter.project_slug }}-development
-    TARGET: {{ cookiecutter.project_slug }}-integration
+    SOURCE: {{ cookiecutter.cloud_project }}-development
+    TARGET: {{ cookiecutter.cloud_project }}-integration
 {%- endif %}
   only:
   - master
@@ -29,8 +29,8 @@ production:
     name: production
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
   variables:
-    SOURCE: {{ cookiecutter.project_slug }}-integration
-    TARGET: {{ cookiecutter.project_slug }}-production
+    SOURCE: {{ cookiecutter.cloud_project }}-integration
+    TARGET: {{ cookiecutter.cloud_project }}-production
 {%- endif %}
   only:
   - tags

@@ -54,23 +54,23 @@ Initial Setup
    .. code-block:: console
 {% set service_account = cookiecutter.ci_service|replace('.yml', '')|replace('.', '')|replace('-steps', '')|replace('travis', 'travis-ci') %}
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
-        oc -n {{ cookiecutter.project_slug }}-production create sa {{ service_account }}
-        oc -n {{ cookiecutter.project_slug }}-production policy add-role-to-user admin -z {{ service_account }}
-        oc -n {{ cookiecutter.project_slug }}-production sa get-token {{ service_account }}
+        oc -n {{ cookiecutter.cloud_project }}-production create sa {{ service_account }}
+        oc -n {{ cookiecutter.cloud_project }}-production policy add-role-to-user admin -z {{ service_account }}
+        oc -n {{ cookiecutter.cloud_project }}-production sa get-token {{ service_account }}
 {%- else %}
-        oc -n {{ cookiecutter.project_slug }} create sa {{ service_account }}
-        oc -n {{ cookiecutter.project_slug }} policy add-role-to-user admin -z {{ service_account }}
-        oc -n {{ cookiecutter.project_slug }} sa get-token {{ service_account }}
+        oc -n {{ cookiecutter.cloud_project }} create sa {{ service_account }}
+        oc -n {{ cookiecutter.cloud_project }} policy add-role-to-user admin -z {{ service_account }}
+        oc -n {{ cookiecutter.cloud_project }} sa get-token {{ service_account }}
 {%- endif %}
 {%- if service_account == 'bitbucket-pipelines' %}
 
 #. Note down service account token and your cluster's URL, and
 
    - at `Settings > Pipelines > Settings
-     <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/admin/addon/admin/pipelines/settings>`_,
+     <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/admin/addon/admin/pipelines/settings>`_,
      check "Enable Pipelines",
    - at `Settings > Pipelines > Repository variables
-     <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/admin/addon/admin/pipelines/repository-variables>`_
+     <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/admin/addon/admin/pipelines/repository-variables>`_
      configure the following environment variables, which allow the pipeline
      to integrate with your container platform:
 
@@ -80,7 +80,7 @@ Initial Setup
 #. Rename the default deployment environments at
 
    - `Settings > Deployments
-     <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/admin/addon/admin/pipelines/deployment-settings>`_
+     <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/admin/addon/admin/pipelines/deployment-settings>`_
 
    as follows:
 
@@ -89,7 +89,7 @@ Initial Setup
 {%- elif service_account == 'gitlab-ci' %}
 
 #. Use the service account token to configure the
-   `Kubernetes integration <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/clusters>`_
+   `Kubernetes integration <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/clusters>`_
    of your GitLab project: (`GitLab docs <https://docs.gitlab.com/ee/user/project/clusters/>`_)
 
    - Operations > Kubernetes > "APPUiO" > Kubernetes cluster details > Service Token
@@ -98,7 +98,7 @@ Initial Setup
 
    - RBAC-enabled cluster: *(checked)*
    - GitLab-managed cluster: *(unchecked)*
-   - Project namespace: {% if cookiecutter.environment_strategy == 'shared' %}"{{ cookiecutter.project_slug }}"{% else %}*(empty)*{% endif %}
+   - Project namespace: {% if cookiecutter.environment_strategy == 'shared' %}"{{ cookiecutter.cloud_project }}"{% else %}*(empty)*{% endif %}
 {%- endif %}
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
 
@@ -107,10 +107,10 @@ Initial Setup
 
    .. code-block:: console
 
-        oc -n {{ cookiecutter.project_slug }}-integration policy add-role-to-user \
-          admin system:serviceaccount:{{ cookiecutter.project_slug }}-production:{{ service_account }}
-        oc -n {{ cookiecutter.project_slug }}-development policy add-role-to-user \
-          admin system:serviceaccount:{{ cookiecutter.project_slug }}-production:{{ service_account }}
+        oc -n {{ cookiecutter.cloud_project }}-integration policy add-role-to-user \
+          admin system:serviceaccount:{{ cookiecutter.cloud_project }}-production:{{ service_account }}
+        oc -n {{ cookiecutter.cloud_project }}-development policy add-role-to-user \
+          admin system:serviceaccount:{{ cookiecutter.cloud_project }}-production:{{ service_account }}
 {%- endif %}
 {%- endif %}
 {%- if cookiecutter.monitoring == 'Sentry' %}
@@ -120,10 +120,10 @@ Integrate External Tools
 
 :Sentry:
   - Add environment variable ``SENTRY_DSN`` in
-    `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/settings/ci_cd>`_
+    `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`_
   - Delete secrets in your namespace and run a deployment (to recreate them)
-  - Configure `Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/error_tracking>`_
-    in `Settings > Operations > Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.project_slug }}/-/settings/operations>`_
+  - Configure `Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/error_tracking>`_
+    in `Settings > Operations > Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/operations>`_
 {%- endif %}
 
 Working with Docker

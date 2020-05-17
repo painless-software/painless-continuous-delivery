@@ -21,7 +21,7 @@ class TestCISetup:
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'expected_ci_target':
-                '        TARGET=${BITBUCKET_REPO_SLUG}',
+                '        TARGET=myproject',
         }),
         ('bitbucket-dedicated', {
             'project_slug': 'myproject',
@@ -34,7 +34,7 @@ class TestCISetup:
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'dedicated',
             'expected_ci_target':
-                '        TARGET=${BITBUCKET_REPO_SLUG}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}',  # noqa
+                '        TARGET=myproject-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}',
         }),
         ('codeship', {
             'project_slug': 'myproject',
