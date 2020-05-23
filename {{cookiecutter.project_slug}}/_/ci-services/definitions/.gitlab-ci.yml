@@ -36,7 +36,7 @@ stages:
   stage: build
   image: docker.io/library/docker
   variables:
-    IMAGE: ${DOCKER_REGISTRY}/${TARGET}/${CI_PROJECT_NAME}
+    IMAGE: ${DOCKER_REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}
   before_script:
   - docker login -u gitlab-ci -p ${KUBE_TOKEN} ${DOCKER_REGISTRY}
   - docker pull "${IMAGE}:latest" || true
@@ -55,15 +55,16 @@ stages:
   before_script:
   - export DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
   - export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
-  - oc -n ${TARGET} get secret ${APPLICATION_NAME} ||
-    oc -n ${TARGET} create secret generic ${APPLICATION_NAME}
+  - oc project ${TARGET}
+  - oc get secret ${APPLICATION_NAME} ||
+    oc create secret generic ${APPLICATION_NAME}
       --from-literal=DJANGO_DATABASE_URL={{ cookiecutter.database|lower }}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}
       --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
 {%- if cookiecutter.monitoring == 'Sentry' %}
       --from-literal=SENTRY_DSN=${SENTRY_DSN}
 {%- endif %}
-  - oc -n ${TARGET} get secret ${DATABASE_HOST} ||
-    oc -n ${TARGET} create secret generic ${DATABASE_HOST}
+  - oc get secret ${DATABASE_HOST} ||
+    oc create secret generic ${DATABASE_HOST}
       --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}
       --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}
       --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
@@ -78,15 +79,15 @@ stages:
   - echo "ENVIRONMENT=${CI_ENVIRONMENT_NAME}" >> deployment/application/base/application.env
   - echo "REVISION=${CI_COMMIT_SHORT_SHA}" >> deployment/application/base/application.env
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
-  - oc tag "${SOURCE}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
-           "${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}"
+  - oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${CI_COMMIT_SHA}"
+           "${TARGET}/{{ cookiecutter.project_slug }}:${CI_COMMIT_SHA}"
 {%- endif %}
-  - seiso images history "${TARGET}/${CI_PROJECT_NAME}" --force
-  - oc -n ${TARGET} get configmap -o name --sort-by='.metadata.creationTimestamp'
-       -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %} |
-      head -n -5 | xargs -r oc -n ${TARGET} delete
+  - seiso configmaps -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %} --delete
+  - seiso secrets -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %} --delete
+  - seiso image history {{ cookiecutter.project_slug }} --delete
+  - seiso image orphans {{ cookiecutter.project_slug }} --delete
   - pushd deployment/application/base &&
-    kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA}" &&
+    kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${CI_COMMIT_SHA}" &&
     popd
   - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | oc apply -f -
   - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | oc apply -f -

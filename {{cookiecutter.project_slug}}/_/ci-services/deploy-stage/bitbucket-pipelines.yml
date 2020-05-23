@@ -21,10 +21,10 @@
         --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}
         --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
     - &cleanup-resources
-      seiso images history "${TARGET}/${BITBUCKET_REPO_SLUG}" --force &&
-      oc get configmap -o name --sort-by='.metadata.creationTimestamp'
-         -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %} |
-        tail -n +5 | xargs -r oc delete
+      seiso configmaps -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %} --delete &&
+      seiso secrets -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %} --delete &&
+      seiso image history {{ cookiecutter.project_slug }} --delete &&
+      seiso image orphans {{ cookiecutter.project_slug }} --delete
 
   - step: &deploy-review-app
       name: Deploy Review App
@@ -35,12 +35,12 @@
         REVIEW_APP=review-pr${BITBUCKET_PR_ID}
         APPLICATION=${REVIEW_APP}-application
         DATABASE_HOST=${REVIEW_APP}-{{ cookiecutter.database|lower }}
-      - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
+      - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n ${TARGET}
       - *generate-secrets-vars
       - *generate-secrets-app
       - *generate-secrets-db
       - pushd deployment/application/base &&
-        kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}" &&
+        kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}" &&
         popd
       - pushd deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
         kustomize edit add label app:${REVIEW_APP} -f &&
@@ -70,14 +70,14 @@
       - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
         TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
-      - oc tag "${SOURCE}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
-               "${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
+      - oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}"
+               "${TARGET}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}"
       - *cleanup-resource
       - *generate-secrets-vars
       - *generate-secrets-app
       - *generate-secrets-db
       - pushd deployment/application/base &&
-        kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}" &&
+        kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}" &&
         popd
       - kustomize build deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
       - kustomize build deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
@@ -96,14 +96,14 @@
       - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-integration{% endif %}
         TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
-      - oc tag "${SOURCE}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_COMMIT}"
-               "${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_TAG}"
+      - oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}"
+               "${TARGET}/{{ cookiecutter.project_slug }}:${BITBUCKET_TAG}"
       - *cleanup-resources
       - *generate-secrets-vars
       - *generate-secrets-app
       - *generate-secrets-db
       - pushd deployment/application/base &&
-        kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/${BITBUCKET_REPO_SLUG}:${BITBUCKET_TAG}" &&
+        kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${BITBUCKET_TAG}" &&
         popd
       - kustomize build deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
       - kustomize build deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
