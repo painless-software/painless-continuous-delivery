@@ -6,7 +6,7 @@
       script:
       - REGISTRY={{ cookiecutter.docker_registry }}
         TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
-        IMAGE="${REGISTRY}/${TARGET}/${BITBUCKET_REPO_SLUG}"
+        IMAGE="${REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}"
       - docker login -u bitbucket-pipelines -p ${KUBE_TOKEN} ${REGISTRY}
       - docker pull "${IMAGE}:latest" || true
       - docker build -t "${IMAGE}:${BITBUCKET_COMMIT}"
