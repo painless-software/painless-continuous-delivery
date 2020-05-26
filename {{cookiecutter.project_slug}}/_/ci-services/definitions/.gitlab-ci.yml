@@ -46,18 +46,22 @@ stages:
                  -f "deployment/application/Dockerfile" .
   - docker push "${IMAGE}"
 
-.generate-secrets:
+.deploy-vars:
   variables:
-    APPLICATION_NAME: application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
+    LABEL: {{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
+    APPLICATION: application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
     DATABASE_HOST: {{ cookiecutter.database|lower }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
     DATABASE_NAME: {{ cookiecutter.project_slug.replace('-', '_') }}
     DATABASE_USER: {{ cookiecutter.project_slug.replace('-', '_') }}
+
+.generate-secrets:
+  extends: .deploy-vars
   before_script:
   - export DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
   - export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
   - oc project ${TARGET}
-  - oc get secret ${APPLICATION_NAME} ||
-    oc create secret generic ${APPLICATION_NAME}
+  - oc get secret ${APPLICATION} ||
+    oc create secret generic ${APPLICATION}
       --from-literal=DJANGO_DATABASE_URL={{ cookiecutter.database|lower }}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}
       --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
 {%- if cookiecutter.monitoring == 'Sentry' %}
@@ -82,12 +86,14 @@ stages:
   - oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${CI_COMMIT_SHA}"
            "${TARGET}/{{ cookiecutter.project_slug }}:${CI_COMMIT_SHA}"
 {%- endif %}
-  - seiso configmaps -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %} --delete
-  - seiso secrets -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %} --delete
+  - seiso configmaps -l app=${LABEL} --delete
+  - seiso secrets -l app=${LABEL} --delete
   - seiso image history {{ cookiecutter.project_slug }} --delete
   - seiso image orphans {{ cookiecutter.project_slug }} --delete
   - pushd deployment/application/base &&
     kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${CI_COMMIT_SHA}" &&
     popd
+  - sed "s|REVIEW-ID|${LABEL}|" -i deployment/application/overlays/${CI_ENVIRONMENT_NAME}/kustomization.yaml
+  - sed "s|REVIEW-ID|${LABEL}|" -i deployment/database/overlays/${CI_ENVIRONMENT_NAME}/kustomization.yaml
   - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | oc apply -f -
   - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | oc apply -f -

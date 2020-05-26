@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Route
 metadata:
-  name: application-route
+  name: {{ cookiecutter.project_slug }}
   annotations:
     kubernetes.io/tls-acme: "true"
 spec:

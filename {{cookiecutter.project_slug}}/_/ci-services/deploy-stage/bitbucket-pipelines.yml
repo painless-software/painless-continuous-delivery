@@ -69,7 +69,7 @@
       script:
       - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
         TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
-      - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
+      - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n ${TARGET}
       - oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}"
                "${TARGET}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}"
       - *cleanup-resource
@@ -95,7 +95,7 @@
       script:
       - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-integration{% endif %}
         TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
-      - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n "${TARGET}"
+      - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n ${TARGET}
       - oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}"
                "${TARGET}/{{ cookiecutter.project_slug }}:${BITBUCKET_TAG}"
       - *cleanup-resources

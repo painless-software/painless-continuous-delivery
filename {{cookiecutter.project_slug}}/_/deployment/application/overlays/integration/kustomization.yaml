@@ -1,6 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 {%- if cookiecutter.environment_strategy == 'shared' %}
+namespace: {{ cookiecutter.cloud_project }}
 nameSuffix: -integration
 {%- else %}
 namespace: {{ cookiecutter.cloud_project }}-integration
@@ -11,9 +12,7 @@ commonAnnotations:
   app.gitlab.com/env: integration
 {%- endif %}
 commonLabels:
-{%- if cookiecutter.environment_strategy == 'shared' %}
-  app: {{ cookiecutter.project_slug }}-integration
-{%- endif %}
+  app: {{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-integration{% endif %}
   environment: integration
 configMapGenerator:
 - name: application
