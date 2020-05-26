@@ -1,15 +1,30 @@
 
-development:
+review:
   extends: .deploy
   environment:
     name: development
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
+    on_stop: stop_review
   variables:
+    LABEL: review-mr${CI_MERGE_REQUEST_IID}
+    APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}
+    DATABASE_HOST: {{ cookiecutter.database|lower }}-review-mr${CI_MERGE_REQUEST_IID}
+{%- if cookiecutter.environment_strategy == 'dedicated' %}
     SOURCE: {{ cookiecutter.cloud_project }}-development
     TARGET: {{ cookiecutter.cloud_project }}-development
 {%- endif %}
   only:
   - merge_requests
+
+stop_review:
+  extends: review
+  environment:
+    action: stop
+  variables:
+    GIT_STRATEGY: none
+  when: manual
+  before_script:
+  script:
+  - oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}
 
 integration:
   extends: .deploy

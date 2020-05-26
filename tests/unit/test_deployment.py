@@ -39,8 +39,8 @@ class TestDeployment:
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
-    def test_deploy_config(self, cookies, cronjobs, files_present,
-                           files_absent):
+    def test_deploy_config(
+            self, cookies, cronjobs, files_present, files_absent):
         """
         Generate a deployment configuration and verify it is complete.
         """
@@ -57,18 +57,82 @@ class TestDeployment:
         assert result.project.isdir()
         assert result.project.join('deployment').isdir()
 
-        deployment_base = \
-            result.project.join('deployment', 'application', 'base')
+        app_config = result.project.join('deployment', 'application')
+        db_config = result.project.join('deployment', 'database')
+        app_base = app_config.join('base')
+        db_base = db_config.join('base')
 
-        assert deployment_base.isdir()
+        assert app_base.isdir()
+        assert db_base.isdir()
 
-        kustom_lines = \
-            deployment_base.join('kustomization.yaml').readlines(cr=False)
-
-        assert 'configMapGenerator:' in kustom_lines
+        self.compare_deployment_configs(
+            app_config, db_config, app_base, db_base)
 
         for filename in files_present:
-            assert deployment_base.join(filename).exists()
+            assert app_base.join(filename).exists()
 
         for filename in files_absent:
-            assert not deployment_base.join(filename).exists()
+            assert not app_base.join(filename).exists()
+
+    def compare_deployment_configs(
+            self, app_config, db_config, app_base, db_base):
+        """
+        Verify deployment configuration
+        """
+        app_overlays = app_config.join('overlays')
+        app_development = app_overlays.join('development')
+        app_integration = app_overlays.join('integration')
+        app_production = app_overlays.join('production')
+
+        assert app_overlays.isdir()
+        assert app_development.isdir()
+        assert app_integration.isdir()
+        assert app_production.isdir()
+
+        app_base_kustomize = \
+            app_base.join('kustomization.yaml').readlines(cr=False)
+        app_development_kustomize = \
+            app_development.join('kustomization.yaml').readlines(cr=False)
+        app_integration_kustomize = \
+            app_integration.join('kustomization.yaml').readlines(cr=False)
+        app_production_kustomize = \
+            app_production.join('kustomization.yaml').readlines(cr=False)
+
+        assert 'configMapGenerator:' in app_base_kustomize
+        assert 'configMapGenerator:' in app_development_kustomize
+        assert 'configMapGenerator:' in app_integration_kustomize
+        assert 'configMapGenerator:' in app_production_kustomize
+
+        db_overlays = db_config.join('overlays')
+        db_development = db_overlays.join('development')
+        db_integration = db_overlays.join('integration')
+        db_production = db_overlays.join('production')
+
+        assert db_overlays.isdir()
+        assert db_development.isdir()
+        assert db_integration.isdir()
+        assert db_production.isdir()
+
+        db_base_kustomize = \
+            db_base.join('kustomization.yaml').readlines(cr=False)
+        db_development_kustomize = \
+            db_development.join('kustomization.yaml').readlines(cr=False)
+        db_integration_kustomize = \
+            db_integration.join('kustomization.yaml').readlines(cr=False)
+        db_production_kustomize = \
+            db_production.join('kustomization.yaml').readlines(cr=False)
+
+        # top of kustomization setups should stay aligned
+        assert app_base_kustomize[:4] == db_base_kustomize[:4]
+        assert app_development_kustomize[:10] == db_development_kustomize[:10]
+        assert app_integration_kustomize[:10] == db_integration_kustomize[:10]
+        assert app_production_kustomize[:10] == db_production_kustomize[:10]
+
+        # review app placeholders
+        assert 'nameSuffix: -REVIEW-ID' in app_development_kustomize
+        assert 'nameSuffix: -REVIEW-ID' in db_development_kustomize
+        assert '  app: REVIEW-ID' in app_development_kustomize
+        assert '  app: REVIEW-ID' in db_development_kustomize
+
+        app_base_route = app_base.join('route.yaml').readlines(cr=False)
+        assert '  name: myproject' in app_base_route
