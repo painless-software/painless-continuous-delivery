@@ -41,7 +41,8 @@ class TestFramework:
                 ('docker-compose.yml', [
                     '    environment:',
                     '      - DJANGO_DEBUG=True',
-                    '    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]',  # noqa
+                    '    command: '
+                    '["python", "manage.py", "runserver", "0.0.0.0:8000"]',
                     '    ports:',
                     '      - "8000:8000"',
                 ]),
