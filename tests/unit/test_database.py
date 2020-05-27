@@ -20,7 +20,7 @@ class TestDatabase:
                 'DATABASES': {
                     'default': env_db(
                         "'DJANGO_DATABASE_URL',",
-                        "default='sqlite://%s' % join(BASE_DIR, 'db.sqlite3')"
+                        "default='sqlite://%s' % join(BASE_DIR, 'db.sqlite3')",
                     ),
                 },
             },
@@ -36,7 +36,8 @@ class TestDatabase:
                 'DATABASES': {
                     'default': env_db(
                         "'DJANGO_DATABASE_URL',",
-                        "default='postgres://postgres:postgres@database/postgres'"  # noqa
+                        "default='postgres://"
+                        "postgres:postgres@database/postgres'",
                     ),
                 },
             },
@@ -53,7 +54,7 @@ class TestDatabase:
                 'DATABASES': {
                     'default': env_db(
                         "'DJANGO_DATABASE_URL',",
-                        "default='mysql://mysql:mysql@database/mysql'"
+                        "default='mysql://mysql:mysql@database/mysql'",
                     ),
                 },
             },
