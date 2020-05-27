@@ -49,7 +49,7 @@ Initial Setup
 #. With the commands below, create a service account from your terminal
    (logging in to your cluster first), grant permissions to push images
    and apply configurations, and get the service account's token value:
-   (`APPUiO docs <https://appuio-community-documentation.readthedocs.io/en/latest/services/webserver/50_pushing_to_appuio.html>`_)
+   (`APPUiO docs <https://docs.appuio.ch/en/latest/services/webserver/50_pushing_to_appuio.html>`_)
 
    .. code-block:: console
 {% set service_account = cookiecutter.ci_service|replace('.yml', '')|replace('.', '')|replace('-steps', '')|replace('travis', 'travis-ci') %}
@@ -198,8 +198,9 @@ We have 3 environments corresponding to 3 deployments in a single namespace
 on our container platform: *development*, *integration*, *production*
 {%- endif %}
 
-- Any merge request triggers a deployment (of the feature branch) on
-  *development*.
+- Any merge request triggers a deployment of a review app on *development*.
+  When a merge request is merged or closed the review app will automatically
+  be removed.
 - Any change on the main branch, e.g. when a merge request is merged into
   ``master``, triggers a deployment on *integration*.
 - To trigger a deployment on *production* push a Git tag, e.g.
