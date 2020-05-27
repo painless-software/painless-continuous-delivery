@@ -10,7 +10,20 @@ class TestDeployment:
     scenarios).
     """
     scenarios = [
+        ('dedicated', {
+            'strategy': 'dedicated',
+            'cronjobs': '(none)',
+            'files_present': [],
+            'files_absent': [],
+        }),
+        ('shared', {
+            'strategy': 'shared',
+            'cronjobs': '(none)',
+            'files_present': [],
+            'files_absent': [],
+        }),
         ('no_cronjobs', {
+            'strategy': 'shared',
             'cronjobs': '(none)',
             'files_present': [],
             'files_absent': [
@@ -19,6 +32,7 @@ class TestDeployment:
             ],
         }),
         ('simple_cronjob', {
+            'strategy': 'shared',
             'cronjobs': 'simple',
             'files_present': [
                 'cronjob.yaml',
@@ -28,6 +42,7 @@ class TestDeployment:
             ],
         }),
         ('complex_cronjobs', {
+            'strategy': 'shared',
             'cronjobs': 'complex',
             'files_present': [
                 'cronjob',
@@ -40,12 +55,13 @@ class TestDeployment:
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
     def test_deploy_config(
-            self, cookies, cronjobs, files_present, files_absent):
+            self, cookies, strategy, cronjobs, files_present, files_absent):
         """
         Generate a deployment configuration and verify it is complete.
         """
         result = cookies.bake(extra_context={
             'project_slug': 'myproject',
+            'environment_strategy': strategy,
             'framework': 'Django',
             'cronjobs': cronjobs,
         })
@@ -66,7 +82,7 @@ class TestDeployment:
         assert db_base.isdir()
 
         self.compare_deployment_configs(
-            app_config, db_config, app_base, db_base)
+            app_config, db_config, app_base, db_base, strategy)
 
         for filename in files_present:
             assert app_base.join(filename).exists()
@@ -75,7 +91,7 @@ class TestDeployment:
             assert not app_base.join(filename).exists()
 
     def compare_deployment_configs(
-            self, app_config, db_config, app_base, db_base):
+            self, app_config, db_config, app_base, db_base, strategy):
         """
         Verify deployment configuration
         """
@@ -124,9 +140,14 @@ class TestDeployment:
 
         # top of kustomization setups should stay aligned
         assert app_base_kustomize[:4] == db_base_kustomize[:4]
-        assert app_development_kustomize[:10] == db_development_kustomize[:10]
-        assert app_integration_kustomize[:10] == db_integration_kustomize[:10]
-        assert app_production_kustomize[:10] == db_production_kustomize[:10]
+        if strategy == 'dedicated':
+            assert app_development_kustomize[:7] == db_development_kustomize[:7]
+            assert app_integration_kustomize[:6] == db_integration_kustomize[:6]
+            assert app_production_kustomize[:6] == db_production_kustomize[:6]
+        else:
+            assert app_development_kustomize[:10] == db_development_kustomize[:10]
+            assert app_integration_kustomize[:10] == db_integration_kustomize[:10]
+            assert app_production_kustomize[:10] == db_production_kustomize[:10]
 
         # review app placeholders
         assert 'nameSuffix: -REVIEW-ID' in app_development_kustomize
