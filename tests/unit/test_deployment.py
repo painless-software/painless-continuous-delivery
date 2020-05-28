@@ -2,7 +2,7 @@
 from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
 
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=attribute-defined-outside-init,too-many-instance-attributes
 class TestDeployment:
     """
     Tests for verifying generated deployment configuration of this
@@ -11,18 +11,21 @@ class TestDeployment:
     """
     scenarios = [
         ('dedicated', {
+            'vcs_platform': 'GitLab.com',
             'strategy': 'dedicated',
             'cronjobs': '(none)',
             'files_present': [],
             'files_absent': [],
         }),
         ('shared', {
+            'vcs_platform': 'Bitbucket.org',
             'strategy': 'shared',
             'cronjobs': '(none)',
             'files_present': [],
             'files_absent': [],
         }),
         ('no_cronjobs', {
+            'vcs_platform': 'GitHub.com',
             'strategy': 'shared',
             'cronjobs': '(none)',
             'files_present': [],
@@ -32,6 +35,7 @@ class TestDeployment:
             ],
         }),
         ('simple_cronjob', {
+            'vcs_platform': 'GitLab.com',
             'strategy': 'shared',
             'cronjobs': 'simple',
             'files_present': [
@@ -42,6 +46,7 @@ class TestDeployment:
             ],
         }),
         ('complex_cronjobs', {
+            'vcs_platform': 'Bitbucket.org',
             'strategy': 'shared',
             'cronjobs': 'complex',
             'files_present': [
@@ -53,18 +58,23 @@ class TestDeployment:
         }),
     ]
 
-    # pylint: disable=too-many-arguments,too-many-locals,no-self-use
+    # pylint: disable=too-many-arguments
     def test_deploy_config(
-            self, cookies, strategy, cronjobs, files_present, files_absent):
+            self, cookies, vcs_platform, strategy, cronjobs, files_present,
+            files_absent):
         """
         Generate a deployment configuration and verify it is complete.
         """
         result = cookies.bake(extra_context={
             'project_slug': 'myproject',
+            'vcs_platform': vcs_platform,
             'environment_strategy': strategy,
             'framework': 'Django',
             'cronjobs': cronjobs,
         })
+
+        self.vcs_platform = vcs_platform
+        self.strategy = strategy
 
         assert result.exit_code == 0
         assert result.exception is None
@@ -73,87 +83,138 @@ class TestDeployment:
         assert result.project.isdir()
         assert result.project.join('deployment').isdir()
 
-        app_config = result.project.join('deployment', 'application')
-        db_config = result.project.join('deployment', 'database')
-        app_base = app_config.join('base')
-        db_base = db_config.join('base')
-
-        assert app_base.isdir()
-        assert db_base.isdir()
-
-        self.compare_deployment_configs(
-            app_config, db_config, app_base, db_base, strategy)
+        self.verify_folders_exist(result)
+        self.read_deployment_configs()
+        self.ensure_gitlab_annotations()
+        self.compare_deployment_configs()
 
         for filename in files_present:
-            assert app_base.join(filename).exists()
+            assert self.app_base.join(filename).exists()
 
         for filename in files_absent:
-            assert not app_base.join(filename).exists()
+            assert not self.app_base.join(filename).exists()
 
-    def compare_deployment_configs(
-            self, app_config, db_config, app_base, db_base, strategy):
+    def verify_folders_exist(self, result):
+        """
+        Set instance variables while checking on directories
+        """
+        self.app_config = result.project.join('deployment', 'application')
+        self.db_config = result.project.join('deployment', 'database')
+        self.app_base = self.app_config.join('base')
+        self.db_base = self.db_config.join('base')
+
+        assert self.app_base.isdir()
+        assert self.db_base.isdir()
+
+        self.app_overlays = self.app_config.join('overlays')
+        self.app_development = self.app_overlays.join('development')
+        self.app_integration = self.app_overlays.join('integration')
+        self.app_production = self.app_overlays.join('production')
+
+        assert self.app_overlays.isdir()
+        assert self.app_development.isdir()
+        assert self.app_integration.isdir()
+        assert self.app_production.isdir()
+
+        self.db_overlays = self.db_config.join('overlays')
+        self.db_development = self.db_overlays.join('development')
+        self.db_integration = self.db_overlays.join('integration')
+        self.db_production = self.db_overlays.join('production')
+
+        assert self.db_overlays.isdir()
+        assert self.db_development.isdir()
+        assert self.db_integration.isdir()
+        assert self.db_production.isdir()
+
+    def read_deployment_configs(self):
+        """
+        Read Kustomize configuration
+        """
+        self.app_base_kustomize = \
+            self.app_base.join('kustomization.yaml').readlines(cr=False)
+        self.app_development_kustomize = \
+            self.app_development.join('kustomization.yaml').readlines(cr=False)
+        self.app_integration_kustomize = \
+            self.app_integration.join('kustomization.yaml').readlines(cr=False)
+        self.app_production_kustomize = \
+            self.app_production.join('kustomization.yaml').readlines(cr=False)
+
+        self.db_base_kustomize = \
+            self.db_base.join('kustomization.yaml').readlines(cr=False)
+        self.db_development_kustomize = \
+            self.db_development.join('kustomization.yaml').readlines(cr=False)
+        self.db_integration_kustomize = \
+            self.db_integration.join('kustomization.yaml').readlines(cr=False)
+        self.db_production_kustomize = \
+            self.db_production.join('kustomization.yaml').readlines(cr=False)
+
+    def compare_deployment_configs(self):
         """
         Verify deployment configuration
         """
-        app_overlays = app_config.join('overlays')
-        app_development = app_overlays.join('development')
-        app_integration = app_overlays.join('integration')
-        app_production = app_overlays.join('production')
-
-        assert app_overlays.isdir()
-        assert app_development.isdir()
-        assert app_integration.isdir()
-        assert app_production.isdir()
-
-        app_base_kustomize = \
-            app_base.join('kustomization.yaml').readlines(cr=False)
-        app_development_kustomize = \
-            app_development.join('kustomization.yaml').readlines(cr=False)
-        app_integration_kustomize = \
-            app_integration.join('kustomization.yaml').readlines(cr=False)
-        app_production_kustomize = \
-            app_production.join('kustomization.yaml').readlines(cr=False)
-
-        assert 'configMapGenerator:' in app_base_kustomize
-        assert 'configMapGenerator:' in app_development_kustomize
-        assert 'configMapGenerator:' in app_integration_kustomize
-        assert 'configMapGenerator:' in app_production_kustomize
-
-        db_overlays = db_config.join('overlays')
-        db_development = db_overlays.join('development')
-        db_integration = db_overlays.join('integration')
-        db_production = db_overlays.join('production')
-
-        assert db_overlays.isdir()
-        assert db_development.isdir()
-        assert db_integration.isdir()
-        assert db_production.isdir()
-
-        db_base_kustomize = \
-            db_base.join('kustomization.yaml').readlines(cr=False)
-        db_development_kustomize = \
-            db_development.join('kustomization.yaml').readlines(cr=False)
-        db_integration_kustomize = \
-            db_integration.join('kustomization.yaml').readlines(cr=False)
-        db_production_kustomize = \
-            db_production.join('kustomization.yaml').readlines(cr=False)
+        assert 'configMapGenerator:' in self.app_base_kustomize
+        assert 'configMapGenerator:' in self.app_development_kustomize
+        assert 'configMapGenerator:' in self.app_integration_kustomize
+        assert 'configMapGenerator:' in self.app_production_kustomize
 
         # top of kustomization setups should stay aligned
-        assert app_base_kustomize[:4] == db_base_kustomize[:4]
-        if strategy == 'dedicated':
-            assert app_development_kustomize[:7] == db_development_kustomize[:7]
-            assert app_integration_kustomize[:6] == db_integration_kustomize[:6]
-            assert app_production_kustomize[:6] == db_production_kustomize[:6]
+        assert self.app_base_kustomize[:4] == self.db_base_kustomize[:4]
+
+        identical_lines = 10 if self.vcs_platform == 'GitLab.com' else 7
+        if self.strategy == 'dedicated':
+            assert self.app_development_kustomize[:identical_lines] == \
+                self.db_development_kustomize[:identical_lines]
+            assert self.app_integration_kustomize[:identical_lines - 1] == \
+                self.db_integration_kustomize[:identical_lines - 1]
+            assert self.app_production_kustomize[:identical_lines - 1] == \
+                self.db_production_kustomize[:identical_lines - 1]
         else:
-            assert app_development_kustomize[:10] == db_development_kustomize[:10]
-            assert app_integration_kustomize[:10] == db_integration_kustomize[:10]
-            assert app_production_kustomize[:10] == db_production_kustomize[:10]
+            assert self.app_development_kustomize[:identical_lines] == \
+                self.db_development_kustomize[:identical_lines]
+            assert self.app_integration_kustomize[:identical_lines] == \
+                self.db_integration_kustomize[:identical_lines]
+            assert self.app_production_kustomize[:identical_lines] == \
+                self.db_production_kustomize[:identical_lines]
 
         # review app placeholders
-        assert 'nameSuffix: -REVIEW-ID' in app_development_kustomize
-        assert 'nameSuffix: -REVIEW-ID' in db_development_kustomize
-        assert '  app: REVIEW-ID' in app_development_kustomize
-        assert '  app: REVIEW-ID' in db_development_kustomize
+        assert 'nameSuffix: -REVIEW-ID' in self.app_development_kustomize
+        assert 'nameSuffix: -REVIEW-ID' in self.db_development_kustomize
+        assert '  app: REVIEW-ID' in self.app_development_kustomize
+        assert '  app: REVIEW-ID' in self.db_development_kustomize
 
-        app_base_route = app_base.join('route.yaml').readlines(cr=False)
+        app_base_route = self.app_base.join('route.yaml').readlines(cr=False)
         assert '  name: myproject' in app_base_route
+
+    def ensure_gitlab_annotations(self):
+        """
+        Make sure GitLab annotation are absent or present
+        """
+        should_be_present = (self.vcs_platform == 'GitLab.com')
+        message = 'GitLab annotations should be %s for %s\n-------\n{}' % (
+            'present' if should_be_present else 'absent',
+            self.vcs_platform,
+        )
+
+        kustomize_dev = '\n'.join(self.app_development_kustomize)
+        kustomize_int = '\n'.join(self.app_integration_kustomize)
+        kustomize_prod = '\n'.join(self.app_production_kustomize)
+        assert (
+            'commonAnnotations:\n'
+            '  app.gitlab.com/app: company-or-username-myproject\n'
+            '  app.gitlab.com/env: development\n' in kustomize_dev
+            ) is should_be_present, \
+            message.format(kustomize_dev)
+
+        assert (
+            'commonAnnotations:\n'
+            '  app.gitlab.com/app: company-or-username-myproject\n'
+            '  app.gitlab.com/env: integration\n' in kustomize_int
+            ) is should_be_present, \
+            message.format(kustomize_int)
+
+        assert (
+            'commonAnnotations:\n'
+            '  app.gitlab.com/app: company-or-username-myproject\n'
+            '  app.gitlab.com/env: production\n' in kustomize_prod
+            ) is should_be_present, \
+            message.format(kustomize_prod)
