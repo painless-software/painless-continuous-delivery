@@ -2,6 +2,7 @@
     - &generate-secrets-vars
       DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
       DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
+      LABEL=${LABEL:-{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}}
       APPLICATION=${APPLICATION:-application{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}}
       DATABASE_HOST=${DATABASE_HOST:-{{ cookiecutter.database|lower }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}}
       DATABASE_NAME={{ cookiecutter.project_slug.replace('-', '_') }}
@@ -21,8 +22,8 @@
         --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}
         --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
     - &cleanup-resources
-      seiso configmaps -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %} --delete &&
-      seiso secrets -l app={{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %} --delete &&
+      seiso configmaps -l app=${LABEL} --delete &&
+      seiso secrets -l app=${LABEL} --delete &&
       seiso image history {{ cookiecutter.project_slug }} --delete &&
       seiso image orphans {{ cookiecutter.project_slug }} --delete
 
@@ -32,9 +33,9 @@
       image: docker.io/appuio/oc:v3.11
       script:
       - TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
-        REVIEW_APP=review-pr${BITBUCKET_PR_ID}
-        APPLICATION=${REVIEW_APP}-application
-        DATABASE_HOST=${REVIEW_APP}-{{ cookiecutter.database|lower }}
+        LABEL=review-pr${BITBUCKET_PR_ID}
+        APPLICATION=application-${LABEL}
+        DATABASE_HOST={{ cookiecutter.database|lower }}-${LABEL}
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n ${TARGET}
       - *generate-secrets-vars
       - *generate-secrets-app
@@ -42,14 +43,8 @@
       - pushd deployment/application/base &&
         kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}" &&
         popd
-      - pushd deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
-        kustomize edit add label app:${REVIEW_APP} -f &&
-        kustomize edit set nameprefix "${REVIEW_APP}-" &&
-        popd
-      - pushd deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
-        kustomize edit add label app:${REVIEW_APP} -f &&
-        kustomize edit set nameprefix "${REVIEW_APP}-" &&
-        popd
+      - sed "s|REVIEW-ID|${LABEL}|" -i deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT}/kustomization.yaml
+      - sed "s|REVIEW-ID|${LABEL}|" -i deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT}/kustomization.yaml
       - kustomize build deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
       - kustomize build deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
       - echo -e "\n"
@@ -57,10 +52,10 @@
                 "- ${KUBE_URL}/console/project/${TARGET}/overview\n"
                 "\n"
                 "Review App is available at:\n"
-                "- https://${APPLICATION}-route-${TARGET}.appuioapp.ch/\n"
+                "- https://{{ cookiecutter.project_slug }}-${LABEL}-${TARGET}.appuioapp.ch/\n"
                 "\n"
                 "Remove all related resources with >   ++ USE WITH CAUTION ++\n"
-                "  oc -n ${TARGET} delete all,configmap,pvc,secret -l app=${REVIEW_APP}"
+                "  oc -n ${TARGET} delete all,configmap,pvc,secret -l app=${LABEL}"
 
   - step: &deploy-integration
       name: Deploy to Integration
@@ -86,7 +81,7 @@
                 "- ${KUBE_URL}/console/project/${TARGET}/overview\n"
                 "\n"
                 "Application is available at:\n"
-                "- https://${APPLICATION}-route-${TARGET}.appuioapp.ch/"
+                "- https://${LABEL}-${TARGET}.appuioapp.ch/"
 
   - step: &deploy-production
       name: Deploy to Production
