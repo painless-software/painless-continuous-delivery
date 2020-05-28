@@ -22,6 +22,26 @@ class TestCISetup:
             'required_lines': [
                 '        TARGET=myproject',
                 '        - tox -e py37',
+                '                "Remove all related resources with > '
+                '  ++ USE WITH CAUTION ++\\n"',
+                '                "  oc delete all,configmap,pvc,secret'
+                ' -n ${TARGET} -l app=${LABEL}"',
+                '    - &cleanup-resources',
+                '      seiso configmaps -l app=${LABEL} --delete &&',
+                '      seiso secrets -l app=${LABEL} --delete &&',
+                '      seiso image history myproject --delete &&',
+                '      seiso image orphans myproject --delete',
+                '  - step: &deploy-review-app',
+                '  - step: &deploy-integration',
+                '  - step: &deploy-production',
+                '    - &cleanup-resources',
+                '    - &generate-secrets-vars',
+                '    - &generate-secrets-app',
+                '    - &generate-secrets-db',
+                '      - *cleanup-resources',
+                '      - *generate-secrets-vars',
+                '      - *generate-secrets-app',
+                '      - *generate-secrets-db',
             ],
         }),
         ('bitbucket-dedicated', {
@@ -36,6 +56,26 @@ class TestCISetup:
             'required_lines': [
                 '        TARGET=myproject-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}',
                 '        - tox -e py37',
+                '                "Remove all related resources with > '
+                '  ++ USE WITH CAUTION ++\\n"',
+                '                "  oc delete all,configmap,pvc,secret'
+                ' -n ${TARGET} -l app=${LABEL}"',
+                '    - &cleanup-resources',
+                '      seiso configmaps -l app=${LABEL} --delete &&',
+                '      seiso secrets -l app=${LABEL} --delete &&',
+                '      seiso image history myproject --delete &&',
+                '      seiso image orphans myproject --delete',
+                '  - step: &deploy-review-app',
+                '  - step: &deploy-integration',
+                '  - step: &deploy-production',
+                '    - &cleanup-resources',
+                '    - &generate-secrets-vars',
+                '    - &generate-secrets-app',
+                '    - &generate-secrets-db',
+                '      - *cleanup-resources',
+                '      - *generate-secrets-vars',
+                '      - *generate-secrets-app',
+                '      - *generate-secrets-db',
             ],
         }),
         ('codeship', {
