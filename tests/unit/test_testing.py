@@ -136,4 +136,4 @@ class TestTestingSetup:
         # ensure this project itself stays up-to-date with the template
         for filename in match_project_root:
             verify_file_matches_repo_root(result, filename,
-                                          max_compare_bytes=375)
+                                          max_compare_bytes=1250)
