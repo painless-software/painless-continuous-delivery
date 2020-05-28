@@ -72,7 +72,7 @@
       - oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n ${TARGET}
       - oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}"
                "${TARGET}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}"
-      - *cleanup-resource
+      - *cleanup-resources
       - *generate-secrets-vars
       - *generate-secrets-app
       - *generate-secrets-db
