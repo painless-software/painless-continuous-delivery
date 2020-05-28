@@ -1,6 +1,6 @@
   - step: &build
       name: Build image
-      image: docker.io/library/docker
+      image: docker.io/library/docker:19.03.8
       caches:
       - docker
       script:
