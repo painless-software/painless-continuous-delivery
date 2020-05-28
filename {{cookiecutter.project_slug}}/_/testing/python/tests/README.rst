@@ -14,49 +14,52 @@ No need to install additional packages for running tests
     `Tox`_ will create virtual environments and install those packages
     automagically when running your tests.
 
-.. _Tox: https://tox.readthedocs.io/en/latest/
-
-Running Your Tests Locally
---------------------------
+Working with Tox
+----------------
 
 Install Tox on your local machine:
 
-.. code-block:: bash
+.. code-block:: console
 
     pip install tox
 
 Use the ``tox`` command in the terminal to run your tests locally:
 
-.. code-block:: bash
+.. code-block:: console
 
     # list all available test environments (= Tox targets)
     tox -lv
 
-.. code-block:: bash
+.. code-block:: console
 
     # run all tests against all environments
     tox
 
-.. code-block:: bash
+.. code-block:: console
 
     # run a specific set of tests (one or several)
-    tox -e py35
-    tox -e flake8,py35
+    tox -e py37
+    tox -e flake8,py37
 
-.. code-block:: bash
+.. code-block:: console
 
     # remove all environments, build files and folders
     tox -e clean
 
-If you need to use command line arguments for a command separate them with a
-double-dash, like so::
+If you need to use command line options for a command separate them with a
+double-dash, like so:
+
+.. code-block:: console
 
      tox <tox args> -- <command args>
 
 Examples:
 
-.. code-block:: bash
+.. code-block:: console
 
     tox -e behave -- --format=pretty
     tox -e behave -- --tags=-docker
     tox -e flake8 -- --help
+
+
+.. _Tox: https://tox.readthedocs.io/en/latest/
