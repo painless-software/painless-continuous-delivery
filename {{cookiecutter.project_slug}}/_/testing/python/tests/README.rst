@@ -9,9 +9,10 @@ Philosophy
 ----------
 
 No need to install additional packages for running tests
-    All dependencies for running your tests are specified in ``tox.ini``.
-    (Tox_ will create virtual environments and install those packages
-    automagically when running your tests.)
+    All dependencies for running your tests are specified in ``tox.ini``
+
+    `Tox`_ will create virtual environments and install those packages
+    automagically when running your tests.
 
 .. _Tox: https://tox.readthedocs.io/en/latest/
 
