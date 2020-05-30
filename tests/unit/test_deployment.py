@@ -160,7 +160,7 @@ class TestDeployment:
         # top of kustomization setups should stay aligned
         assert self.app_base_kustomize[:4] == self.db_base_kustomize[:4]
 
-        identical_lines = 10 if self.vcs_platform == 'GitLab.com' else 7
+        identical_lines = 8 if self.vcs_platform == 'GitLab.com' else 5
         if self.strategy == 'dedicated':
             assert self.app_development_kustomize[:identical_lines] == \
                 self.db_development_kustomize[:identical_lines]
@@ -177,10 +177,10 @@ class TestDeployment:
                 self.db_production_kustomize[:identical_lines]
 
         # review app placeholders
-        assert 'nameSuffix: -REVIEW-ID' in self.app_development_kustomize
-        assert 'nameSuffix: -REVIEW-ID' in self.db_development_kustomize
-        assert '  app: REVIEW-ID' in self.app_development_kustomize
-        assert '  app: REVIEW-ID' in self.db_development_kustomize
+        assert 'nameSuffix: -REVIEW-ID' not in self.app_development_kustomize
+        assert 'nameSuffix: -REVIEW-ID' not in self.db_development_kustomize
+        assert '  app: REVIEW-ID' not in self.app_development_kustomize
+        assert '  app: REVIEW-ID' not in self.db_development_kustomize
 
         app_base_route = self.app_base.join('route.yaml').readlines(cr=False)
         assert '  name: myproject' in app_base_route

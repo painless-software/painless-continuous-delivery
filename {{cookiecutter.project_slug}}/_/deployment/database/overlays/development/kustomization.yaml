@@ -1,14 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
-nameSuffix: -REVIEW-ID
 {%- if cookiecutter.vcs_platform == 'GitLab.com' %}
 commonAnnotations:
   app.gitlab.com/app: {{ cookiecutter.vcs_account|lower }}-{{ cookiecutter.vcs_project|lower }}
   app.gitlab.com/env: development
 {%- endif %}
 commonLabels:
-  app: REVIEW-ID
   environment: development
 resources:
 - ../../base

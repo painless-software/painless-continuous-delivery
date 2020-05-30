@@ -43,10 +43,16 @@
       - pushd deployment/application/base &&
         kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}" &&
         popd
-      - sed "s|REVIEW-ID|${LABEL}|" -i deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT}/kustomization.yaml
-      - sed "s|REVIEW-ID|${LABEL}|" -i deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT}/kustomization.yaml
-      - kustomize build deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
-      - kustomize build deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
+      - pushd deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
+        kustomize edit set namesuffix -- "-${LABEL}" &&
+        kustomize edit add label "app:${LABEL}" &&
+        kustomize build | oc apply -f - &&
+        popd
+      - pushd deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
+        kustomize edit set namesuffix -- "-${LABEL}" &&
+        kustomize edit add label "app:${LABEL}" &&
+        kustomize build | oc apply -f - &&
+        popd
       - echo -e "\n"
                 "Review App has been deployed to:\n"
                 "- ${KUBE_URL}/console/project/${TARGET}/overview\n"
@@ -74,8 +80,12 @@
       - pushd deployment/application/base &&
         kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}" &&
         popd
-      - kustomize build deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
-      - kustomize build deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
+      - pushd deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
+        kustomize build | oc apply -f - &&
+        popd
+      - pushd deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
+        kustomize build | oc apply -f - &&
+        popd
       - echo -e "\n"
                 "Application has been deployed to:\n"
                 "- ${KUBE_URL}/console/project/${TARGET}/overview\n"
@@ -100,8 +110,12 @@
       - pushd deployment/application/base &&
         kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${BITBUCKET_TAG}" &&
         popd
-      - kustomize build deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
-      - kustomize build deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} | oc apply -f -
+      - pushd deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
+        kustomize build | oc apply -f - &&
+        popd
+      - pushd deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
+        kustomize build | oc apply -f - &&
+        popd
       - echo -e "\n"
                 "Application has been deployed to:\n"
                 "- ${KUBE_URL}/console/project/${TARGET}/overview\n"

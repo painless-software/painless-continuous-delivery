@@ -42,6 +42,17 @@ class TestCISetup:
                 '      - *generate-secrets-vars',
                 '      - *generate-secrets-app',
                 '      - *generate-secrets-db',
+                '      - pushd deployment/application/base &&',
+                '      - pushd deployment/application/overlays/'
+                '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
+                '      - pushd deployment/database/overlays/'
+                '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
+                '        kustomize edit set image IMAGE="docker-registry.'
+                'default.svc:5000/${TARGET}/myproject:${BITBUCKET_COMMIT}" &&',
+                '        kustomize edit set namesuffix -- "-${LABEL}" &&',
+                '        kustomize edit add label "app:${LABEL}" &&',
+                '        kustomize build | oc apply -f - &&',
+                '        popd',
             ],
         }),
         ('bitbucket-dedicated', {
@@ -76,6 +87,17 @@ class TestCISetup:
                 '      - *generate-secrets-vars',
                 '      - *generate-secrets-app',
                 '      - *generate-secrets-db',
+                '      - pushd deployment/application/base &&',
+                '      - pushd deployment/application/overlays/'
+                '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
+                '      - pushd deployment/database/overlays/'
+                '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
+                '        kustomize edit set image IMAGE="docker-registry.'
+                'default.svc:5000/${TARGET}/myproject:${BITBUCKET_COMMIT}" &&',
+                '        kustomize edit set namesuffix -- "-${LABEL}" &&',
+                '        kustomize edit add label "app:${LABEL}" &&',
+                '        kustomize build | oc apply -f - &&',
+                '        popd',
             ],
         }),
         ('codeship', {
@@ -108,22 +130,24 @@ class TestCISetup:
                 '.deploy:',
                 '  extends: .deploy-vars',
                 '  extends: .generate-secrets',
+                '    LABEL: review-mr${CI_MERGE_REQUEST_IID}',
+                '    APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
+                '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
                 '  - seiso configmaps -l app=${LABEL} --delete',
                 '  - seiso secrets -l app=${LABEL} --delete',
                 '  - seiso image history myproject --delete',
                 '  - seiso image orphans myproject --delete',
-                '  - sed "s|REVIEW-ID|${LABEL}|" -i deployment/application/'
-                'overlays/${CI_ENVIRONMENT_NAME}/kustomization.yaml',
-                '  - sed "s|REVIEW-ID|${LABEL}|" -i deployment/database/'
-                'overlays/${CI_ENVIRONMENT_NAME}/kustomization.yaml',
-                '    LABEL: review-mr${CI_MERGE_REQUEST_IID}',
-                '    APPLICATION: application-'
-                'review-mr${CI_MERGE_REQUEST_IID}',
-                '    DATABASE_HOST: postgres-'
-                'review-mr${CI_MERGE_REQUEST_IID}',
+                '  - pushd deployment/application/base &&',
+                '  - pushd deployment/application/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
+                '  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
+                '    kustomize edit set image IMAGE="docker-registry.'
+                'default.svc:5000/${TARGET}/myproject:${CI_COMMIT_SHA}" &&',
+                '    kustomize edit set namesuffix -- "-${LABEL}" &&',
+                '    kustomize edit add label "app:${LABEL}" &&',
+                '    kustomize build | oc apply -f - &&',
+                '    popd',
                 'stop_review:',
-                '  - oc delete all,configmap,pvc,secret -n ${TARGET}'
-                ' -l app=${LABEL}',
+                '  - oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}',  # noqa
             ],
         }),
         ('gitlab-dedicated', {
@@ -143,24 +167,26 @@ class TestCISetup:
                 '.deploy:',
                 '  extends: .deploy-vars',
                 '  extends: .generate-secrets',
+                '    LABEL: review-mr${CI_MERGE_REQUEST_IID}',
+                '    APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
+                '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
                 '  - oc tag "${SOURCE}/myproject:${CI_COMMIT_SHA}"',
                 '           "${TARGET}/myproject:${CI_COMMIT_SHA}"',
                 '  - seiso configmaps -l app=${LABEL} --delete',
                 '  - seiso secrets -l app=${LABEL} --delete',
                 '  - seiso image history myproject --delete',
                 '  - seiso image orphans myproject --delete',
-                '  - sed "s|REVIEW-ID|${LABEL}|" -i deployment/application/'
-                'overlays/${CI_ENVIRONMENT_NAME}/kustomization.yaml',
-                '  - sed "s|REVIEW-ID|${LABEL}|" -i deployment/database/'
-                'overlays/${CI_ENVIRONMENT_NAME}/kustomization.yaml',
-                '    LABEL: review-mr${CI_MERGE_REQUEST_IID}',
-                '    APPLICATION: application-'
-                'review-mr${CI_MERGE_REQUEST_IID}',
-                '    DATABASE_HOST: postgres-'
-                'review-mr${CI_MERGE_REQUEST_IID}',
+                '  - pushd deployment/application/base &&',
+                '  - pushd deployment/application/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
+                '  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
+                '    kustomize edit set image IMAGE="docker-registry.'
+                'default.svc:5000/${TARGET}/myproject:${CI_COMMIT_SHA}" &&',
+                '    kustomize edit set namesuffix -- "-${LABEL}" &&',
+                '    kustomize edit add label "app:${LABEL}" &&',
+                '    kustomize build | oc apply -f - &&',
+                '    popd',
                 'stop_review:',
-                '  - oc delete all,configmap,pvc,secret -n ${TARGET}'
-                ' -l app=${LABEL}',
+                '  - oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}',  # noqa
             ],
         }),
         ('shippable', {
