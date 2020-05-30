@@ -93,7 +93,13 @@ stages:
   - pushd deployment/application/base &&
     kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${CI_COMMIT_SHA}" &&
     popd
-  - sed "s|REVIEW-ID|${LABEL}|" -i deployment/application/overlays/${CI_ENVIRONMENT_NAME}/kustomization.yaml
-  - sed "s|REVIEW-ID|${LABEL}|" -i deployment/database/overlays/${CI_ENVIRONMENT_NAME}/kustomization.yaml
-  - kustomize build deployment/application/overlays/${CI_ENVIRONMENT_NAME} | oc apply -f -
-  - kustomize build deployment/database/overlays/${CI_ENVIRONMENT_NAME} | oc apply -f -
+  - pushd deployment/application/overlays/${CI_ENVIRONMENT_NAME} &&
+    kustomize edit set namesuffix -- "-${LABEL}" &&
+    kustomize edit add label "app:${LABEL}" &&
+    kustomize build | oc apply -f - &&
+    popd
+  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&
+    kustomize edit set namesuffix -- "-${LABEL}" &&
+    kustomize edit add label "app:${LABEL}" &&
+    kustomize build | oc apply -f - &&
+    popd
