@@ -10,7 +10,7 @@ certifi==2020.4.5.1       # via sentry-sdk{% endif %}
 django-datadog==1.0.1     # via -r requirements.in{% endif %}
 django-environ==0.4.5     # via -r requirements.in
 django-probes==1.5.0      # via -r requirements.in
-django==2.2.12            # via -r requirements.in
+django==2.2.13            # via -r requirements.in
 {%- if cookiecutter.database == 'MySQL' %}
 mysql-connector==2.2.9    # via -r requirements.in{% endif %}
 {%- if cookiecutter.monitoring == 'NewRelic' %}
