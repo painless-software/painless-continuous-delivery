@@ -28,7 +28,7 @@ services:
 {%- elif cookiecutter.framework == 'Flask' %}
       - "5000:5000"
 {%- endif %}
-    user: "${UID:-1000}:0"
+    user: "${UID:-1000}:${GID:-1000}"
     volumes:
       - .:/app
     restart: on-failure
