@@ -11,10 +11,8 @@ To start developing on this project simply bring up the Docker setup:
 .. code-block:: console
 {% if cookiecutter.framework in ['Symfony', 'TYPO3'] %}
     composer install
-    docker-compose build
     docker-compose up
 {%- else %}
-    docker-compose build
     docker-compose up
 {%- endif %}
 {%- if cookiecutter.framework == 'Django' %}
@@ -133,7 +131,7 @@ Create/destroy development environment:
 
 .. code-block:: console
 
-    docker-compose up -d    # create and start; omit -d to see log output
+    docker-compose up       # --build to build containers; -d to daemonize
     docker-compose down     # docker-compose kill && docker-compose rm -af
 
 Start/stop development environment:
