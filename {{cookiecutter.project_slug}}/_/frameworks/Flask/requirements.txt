@@ -9,5 +9,5 @@ flask==1.1.2              # via -r requirements.in
 itsdangerous==1.1.0       # via flask
 jinja2==2.11.2            # via flask
 markupsafe==1.1.1         # via jinja2
-uwsgi==2.0.19             # via -r requirements.in
+uwsgi==2.0.19.1             # via -r requirements.in
 werkzeug==1.0.1           # via flask
