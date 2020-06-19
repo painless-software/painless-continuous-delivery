@@ -20,7 +20,6 @@ class TestCISetup:
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'required_lines': [
-                '        TARGET=myproject',
                 '        - tox -e py37',
                 '                "Remove all related resources with > '
                 '  ++ USE WITH CAUTION ++\\n"',
@@ -34,25 +33,41 @@ class TestCISetup:
                 '  - step: &deploy-review-app',
                 '  - step: &deploy-integration',
                 '  - step: &deploy-production',
-                '    - &cleanup-resources',
+                '    - &cloud-login',
+                '    - &cloud-tag-image',
+                '    - &cloud-set-image',
+                '    - &cloud-apply-app',
+                '    - &cloud-apply-db',
                 '    - &generate-secrets-vars',
                 '    - &generate-secrets-app',
                 '    - &generate-secrets-db',
-                '      - *cleanup-resources',
+                '    - &cleanup-resources',
+                '      - *cloud-login',
+                '      - *cloud-tag-image',
+                '      - *cloud-set-image',
+                '      - *cloud-apply-app',
+                '      - *cloud-apply-db',
                 '      - *generate-secrets-vars',
                 '      - *generate-secrets-app',
                 '      - *generate-secrets-db',
-                '      - pushd deployment/application/base &&',
-                '      - pushd deployment/application/overlays/'
+                '      - *cleanup-resources',
+                '      pushd deployment/application/base &&',
+                '      pushd deployment/application/overlays/'
                 '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
-                '      - pushd deployment/database/overlays/'
+                '      pushd deployment/database/overlays/'
                 '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
-                '        kustomize edit set image IMAGE="docker-registry.'
-                'default.svc:5000/${TARGET}/myproject:${BITBUCKET_COMMIT}" &&',
-                '        kustomize edit set namesuffix -- "-${LABEL}" &&',
-                '        kustomize edit add label "app:${LABEL}" &&',
-                '        kustomize build | oc apply -f - &&',
-                '        popd',
+                '      popd',
+                '      kustomize edit set image IMAGE="docker-registry.'
+                'default.svc:5000/${TARGET}/myproject:${IMAGE_TAG}" &&',
+                '      kustomize edit set namesuffix -- "${SUFFIX}" &&',
+                '      kustomize edit set label "app:${LABEL}" &&',
+                '      kustomize build | oc apply -f - &&',
+                '      - SOURCE=myproject',
+                '      - TARGET=myproject',
+                '        TARGET=myproject',
+                '        SUFFIX=-review-pr${BITBUCKET_PR_ID}',
+                '        IMAGE_TAG=${BITBUCKET_COMMIT}',
+                '        IMAGE_TAG=${BITBUCKET_TAG}',
             ],
         }),
         ('bitbucket-dedicated', {
@@ -65,7 +80,6 @@ class TestCISetup:
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'dedicated',
             'required_lines': [
-                '        TARGET=myproject-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}',
                 '        - tox -e py37',
                 '                "Remove all related resources with > '
                 '  ++ USE WITH CAUTION ++\\n"',
@@ -79,25 +93,42 @@ class TestCISetup:
                 '  - step: &deploy-review-app',
                 '  - step: &deploy-integration',
                 '  - step: &deploy-production',
-                '    - &cleanup-resources',
+                '    - &cloud-login',
+                '    - &cloud-tag-image',
+                '    - &cloud-set-image',
+                '    - &cloud-apply-app',
+                '    - &cloud-apply-db',
                 '    - &generate-secrets-vars',
                 '    - &generate-secrets-app',
                 '    - &generate-secrets-db',
-                '      - *cleanup-resources',
+                '    - &cleanup-resources',
+                '      - *cloud-login',
+                '      - *cloud-tag-image',
+                '      - *cloud-set-image',
+                '      - *cloud-apply-app',
+                '      - *cloud-apply-db',
                 '      - *generate-secrets-vars',
                 '      - *generate-secrets-app',
                 '      - *generate-secrets-db',
-                '      - pushd deployment/application/base &&',
-                '      - pushd deployment/application/overlays/'
+                '      - *cleanup-resources',
+                '      pushd deployment/application/base &&',
+                '      pushd deployment/application/overlays/'
                 '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
-                '      - pushd deployment/database/overlays/'
+                '      pushd deployment/database/overlays/'
                 '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
-                '        kustomize edit set image IMAGE="docker-registry.'
-                'default.svc:5000/${TARGET}/myproject:${BITBUCKET_COMMIT}" &&',
-                '        kustomize edit set namesuffix -- "-${LABEL}" &&',
-                '        kustomize edit add label "app:${LABEL}" &&',
-                '        kustomize build | oc apply -f - &&',
-                '        popd',
+                '      popd',
+                '      kustomize edit set image IMAGE="docker-registry.'
+                'default.svc:5000/${TARGET}/myproject:${IMAGE_TAG}" &&',
+                '      kustomize edit set namesuffix -- "${SUFFIX}" &&',
+                '      kustomize edit set label "app:${LABEL}" &&',
+                '      kustomize build | oc apply -f - &&',
+                '      - SOURCE=myproject-development',
+                '      - SOURCE=myproject-integration',
+                '      - TARGET=myproject-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}',
+                '        TARGET=myproject-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}',
+                '        SUFFIX=-review-pr${BITBUCKET_PR_ID}',
+                '        IMAGE_TAG=${BITBUCKET_COMMIT}',
+                '        IMAGE_TAG=${BITBUCKET_TAG}',
             ],
         }),
         ('codeship', {
@@ -130,9 +161,10 @@ class TestCISetup:
                 '.deploy:',
                 '  extends: .deploy-vars',
                 '  extends: .generate-secrets',
-                '    LABEL: review-mr${CI_MERGE_REQUEST_IID}',
+                '    SUFFIX: -${CI_ENVIRONMENT_NAME}',
                 '    APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
                 '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
+                '  - LABEL=myproject${SUFFIX}',
                 '  - seiso configmaps -l app=${LABEL} --delete',
                 '  - seiso secrets -l app=${LABEL} --delete',
                 '  - seiso image history myproject --delete',
@@ -142,8 +174,8 @@ class TestCISetup:
                 '  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
                 '    kustomize edit set image IMAGE="docker-registry.'
                 'default.svc:5000/${TARGET}/myproject:${CI_COMMIT_SHA}" &&',
-                '    kustomize edit set namesuffix -- "-${LABEL}" &&',
-                '    kustomize edit add label "app:${LABEL}" &&',
+                '    kustomize edit set namesuffix -- "${SUFFIX}" &&',
+                '    kustomize edit set label "app:${LABEL}" &&',
                 '    kustomize build | oc apply -f - &&',
                 '    popd',
                 'stop_review:',
@@ -167,11 +199,12 @@ class TestCISetup:
                 '.deploy:',
                 '  extends: .deploy-vars',
                 '  extends: .generate-secrets',
-                '    LABEL: review-mr${CI_MERGE_REQUEST_IID}',
+                '    SUFFIX: ""',
                 '    APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
                 '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
                 '  - oc tag "${SOURCE}/myproject:${CI_COMMIT_SHA}"',
                 '           "${TARGET}/myproject:${CI_COMMIT_SHA}"',
+                '  - LABEL=myproject${SUFFIX}',
                 '  - seiso configmaps -l app=${LABEL} --delete',
                 '  - seiso secrets -l app=${LABEL} --delete',
                 '  - seiso image history myproject --delete',
@@ -181,8 +214,8 @@ class TestCISetup:
                 '  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
                 '    kustomize edit set image IMAGE="docker-registry.'
                 'default.svc:5000/${TARGET}/myproject:${CI_COMMIT_SHA}" &&',
-                '    kustomize edit set namesuffix -- "-${LABEL}" &&',
-                '    kustomize edit add label "app:${LABEL}" &&',
+                '    kustomize edit set namesuffix -- "${SUFFIX}" &&',
+                '    kustomize edit set label "app:${LABEL}" &&',
                 '    kustomize build | oc apply -f - &&',
                 '    popd',
                 'stop_review:',
