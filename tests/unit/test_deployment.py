@@ -176,12 +176,6 @@ class TestDeployment:
             assert self.app_production_kustomize[:identical_lines] == \
                 self.db_production_kustomize[:identical_lines]
 
-        # review app placeholders
-        assert 'nameSuffix: -REVIEW-ID' not in self.app_development_kustomize
-        assert 'nameSuffix: -REVIEW-ID' not in self.db_development_kustomize
-        assert '  app: REVIEW-ID' not in self.app_development_kustomize
-        assert '  app: REVIEW-ID' not in self.db_development_kustomize
-
         app_base_route = self.app_base.join('route.yaml').readlines(cr=False)
         assert '  name: myproject' in app_base_route
 
