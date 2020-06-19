@@ -18,8 +18,8 @@ RUN apt-get update \
     libpq-dev \
     nginx \
     python3-dev \
- && pip --disable-pip-version-check --no-cache-dir \
-    install -r ${REQUIREMENTS} \
+ && pip --no-cache-dir install --upgrade pip \
+ && pip --no-cache-dir install -r ${REQUIREMENTS} \
  && apt-get purge -y \
     gcc \
     libpq-dev \
