@@ -9,10 +9,6 @@ review:
     SUFFIX: -review-mr${CI_MERGE_REQUEST_IID}
     APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}
     DATABASE_HOST: {{ cookiecutter.database|lower }}-review-mr${CI_MERGE_REQUEST_IID}
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
-    SOURCE: {{ cookiecutter.cloud_project }}-development
-    TARGET: {{ cookiecutter.cloud_project }}-development
-{%- endif %}
     IMAGE_TAG: ${CI_COMMIT_SHA}
   only:
   - merge_requests
@@ -33,7 +29,9 @@ integration:
   environment:
     name: integration
   variables:
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
+{%- if cookiecutter.environment_strategy == 'shared' %}
+    SUFFIX: -integration
+{%- else %}
     SOURCE: {{ cookiecutter.cloud_project }}-development
     TARGET: {{ cookiecutter.cloud_project }}-integration
 {%- endif %}
@@ -46,7 +44,9 @@ production:
   environment:
     name: production
   variables:
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
+{%- if cookiecutter.environment_strategy == 'shared' %}
+    SUFFIX: -production
+{%- else %}
     SOURCE: {{ cookiecutter.cloud_project }}-integration
     TARGET: {{ cookiecutter.cloud_project }}-production
 {%- endif %}

@@ -3,10 +3,6 @@ application:
   extends: .build
   environment:
     name: development
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
-  variables:
-    TARGET: {{ cookiecutter.cloud_project }}-development
-{%- endif %}
   only:
   - merge_requests
   - master

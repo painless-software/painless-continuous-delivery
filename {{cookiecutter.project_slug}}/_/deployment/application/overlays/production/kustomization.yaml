@@ -1,18 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-{%- if cookiecutter.environment_strategy == 'shared' %}
-namespace: {{ cookiecutter.cloud_project }}
-nameSuffix: -production
-{%- else %}
-namespace: {{ cookiecutter.cloud_project }}-production
-{%- endif %}
+namespace: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-production{% endif %}
 {%- if cookiecutter.vcs_platform == 'GitLab.com' %}
 commonAnnotations:
   app.gitlab.com/app: {{ cookiecutter.vcs_account|lower }}-{{ cookiecutter.vcs_project|lower }}
   app.gitlab.com/env: production
 {%- endif %}
 commonLabels:
-  app: {{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-production{% endif %}
   environment: production
 configMapGenerator:
 - name: application
