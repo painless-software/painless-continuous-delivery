@@ -1,18 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-{%- if cookiecutter.environment_strategy == 'shared' %}
-namespace: {{ cookiecutter.cloud_project }}
-nameSuffix: -integration
-{%- else %}
-namespace: {{ cookiecutter.cloud_project }}-integration
-{%- endif %}
+namespace: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-integration{% endif %}
 {%- if cookiecutter.vcs_platform == 'GitLab.com' %}
 commonAnnotations:
   app.gitlab.com/app: {{ cookiecutter.vcs_account|lower }}-{{ cookiecutter.vcs_project|lower }}
   app.gitlab.com/env: integration
 {%- endif %}
 commonLabels:
-  app: {{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-integration{% endif %}
   environment: integration
 resources:
 - ../../base

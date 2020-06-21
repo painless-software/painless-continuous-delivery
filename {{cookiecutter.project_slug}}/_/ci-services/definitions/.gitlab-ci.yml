@@ -1,9 +1,6 @@
 
 variables:
   DOCKER_REGISTRY: {{ cookiecutter.docker_registry }}
-{%- if cookiecutter.environment_strategy == 'shared' %}
-  TARGET: {{ cookiecutter.cloud_project }}
-{%- endif %}
 
 stages:
 - check
@@ -41,6 +38,7 @@ stages:
   variables:
     GIT_DEPTH: 7
     IMAGE: ${DOCKER_REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}
+    TARGET: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
   before_script:
   - docker login -u gitlab-ci -p ${KUBE_TOKEN} ${DOCKER_REGISTRY}
   - docker pull "${IMAGE}:latest" || true
@@ -52,7 +50,9 @@ stages:
 
 .deploy-vars:
   variables:
-    SUFFIX: {% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% else %}""{% endif %}
+    SUFFIX: ""
+    SOURCE: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
+    TARGET: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}
     APPLICATION: application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
     DATABASE_HOST: {{ cookiecutter.database|lower }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
     DATABASE_NAME: {{ cookiecutter.project_slug.replace('-', '_') }}
@@ -88,26 +88,22 @@ stages:
   - LABEL={{ cookiecutter.project_slug }}${SUFFIX}
   - echo "ENVIRONMENT=${CI_ENVIRONMENT_NAME}" >> deployment/application/base/application.env
   - echo "REVISION=${CI_COMMIT_SHORT_SHA}" >> deployment/application/base/application.env
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
-  - oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${CI_COMMIT_SHA}"
-           "${TARGET}/{{ cookiecutter.project_slug }}:${CI_COMMIT_SHA}"
-{%- endif %}
   - seiso configmaps -l app=${LABEL} --delete
   - seiso secrets -l app=${LABEL} --delete
   - seiso image history {{ cookiecutter.project_slug }} --delete
   - seiso image orphans {{ cookiecutter.project_slug }} --delete
+  - oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${CI_COMMIT_SHA}"
+           "${TARGET}/{{ cookiecutter.project_slug }}:${IMAGE_TAG}"
   - pushd deployment/application/base &&
     kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${IMAGE_TAG}" &&
     popd
   - pushd deployment/application/overlays/${CI_ENVIRONMENT_NAME} &&
     kustomize edit set namesuffix -- "${SUFFIX}" &&
-    kustomize edit remove label app || true &&
     kustomize edit add label "app:${LABEL}" &&
     kustomize build | oc apply -f - &&
     popd
   - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&
     kustomize edit set namesuffix -- "${SUFFIX}" &&
-    kustomize edit remove label app || true &&
     kustomize edit add label "app:${LABEL}" &&
     kustomize build | oc apply -f - &&
     popd

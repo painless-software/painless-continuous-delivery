@@ -31,7 +31,7 @@
       oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n ${TARGET}
     - &cloud-tag-image
       oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}"
-              "${TARGET}/{{ cookiecutter.project_slug }}:${IMAGE_TAG}"
+             "${TARGET}/{{ cookiecutter.project_slug }}:${IMAGE_TAG}"
     - &cloud-set-image
       pushd deployment/application/base &&
       kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${IMAGE_TAG}" &&
@@ -39,14 +39,12 @@
     - &cloud-apply-app
       pushd deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
       kustomize edit set namesuffix -- "${SUFFIX}" &&
-      kustomize edit remove label app || true &&
       kustomize edit add label "app:${LABEL}" &&
       kustomize build | oc apply -f - &&
       popd
     - &cloud-apply-db
       pushd deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
       kustomize edit set namesuffix -- "${SUFFIX}" &&
-      kustomize edit remove label app || true &&
       kustomize edit add label "app:${LABEL}" &&
       kustomize build | oc apply -f - &&
       popd
@@ -56,9 +54,11 @@
       deployment: development
       image: docker.io/appuio/oc:v3.11
       script:
-      - TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
+      - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
+        TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
         SUFFIX=-review-pr${BITBUCKET_PR_ID}
       - *cloud-login
+      - *cloud-tag-image
       - *generate-secrets-vars
       - *generate-secrets-app
       - *generate-secrets-db
@@ -81,7 +81,7 @@
       image: docker.io/appuio/oc:v3.11
       script:
       - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
-        TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
+        TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-integration{% endif %}
         IMAGE_TAG=${BITBUCKET_COMMIT}
       - *cloud-login
       - *cloud-tag-image
@@ -104,8 +104,8 @@
       deployment: production
       image: docker.io/appuio/oc:v3.11
       script:
-      - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-integration{% endif %}
-        TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${BITBUCKET_DEPLOYMENT_ENVIRONMENT}{% endif %}
+      - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
+        TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-production{% endif %}
         IMAGE_TAG=${BITBUCKET_TAG}
       - *cloud-login
       - *cloud-tag-image

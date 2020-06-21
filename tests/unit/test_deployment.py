@@ -158,23 +158,15 @@ class TestDeployment:
         assert 'configMapGenerator:' in self.app_production_kustomize
 
         # top of kustomization setups should stay aligned
-        assert self.app_base_kustomize[:4] == self.db_base_kustomize[:4]
+        assert self.app_base_kustomize[:3] == self.db_base_kustomize[:3]
 
         identical_lines = 8 if self.vcs_platform == 'GitLab.com' else 5
-        if self.strategy == 'dedicated':
-            assert self.app_development_kustomize[:identical_lines] == \
-                self.db_development_kustomize[:identical_lines]
-            assert self.app_integration_kustomize[:identical_lines - 1] == \
-                self.db_integration_kustomize[:identical_lines - 1]
-            assert self.app_production_kustomize[:identical_lines - 1] == \
-                self.db_production_kustomize[:identical_lines - 1]
-        else:
-            assert self.app_development_kustomize[:identical_lines] == \
-                self.db_development_kustomize[:identical_lines]
-            assert self.app_integration_kustomize[:identical_lines] == \
-                self.db_integration_kustomize[:identical_lines]
-            assert self.app_production_kustomize[:identical_lines] == \
-                self.db_production_kustomize[:identical_lines]
+        assert self.app_development_kustomize[:identical_lines] == \
+            self.db_development_kustomize[:identical_lines]
+        assert self.app_integration_kustomize[:identical_lines] == \
+            self.db_integration_kustomize[:identical_lines]
+        assert self.app_production_kustomize[:identical_lines] == \
+            self.db_production_kustomize[:identical_lines]
 
         app_base_route = self.app_base.join('route.yaml').readlines(cr=False)
         assert '  name: myproject' in app_base_route
