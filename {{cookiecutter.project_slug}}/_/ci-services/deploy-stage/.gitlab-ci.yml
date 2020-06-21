@@ -4,15 +4,16 @@ review:
   environment:
     name: development
     on_stop: stop_review
-    auto_stop_in: 1 day
+    auto_stop_in: 18 hours
   variables:
-    LABEL: review-mr${CI_MERGE_REQUEST_IID}
+    SUFFIX: -review-mr${CI_MERGE_REQUEST_IID}
     APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}
     DATABASE_HOST: {{ cookiecutter.database|lower }}-review-mr${CI_MERGE_REQUEST_IID}
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
     SOURCE: {{ cookiecutter.cloud_project }}-development
     TARGET: {{ cookiecutter.cloud_project }}-development
 {%- endif %}
+    IMAGE_TAG: ${CI_COMMIT_SHA}
   only:
   - merge_requests
 
@@ -31,11 +32,12 @@ integration:
   extends: .deploy
   environment:
     name: integration
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
   variables:
+{%- if cookiecutter.environment_strategy == 'dedicated' %}
     SOURCE: {{ cookiecutter.cloud_project }}-development
     TARGET: {{ cookiecutter.cloud_project }}-integration
 {%- endif %}
+    IMAGE_TAG: ${CI_COMMIT_SHA}
   only:
   - master
 
@@ -43,10 +45,11 @@ production:
   extends: .deploy
   environment:
     name: production
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
   variables:
+{%- if cookiecutter.environment_strategy == 'dedicated' %}
     SOURCE: {{ cookiecutter.cloud_project }}-integration
     TARGET: {{ cookiecutter.cloud_project }}-production
 {%- endif %}
+    IMAGE_TAG: ${CI_COMMIT_TAG}
   only:
   - tags

@@ -39,13 +39,15 @@
     - &cloud-apply-app
       pushd deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
       kustomize edit set namesuffix -- "${SUFFIX}" &&
-      kustomize edit set label "app:${LABEL}" &&
+      kustomize edit remove label app || true &&
+      kustomize edit add label "app:${LABEL}" &&
       kustomize build | oc apply -f - &&
       popd
     - &cloud-apply-db
       pushd deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
       kustomize edit set namesuffix -- "${SUFFIX}" &&
-      kustomize edit set label "app:${LABEL}" &&
+      kustomize edit remove label app || true &&
+      kustomize edit add label "app:${LABEL}" &&
       kustomize build | oc apply -f - &&
       popd
 
