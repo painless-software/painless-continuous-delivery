@@ -5,9 +5,6 @@ variables:
   TARGET: {{ cookiecutter.cloud_project }}
 {%- endif %}
 
-services:
-- name: docker:dind
-
 stages:
 - check
 - test
@@ -17,6 +14,8 @@ stages:
 .check:
   stage: check
   image: docker.io/painless/tox
+  variables:
+    GIT_DEPTH: 7
   only:
   - merge_requests
   - master
@@ -28,6 +27,8 @@ stages:
     reports:
       junit: tests/reports/*.xml
   coverage: /^TOTAL.+ (\d+)%$/
+  variables:
+    GIT_DEPTH: 7
   only:
   - merge_requests
   - master
@@ -35,7 +36,10 @@ stages:
 .build:
   stage: build
   image: docker.io/library/docker
+  services:
+  - name: docker:dind
   variables:
+    GIT_DEPTH: 7
     IMAGE: ${DOCKER_REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}
   before_script:
   - docker login -u gitlab-ci -p ${KUBE_TOKEN} ${DOCKER_REGISTRY}
@@ -48,11 +52,12 @@ stages:
 
 .deploy-vars:
   variables:
-    LABEL: {{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
+    SUFFIX: {% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% else %}""{% endif %}
     APPLICATION: application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
     DATABASE_HOST: {{ cookiecutter.database|lower }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
     DATABASE_NAME: {{ cookiecutter.project_slug.replace('-', '_') }}
     DATABASE_USER: {{ cookiecutter.project_slug.replace('-', '_') }}
+    GIT_STRATEGY: clone
 
 .generate-secrets:
   extends: .deploy-vars
@@ -80,6 +85,7 @@ stages:
     url: "${KUBE_URL}/console/project/{{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}/overview"
   image: docker.io/appuio/oc:v3.11
   script:
+  - LABEL={{ cookiecutter.project_slug }}${SUFFIX}
   - echo "ENVIRONMENT=${CI_ENVIRONMENT_NAME}" >> deployment/application/base/application.env
   - echo "REVISION=${CI_COMMIT_SHORT_SHA}" >> deployment/application/base/application.env
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
@@ -91,15 +97,17 @@ stages:
   - seiso image history {{ cookiecutter.project_slug }} --delete
   - seiso image orphans {{ cookiecutter.project_slug }} --delete
   - pushd deployment/application/base &&
-    kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${CI_COMMIT_SHA}" &&
+    kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${IMAGE_TAG}" &&
     popd
   - pushd deployment/application/overlays/${CI_ENVIRONMENT_NAME} &&
-    kustomize edit set namesuffix -- "-${LABEL}" &&
+    kustomize edit set namesuffix -- "${SUFFIX}" &&
+    kustomize edit remove label app || true &&
     kustomize edit add label "app:${LABEL}" &&
     kustomize build | oc apply -f - &&
     popd
   - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&
-    kustomize edit set namesuffix -- "-${LABEL}" &&
+    kustomize edit set namesuffix -- "${SUFFIX}" &&
+    kustomize edit remove label app || true &&
     kustomize edit add label "app:${LABEL}" &&
     kustomize build | oc apply -f - &&
     popd

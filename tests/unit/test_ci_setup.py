@@ -60,7 +60,8 @@ class TestCISetup:
                 '      kustomize edit set image IMAGE="docker-registry.'
                 'default.svc:5000/${TARGET}/myproject:${IMAGE_TAG}" &&',
                 '      kustomize edit set namesuffix -- "${SUFFIX}" &&',
-                '      kustomize edit set label "app:${LABEL}" &&',
+                '      kustomize edit remove label app || true &&',
+                '      kustomize edit add label "app:${LABEL}" &&',
                 '      kustomize build | oc apply -f - &&',
                 '      - SOURCE=myproject',
                 '      - TARGET=myproject',
@@ -120,7 +121,8 @@ class TestCISetup:
                 '      kustomize edit set image IMAGE="docker-registry.'
                 'default.svc:5000/${TARGET}/myproject:${IMAGE_TAG}" &&',
                 '      kustomize edit set namesuffix -- "${SUFFIX}" &&',
-                '      kustomize edit set label "app:${LABEL}" &&',
+                '      kustomize edit remove label app || true &&',
+                '      kustomize edit add label "app:${LABEL}" &&',
                 '      kustomize build | oc apply -f - &&',
                 '      - SOURCE=myproject-development',
                 '      - SOURCE=myproject-integration',
@@ -164,6 +166,11 @@ class TestCISetup:
                 '    SUFFIX: -${CI_ENVIRONMENT_NAME}',
                 '    APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
                 '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
+                '    IMAGE_TAG: ${CI_COMMIT_SHA}',
+                '    IMAGE_TAG: ${CI_COMMIT_TAG}',
+                '    GIT_STRATEGY: clone',
+                '    GIT_STRATEGY: none',
+                '    GIT_DEPTH: 7',
                 '  - LABEL=myproject${SUFFIX}',
                 '  - seiso configmaps -l app=${LABEL} --delete',
                 '  - seiso secrets -l app=${LABEL} --delete',
@@ -173,13 +180,15 @@ class TestCISetup:
                 '  - pushd deployment/application/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
                 '  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
                 '    kustomize edit set image IMAGE="docker-registry.'
-                'default.svc:5000/${TARGET}/myproject:${CI_COMMIT_SHA}" &&',
+                'default.svc:5000/${TARGET}/myproject:${IMAGE_TAG}" &&',
                 '    kustomize edit set namesuffix -- "${SUFFIX}" &&',
-                '    kustomize edit set label "app:${LABEL}" &&',
+                '    kustomize edit remove label app || true &&',
+                '    kustomize edit add label "app:${LABEL}" &&',
                 '    kustomize build | oc apply -f - &&',
                 '    popd',
                 'stop_review:',
                 '  - oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}',  # noqa
+                '    auto_stop_in: 18 hours',
             ],
         }),
         ('gitlab-dedicated', {
@@ -202,6 +211,11 @@ class TestCISetup:
                 '    SUFFIX: ""',
                 '    APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
                 '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
+                '    IMAGE_TAG: ${CI_COMMIT_SHA}',
+                '    IMAGE_TAG: ${CI_COMMIT_TAG}',
+                '    GIT_STRATEGY: clone',
+                '    GIT_STRATEGY: none',
+                '    GIT_DEPTH: 7',
                 '  - oc tag "${SOURCE}/myproject:${CI_COMMIT_SHA}"',
                 '           "${TARGET}/myproject:${CI_COMMIT_SHA}"',
                 '  - LABEL=myproject${SUFFIX}',
@@ -213,13 +227,15 @@ class TestCISetup:
                 '  - pushd deployment/application/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
                 '  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
                 '    kustomize edit set image IMAGE="docker-registry.'
-                'default.svc:5000/${TARGET}/myproject:${CI_COMMIT_SHA}" &&',
+                'default.svc:5000/${TARGET}/myproject:${IMAGE_TAG}" &&',
                 '    kustomize edit set namesuffix -- "${SUFFIX}" &&',
-                '    kustomize edit set label "app:${LABEL}" &&',
+                '    kustomize edit remove label app || true &&',
+                '    kustomize edit add label "app:${LABEL}" &&',
                 '    kustomize build | oc apply -f - &&',
                 '    popd',
                 'stop_review:',
                 '  - oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}',  # noqa
+                '    auto_stop_in: 18 hours',
             ],
         }),
         ('shippable', {
