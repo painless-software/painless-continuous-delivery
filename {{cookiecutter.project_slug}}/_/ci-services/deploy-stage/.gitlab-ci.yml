@@ -32,6 +32,7 @@ integration:
   variables:
 {%- if cookiecutter.environment_strategy == 'shared' %}
     SUFFIX: -integration
+    LABEL: {{ cookiecutter.project_slug }}-integration
 {%- else %}
     SOURCE: {{ cookiecutter.cloud_project }}-development
     TARGET: {{ cookiecutter.cloud_project }}-integration
@@ -47,6 +48,7 @@ production:
   variables:
 {%- if cookiecutter.environment_strategy == 'shared' %}
     SUFFIX: -production
+    LABEL: {{ cookiecutter.project_slug }}-production
 {%- else %}
     SOURCE: {{ cookiecutter.cloud_project }}-integration
     TARGET: {{ cookiecutter.cloud_project }}-production
