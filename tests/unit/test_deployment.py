@@ -14,6 +14,7 @@ class TestDeployment:
             'vcs_platform': 'GitLab.com',
             'strategy': 'dedicated',
             'cronjobs': '(none)',
+            'production_domain': 'mydomain.com',
             'files_present': [],
             'files_absent': [],
         }),
@@ -21,6 +22,7 @@ class TestDeployment:
             'vcs_platform': 'Bitbucket.org',
             'strategy': 'shared',
             'cronjobs': '(none)',
+            'production_domain': '(automatic)',
             'files_present': [],
             'files_absent': [],
         }),
@@ -28,6 +30,7 @@ class TestDeployment:
             'vcs_platform': 'GitHub.com',
             'strategy': 'shared',
             'cronjobs': '(none)',
+            'production_domain': '(automatic)',
             'files_present': [],
             'files_absent': [
                 'cronjob.yaml',
@@ -38,6 +41,7 @@ class TestDeployment:
             'vcs_platform': 'GitLab.com',
             'strategy': 'shared',
             'cronjobs': 'simple',
+            'production_domain': '(automatic)',
             'files_present': [
                 'cronjob.yaml',
             ],
@@ -49,6 +53,7 @@ class TestDeployment:
             'vcs_platform': 'Bitbucket.org',
             'strategy': 'shared',
             'cronjobs': 'complex',
+            'production_domain': '(automatic)',
             'files_present': [
                 'cronjob',
             ],
@@ -60,8 +65,8 @@ class TestDeployment:
 
     # pylint: disable=too-many-arguments
     def test_deploy_config(
-            self, cookies, vcs_platform, strategy, cronjobs, files_present,
-            files_absent):
+            self, cookies, vcs_platform, strategy, cronjobs, production_domain,
+            files_present, files_absent):
         """
         Generate a deployment configuration and verify it is complete.
         """
@@ -69,12 +74,14 @@ class TestDeployment:
             'project_slug': 'myproject',
             'vcs_platform': vcs_platform,
             'environment_strategy': strategy,
+            'production_domain': production_domain,
             'framework': 'Django',
             'cronjobs': cronjobs,
         })
 
         self.vcs_platform = vcs_platform
         self.strategy = strategy
+        self.production_domain = production_domain
 
         assert result.exit_code == 0
         assert result.exception is None
@@ -85,8 +92,9 @@ class TestDeployment:
 
         self.verify_folders_exist(result)
         self.read_deployment_configs()
-        self.ensure_gitlab_annotations()
         self.compare_deployment_configs()
+        self.verify_gitlab_annotations()
+        self.verify_expected_content()
 
         for filename in files_present:
             assert self.app_base.join(filename).exists()
@@ -171,7 +179,7 @@ class TestDeployment:
         app_base_route = self.app_base.join('route.yaml').readlines(cr=False)
         assert '  name: myproject' in app_base_route
 
-    def ensure_gitlab_annotations(self):
+    def verify_gitlab_annotations(self):
         """
         Make sure GitLab annotation are absent or present
         """
@@ -204,3 +212,23 @@ class TestDeployment:
             '  app.gitlab.com/env: production\n' in kustomize_prod
             ) is should_be_present, \
             message.format(kustomize_prod)
+
+    def verify_expected_content(self):
+        """
+        Make sure certain files contain what they should
+        """
+        app_prod_route_manifest = self.app_production.join('route.yaml').read()
+        spec_pattern = '\nspec:\n  host: %s\n'
+        custom_domain = None if self.production_domain == '(automatic)' \
+            else self.production_domain
+
+        if custom_domain:
+            assert spec_pattern % custom_domain in app_prod_route_manifest, \
+                "Host %s not found in Production route manifest:\n" \
+                "%s" % (custom_domain, app_prod_route_manifest)
+            assert '- route.yaml' in self.app_production_kustomize, \
+                "route.yaml not included in Kustomize production config:\n" \
+                "%s" % '\n'.join(self.app_production_kustomize)
+        else:
+            assert '- route.yaml' not in self.app_production_kustomize, \
+                "route.yaml is included in Kustomize production config!"

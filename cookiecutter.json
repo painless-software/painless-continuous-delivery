@@ -4,6 +4,7 @@
     "project_name": "Name of the project",
     "project_description": "A short description of the project",
     "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
+    "production_domain": "(automatic)",
     "license": [
         "Proprietary",
         "Apache-2",

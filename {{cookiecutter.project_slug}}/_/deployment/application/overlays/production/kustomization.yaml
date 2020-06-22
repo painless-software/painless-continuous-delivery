@@ -17,4 +17,6 @@ resources:
 - ../../base
 patchesStrategicMerge:
 - deployment.yaml
+{%- if cookiecutter.production_domain != '(automatic)' %}
 - route.yaml
+{%- endif %}
