@@ -5,4 +5,4 @@ metadata:
     kubernetes.io/tls-acme: "true"
   name: {{ cookiecutter.project_slug }}
 spec:
-  host: example.com
+  host: {{ cookiecutter.production_domain|replace('(automatic)', 'example.com') }}
