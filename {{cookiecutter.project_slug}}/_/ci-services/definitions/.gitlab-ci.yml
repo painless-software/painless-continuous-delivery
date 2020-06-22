@@ -51,6 +51,7 @@ stages:
 .deploy-vars:
   variables:
     SUFFIX: ""
+    LABEL: {{ cookiecutter.project_slug }}
     SOURCE: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
     TARGET: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}
     APPLICATION: application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
@@ -85,7 +86,6 @@ stages:
     url: "${KUBE_URL}/console/project/{{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}/overview"
   image: docker.io/appuio/oc:v3.11
   script:
-  - LABEL={{ cookiecutter.project_slug }}${SUFFIX}
   - echo "ENVIRONMENT=${CI_ENVIRONMENT_NAME}" >> deployment/application/base/application.env
   - echo "REVISION=${CI_COMMIT_SHORT_SHA}" >> deployment/application/base/application.env
   - seiso configmaps -l app=${LABEL} --delete

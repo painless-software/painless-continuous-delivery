@@ -7,6 +7,7 @@ review:
     auto_stop_in: 18 hours
   variables:
     SUFFIX: -review-mr${CI_MERGE_REQUEST_IID}
+    LABEL: {{ cookiecutter.project_slug }}-review-mr${CI_MERGE_REQUEST_IID}
     APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}
     DATABASE_HOST: {{ cookiecutter.database|lower }}-review-mr${CI_MERGE_REQUEST_IID}
     IMAGE_TAG: ${CI_COMMIT_SHA}
