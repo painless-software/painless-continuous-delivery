@@ -1,6 +1,6 @@
 
 variables:
-  DOCKER_REGISTRY: {{ cookiecutter.docker_registry }}
+  REGISTRY: {{ cookiecutter.docker_registry }}
 
 stages:
 - check
@@ -37,10 +37,10 @@ stages:
   - name: docker:dind
   variables:
     GIT_DEPTH: 7
-    IMAGE: ${DOCKER_REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}
+    IMAGE: ${REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}
     TARGET: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
   before_script:
-  - docker login -u gitlab-ci -p ${KUBE_TOKEN} ${DOCKER_REGISTRY}
+  - docker login -u gitlab-ci -p ${KUBE_TOKEN} ${REGISTRY}
   - docker pull "${IMAGE}:latest" || true
   script:
   - docker build -t "${IMAGE}:${CI_COMMIT_SHA}"
