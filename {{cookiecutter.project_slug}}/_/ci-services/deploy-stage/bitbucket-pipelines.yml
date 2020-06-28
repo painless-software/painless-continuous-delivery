@@ -1,11 +1,18 @@
   - script:
-    - &generate-secrets-vars
+    - &define-vars
       DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
       DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
+{%- if cookiecutter.environment_strategy == 'shared' %}
+      SOURCE={{ cookiecutter.cloud_project }}
+      TARGET={{ cookiecutter.cloud_project }}
+{%- else %}
+      SOURCE=${SOURCE:-{{ cookiecutter.cloud_project }}}
+      TARGET=${TARGET:-{{ cookiecutter.cloud_project }}}
+{%- endif %}
       SUFFIX="${SUFFIX}"
-      LABEL=${LABEL:-{{ cookiecutter.project_slug }}{% if cookiecutter.environment_strategy == 'shared' %}${SUFFIX:--${BITBUCKET_DEPLOYMENT_ENVIRONMENT}}{% else %}${SUFFIX}{% endif %}}
-      APPLICATION=${APPLICATION:-application{% if cookiecutter.environment_strategy == 'shared' %}${SUFFIX:--${BITBUCKET_DEPLOYMENT_ENVIRONMENT}}{% else %}${SUFFIX}{% endif %}}
-      DATABASE_HOST=${DATABASE_HOST:-{{ cookiecutter.database|lower }}{% if cookiecutter.environment_strategy == 'shared' %}${SUFFIX:--${BITBUCKET_DEPLOYMENT_ENVIRONMENT}}{% else %}${SUFFIX}{% endif %}}
+      LABEL={{ cookiecutter.project_slug }}${SUFFIX}
+      APPLICATION=${APPLICATION:-application${SUFFIX}}
+      DATABASE_HOST=${DATABASE_HOST:-{{ cookiecutter.database|lower }}${SUFFIX}}
       DATABASE_NAME={{ cookiecutter.project_slug.replace('-', '_') }}
       DATABASE_USER={{ cookiecutter.project_slug.replace('-', '_') }}
     - &generate-secrets-app
@@ -54,13 +61,15 @@
       deployment: development
       image: docker.io/appuio/oc:v3.11
       script:
-      - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
-        TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
-        IMAGE_TAG=${BITBUCKET_COMMIT}
+      - IMAGE_TAG=${BITBUCKET_COMMIT}
+{%- if cookiecutter.environment_strategy == 'dedicated' %}
+        SOURCE={{ cookiecutter.cloud_project }}-development
+        TARGET={{ cookiecutter.cloud_project }}-development
+{%- endif %}
         SUFFIX=-review-pr${BITBUCKET_PR_ID}
+      - *define-vars
       - *cloud-login
       - *cloud-tag-image
-      - *generate-secrets-vars
       - *generate-secrets-app
       - *generate-secrets-db
       - *cloud-set-image
@@ -81,13 +90,17 @@
       deployment: integration
       image: docker.io/appuio/oc:v3.11
       script:
-      - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
-        TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-integration{% endif %}
-        IMAGE_TAG=${BITBUCKET_COMMIT}
+      - IMAGE_TAG=${BITBUCKET_COMMIT}
+{%- if cookiecutter.environment_strategy == 'dedicated' %}
+        SOURCE={{ cookiecutter.cloud_project }}-development
+        TARGET={{ cookiecutter.cloud_project }}-integration
+{%- else %}
+        SUFFIX=-integration
+{%- endif %}
+      - *define-vars
       - *cloud-login
       - *cloud-tag-image
       - *cleanup-resources
-      - *generate-secrets-vars
       - *generate-secrets-app
       - *generate-secrets-db
       - *cloud-set-image
@@ -105,13 +118,17 @@
       deployment: production
       image: docker.io/appuio/oc:v3.11
       script:
-      - SOURCE={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
-        TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-production{% endif %}
-        IMAGE_TAG=${BITBUCKET_TAG}
+      - IMAGE_TAG=${BITBUCKET_TAG}
+{%- if cookiecutter.environment_strategy == 'dedicated' %}
+        SOURCE={{ cookiecutter.cloud_project }}-development
+        TARGET={{ cookiecutter.cloud_project }}-production
+{%- else %}
+        SUFFIX=-production
+{%- endif %}
+      - *define-vars
       - *cloud-login
       - *cloud-tag-image
       - *cleanup-resources
-      - *generate-secrets-vars
       - *generate-secrets-app
       - *generate-secrets-db
       - *cloud-set-image
