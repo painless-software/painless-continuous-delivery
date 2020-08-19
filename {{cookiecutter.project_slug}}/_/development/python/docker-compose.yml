@@ -7,7 +7,7 @@ services:
   application:
     build:
       context: .
-      dockerfile: deployment/application/Dockerfile
+      dockerfile: Dockerfile
       args:
         REQUIREMENTS: requirements-dev.txt
     environment:

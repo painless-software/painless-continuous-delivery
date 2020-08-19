@@ -7,7 +7,7 @@ services:
   application:
     build:
       context: .
-      dockerfile: ./deployment/application/Dockerfile
+      dockerfile: .Dockerfile
     env_file: .env
     volumes:
       - .:/var/www/html

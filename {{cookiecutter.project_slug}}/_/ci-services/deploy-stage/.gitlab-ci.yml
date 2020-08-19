@@ -1,4 +1,4 @@
-
+{%- if cookiecutter.gitops == 'false' %}
 review:
   extends: .deploy
   environment:
@@ -56,3 +56,22 @@ production:
     IMAGE_TAG: ${CI_COMMIT_TAG}
   only:
   - tags
+{%- endif %}
+{%- if cookiecutter.gitops == 'true' %}
+production_tag:
+  stage: tag
+  image: docker.io/library/docker
+  services:
+  - name: docker:dind
+  variables:
+    IMAGE: ${REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}
+    TARGET: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
+  before_script:
+  - docker login -u gitlab-ci -p ${KUBE_TOKEN} ${REGISTRY}
+  script:
+  - docker pull "${IMAGE}:${CI_COMMIT_SHA}"
+  - docker tag "${IMAGE}:${CI_COMMIT_SHA}" "${IMAGE}:${CI_COMMIT_TAG}"
+  - docker push "${IMAGE}"
+  only:
+  - tags
+{%- endif %}
