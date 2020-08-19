@@ -11,5 +11,5 @@
       - docker pull "${IMAGE}:latest" || true
       - docker build -t "${IMAGE}:${BITBUCKET_COMMIT}"
                      -t "${IMAGE}:latest"
-                     -f "deployment/application/Dockerfile" .
+                     -f "Dockerfile" .
       - docker push "${IMAGE}"

@@ -1,5 +1,5 @@
 """Post-generate hook for cookiecutter."""
-from os import listdir, remove
+from os import listdir, remove, chdir
 from os.path import join
 from pathlib import Path
 from subprocess import CalledProcessError, check_call, check_output, STDOUT
@@ -113,6 +113,9 @@ def set_up_deployment():
 
             shutil.rmtree(str(technology_folder.parent))
 
+    if '{{ cookiecutter.gitops }}' == "true":
+        shutil.move(deployment, "{{cookiecutter.gitops_project}}/deployment")
+
 
 def set_up_dev_tooling():
     """
@@ -130,7 +133,6 @@ def set_up_dev_tooling():
     for file_or_folder in listdir(development_folder):
         shutil.move(join(development_folder, file_or_folder), '.')
 
-
 def remove_temporary_files():
     """Remove files and folders only needed as input for generation."""
     LOG.info('Removing input data folder ...')
@@ -139,11 +141,18 @@ def remove_temporary_files():
 
 def init_version_control():
     """Initialize a repository, commit the code, and prepare for pushing."""
+    init_version_control_for("{{ cookiecutter.vcs_project }}")
+    if '{{ cookiecutter.gitops }}' == "true":
+        init_version_control_for("{{ cookiecutter.vcs_project }}-gitops")
+
+
+def init_version_control_for(project):
+    chdir('../' + project)
     vcs_info = {
         'platform_name': '{{ cookiecutter.vcs_platform }}',
         'platform': '{{ cookiecutter.vcs_platform.lower() }}',
         'account': '{{ cookiecutter.vcs_account }}',
-        'project': '{{ cookiecutter.vcs_project }}',
+        'project': project,
     }
     vcs_info['remote_uri'] = \
         'git@{platform}:{account}/{project}.git'.format(**vcs_info)
@@ -172,11 +181,29 @@ def init_version_control():
     LOG.info('Then push the code to it: git push -u origin --all')
 
 
+def manage_gitops():
+    """
+    Delete gitops folder in case a monorepo is used
+    Move gitops folder in case gitops strategy is used outside the application repository
+    """
+    if '{{ cookiecutter.gitops }}' == "true":
+        shutil.move('{{ cookiecutter.project_slug }}-gitops', "..")
+    else:
+        shutil.rmtree('{{ cookiecutter.project_slug }}-gitops')
+
+
 def deploy_field_test():
     """
     Push the generated project to the target repo. Trigger this action
     using the ``push`` parameter, e.g. ``cookiecutter ... push=force``.
     """
+    deploy_field_test_for("{{ cookiecutter.vcs_project }}")
+    if '{{ cookiecutter.gitops }}' == "true":
+        deploy_field_test_for("{{ cookiecutter.vcs_project }}-gitops")
+
+
+def deploy_field_test_for(project):
+    chdir('../' + project)
     if '{{ cookiecutter.push }}' == 'automatic':
         shell('git push origin master')
     elif '{{ cookiecutter.push }}' == 'force':
@@ -192,5 +219,6 @@ if __name__ == "__main__":
     set_up_deployment()
     set_up_dev_tooling()
     remove_temporary_files()
+    manage_gitops()
     init_version_control()
     deploy_field_test()

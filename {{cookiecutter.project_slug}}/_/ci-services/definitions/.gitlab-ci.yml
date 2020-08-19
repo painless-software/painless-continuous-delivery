@@ -6,7 +6,9 @@ stages:
 - check
 - test
 - build
+{%- if cookiecutter.gitops == 'false' %}
 - deploy
+{%- endif %}
 
 .check:
   stage: check
@@ -45,8 +47,9 @@ stages:
   script:
   - docker build -t "${IMAGE}:${CI_COMMIT_SHA}"
                  -t "${IMAGE}:latest"
-                 -f "deployment/application/Dockerfile" .
+                 -f "Dockerfile" .
   - docker push "${IMAGE}"
+{%- if cookiecutter.gitops == 'false' %}
 
 .deploy-vars:
   variables:
@@ -107,3 +110,4 @@ stages:
     kustomize edit add label "app:${LABEL}" &&
     kustomize build | oc apply -f - &&
     popd
+{%- endif %}

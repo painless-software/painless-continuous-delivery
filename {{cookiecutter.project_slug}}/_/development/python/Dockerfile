@@ -41,6 +41,6 @@ USER 1001:0
 RUN DJANGO_SECRET_KEY=collectstatic \
     python manage.py collectstatic --noinput --link
 {% endif %}
-ENTRYPOINT ["deployment/application/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
 
-CMD ["uwsgi", "deployment/application/uwsgi.ini"]
+CMD ["uwsgi", "uwsgi.ini"]
