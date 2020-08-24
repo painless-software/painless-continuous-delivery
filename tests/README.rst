@@ -57,6 +57,7 @@ Examples:
 
 .. code-block:: console
 
+    tox -e py36 -- -vv --exitfirst
     tox -e behave -- --format=pretty
     tox -e behave -- --tags=-docker
     tox -e flake8 -- --help

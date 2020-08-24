@@ -1,4 +1,4 @@
-{%- if cookiecutter.gitops == 'false' %}
+{%- if cookiecutter.deployment_strategy == 'pipeline' %}
 review:
   extends: .deploy
   environment:
@@ -57,7 +57,7 @@ production:
   only:
   - tags
 {%- endif %}
-{%- if cookiecutter.gitops == 'true' %}
+{%- if cookiecutter.deployment_strategy == 'gitops' %}
 production_tag:
   stage: tag
   image: docker.io/library/docker
