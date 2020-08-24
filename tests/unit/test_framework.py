@@ -17,7 +17,7 @@ class TestFramework:
             'ci_service': '.travis.yml',
             'framework': 'Django',
             'checks': 'flake8,pylint',
-            'tests': 'py35,py36,py37,pypy3,behave',
+            'tests': 'py36,py37,py38,pypy3,behave',
             'required_files': [
                 '.envrc',
                 '.gitignore',
@@ -58,7 +58,7 @@ class TestFramework:
             'ci_service': '.travis.yml',
             'framework': 'Flask',
             'checks': 'flake8,pylint',
-            'tests': 'py35,py36,py37,pypy3,behave',
+            'tests': 'py36,py37,py38,pypy3,behave',
             'required_files': [
                 '.envrc',
                 '.gitignore',
