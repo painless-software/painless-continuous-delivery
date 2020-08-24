@@ -16,7 +16,7 @@ class TestCISetup:
             'vcs_platform': 'Bitbucket.org',
             'ci_service': 'bitbucket-pipelines.yml',
             'checks': 'flake8,pylint,bandit,kubernetes',
-            'tests': 'py35,py36,py37,pypy3,behave',
+            'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'required_lines': [
@@ -79,7 +79,7 @@ class TestCISetup:
             'vcs_platform': 'Bitbucket.org',
             'ci_service': 'bitbucket-pipelines.yml',
             'checks': 'flake8,pylint,bandit,kubernetes',
-            'tests': 'py35,py36,py37,pypy3,behave',
+            'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'dedicated',
             'required_lines': [
@@ -144,7 +144,7 @@ class TestCISetup:
             'vcs_platform': 'GitHub.com',
             'ci_service': 'codeship-steps.yml',
             'checks': 'flake8,pylint,bandit',
-            'tests': 'py35,py36,py37,pypy3,behave',
+            'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'required_lines': [
@@ -157,7 +157,7 @@ class TestCISetup:
             'vcs_platform': 'GitLab.com',
             'ci_service': '.gitlab-ci.yml',
             'checks': 'flake8,pylint,bandit',
-            'tests': 'py35,py36,py37,pypy3,behave',
+            'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'required_lines': [
@@ -207,7 +207,7 @@ class TestCISetup:
             'vcs_platform': 'GitLab.com',
             'ci_service': '.gitlab-ci.yml',
             'checks': 'flake8,pylint,bandit',
-            'tests': 'py35,py36,py37,pypy3,behave',
+            'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'dedicated',
             'required_lines': [
@@ -255,7 +255,7 @@ class TestCISetup:
             'vcs_platform': 'Bitbucket.org',
             'ci_service': 'shippable.yml',
             'checks': 'flake8,pylint,bandit',
-            'tests': 'py35,py36,py37,pypy3,behave',
+            'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'required_lines': [
@@ -268,7 +268,7 @@ class TestCISetup:
             'vcs_platform': 'GitHub.com',
             'ci_service': '.travis.yml',
             'checks': 'flake8,pylint,bandit',
-            'tests': 'py35,py36,py37,pypy3,behave',
+            'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'required_lines': [

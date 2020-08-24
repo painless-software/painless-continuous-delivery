@@ -16,11 +16,11 @@ class TestTestingSetup:
             'ci_service': '.travis.yml',
             'framework': 'Django',
             'checks': 'flake8,pylint',
-            'tests': 'py35,py36,py37,pypy3,behave',
+            'tests': 'py36,py37,py38,pypy3,behave',
             'test_configuration': [
                 ('tox.ini', [
                     '[tox]',
-                    'envlist = flake8,pylint,py35,py36,py37,pypy3,behave',
+                    'envlist = flake8,pylint,py36,py37,py38,pypy3,behave',
                     '[testenv]',
                     '[testenv:flake8]',
                     '[testenv:pylint]',
@@ -43,11 +43,11 @@ class TestTestingSetup:
             'ci_service': '.travis.yml',
             'framework': 'Flask',
             'checks': '',
-            'tests': 'py36,py37,behave',
+            'tests': 'py37,py38,behave',
             'test_configuration': [
                 ('tox.ini', [
                     '[tox]',
-                    'envlist = py36,py37,behave',
+                    'envlist = py37,py38,behave',
                     '[testenv]',
                     '[testenv:flake8]',
                     '[testenv:pylint]',
