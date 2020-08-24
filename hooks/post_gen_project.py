@@ -1,27 +1,35 @@
 """Post-generate hook for cookiecutter."""
-from os import listdir, remove, chdir
-from os.path import join
 from pathlib import Path
 from subprocess import CalledProcessError, check_call, check_output, STDOUT
 
-import contextlib
 import logging
 import shutil
 import sys
 
 
-def shell(command, capture=False):
-    """Portable system call that aborts generation in case of failure."""
-    try:
-        if capture:
-            stdout = check_output(command, shell=True, stderr=STDOUT,
-                                  universal_newlines=True)
-            return str(stdout)
+class Shell:  # pylint: disable=too-few-public-methods)
+    """
+    Command execution shell as a class to allow preserving behavior across
+    execution calls.
+    """
 
-        return check_call(command, shell=True)
-    except CalledProcessError as err:
-        LOG.error('Project generation failed.')
-        sys.exit(err.returncode)
+    def __init__(self, cwd=None, capture=False):
+        """A shell executed from a specific directory (default: current)."""
+        self.cwd = cwd
+        self.capture = capture
+
+    def run(self, command):
+        """Portable system call that aborts generation in case of failure."""
+        try:
+            if self.capture:
+                stdout = check_output(command, shell=True, stderr=STDOUT,
+                                      cwd=self.cwd, universal_newlines=True)
+                return str(stdout)
+
+            return check_call(command, cwd=self.cwd, shell=True)
+        except CalledProcessError as err:
+            LOG.error('Project generation failed.')
+            sys.exit(err.returncode)
 
 
 def get_framework_and_technology():
@@ -46,8 +54,8 @@ def set_up_ci_service():
 
     if ci_service == 'codeship-steps.yml':
         LOG.info('Adding additional files for this CI setup ...')
-        ci_services_folder = join('_', 'ci-services')
-        shutil.move(join(ci_services_folder, 'codeship-services.yml'), '.')
+        codeship_services = Path('_') / 'ci-services' / 'codeship-services.yml'
+        shutil.move(str(codeship_services), '.')
 
 
 def set_up_framework_and_tests():
@@ -60,15 +68,16 @@ def set_up_framework_and_tests():
         return
 
     LOG.info('Moving files for %s project ...', framework)
-    framework_folder = join('_', 'frameworks', framework)
-    for file_or_folder in listdir(framework_folder):
-        shutil.move(join(framework_folder, file_or_folder), '.')
+    framework_folder = Path('_') / 'frameworks' / framework
+    if framework_folder.exists():
+        for file_or_folder in framework_folder.iterdir():
+            shutil.move(str(file_or_folder), '.')
 
     LOG.info('Moving test setup for %s project ...', framework)
-    with contextlib.suppress(FileNotFoundError):
-        testing_folder = join('_', 'testing', technology)
-        for file_or_folder in listdir(testing_folder):
-            shutil.move(join(testing_folder, file_or_folder), '.')
+    testing_folder = Path('_') / 'testing' / technology
+    if testing_folder.exists():
+        for file_or_folder in testing_folder.iterdir():
+            shutil.move(str(file_or_folder), '.')
 
 
 def prune_cronjob_style():
@@ -76,13 +85,27 @@ def prune_cronjob_style():
     Based on selected cronjob setup style, remove the other unneeded files.
     """
     cron_type = '{{ cookiecutter.cronjobs }}'
-    base_path = join('deployment', 'application', 'base')
+    base_path = Path('deployment') / 'application' / 'base'
 
-    with contextlib.suppress(FileNotFoundError):
-        if cron_type != 'simple':
-            remove(join(base_path, 'cronjob.yaml'))
-        if cron_type != 'complex':
-            shutil.rmtree(join(base_path, 'cronjob'))
+    if cron_type != 'simple':
+        (base_path / 'cronjob.yaml').unlink()
+    if cron_type != 'complex':
+        shutil.rmtree(str(base_path / 'cronjob'))
+
+
+def flatten_folder_structure(folder, technology):
+    """
+    Integrate content from subfolders with special meaning (underscore
+    folders) into the parent folder.
+    """
+    subfolders = [elem for elem in folder.iterdir() if elem.is_dir()]
+
+    for config in subfolders:
+        technology_folder = config / '_' / technology
+        if technology_folder.exists():
+            for file_or_folder in technology_folder.iterdir():
+                shutil.move(str(file_or_folder), str(config))
+            shutil.rmtree(str(technology_folder.parent))
 
 
 def set_up_deployment():
@@ -90,31 +113,18 @@ def set_up_deployment():
     If a framework project was created also move deployment configuration
     to project root.
     """
+    deployment = Path('deployment')
     try:
         framework, technology = get_framework_and_technology()
     except KeyError:
-        LOG.warning('Skipping deployment configuration: '
+        LOG.warning('Removing deployment configuration: '
                     'No framework specified.')
+        shutil.rmtree(str(deployment))
         return
 
-    LOG.info('Moving deployment configuration for %s project ...', framework)
-    deployment = 'deployment'
-    shutil.move(join('_', 'deployment'), deployment)
+    LOG.info('Set up deployment configuration for %s project ...', framework)
     prune_cronjob_style()
-
-    for elem in listdir(deployment):
-        destination = Path(deployment) / elem
-        technology_folder = destination / '_' / technology
-
-        with contextlib.suppress(FileNotFoundError, NotADirectoryError):
-            for file_or_folder in listdir(str(technology_folder)):
-                src = technology_folder / file_or_folder
-                shutil.move(str(src), str(destination))
-
-            shutil.rmtree(str(technology_folder.parent))
-
-    if '{{ cookiecutter.gitops }}' == "true":
-        shutil.move(deployment, "{{cookiecutter.gitops_project}}/deployment")
+    flatten_folder_structure(deployment, technology)
 
 
 def set_up_dev_tooling():
@@ -129,9 +139,10 @@ def set_up_dev_tooling():
         return
 
     LOG.info('Moving development tooling for %s project ...', framework)
-    development_folder = join('_', 'development', technology)
-    for file_or_folder in listdir(development_folder):
-        shutil.move(join(development_folder, file_or_folder), '.')
+    development_folder = Path('_') / 'development' / technology
+    for file_or_folder in development_folder.iterdir():
+        shutil.move(str(file_or_folder), '.')
+
 
 def remove_temporary_files():
     """Remove files and folders only needed as input for generation."""
@@ -139,75 +150,87 @@ def remove_temporary_files():
     shutil.rmtree('_')
 
 
+def move_gitops_repo():
+    """
+    Delete gitops folder in case a monorepo is used, or move gitops folder
+    outside the application repository in case gitops strategy is used.
+    """
+    if '{{ cookiecutter.deployment_strategy }}' == "gitops":
+        gitops_folder = Path.cwd().parent / '{{ cookiecutter.gitops_project }}'
+        shutil.move('gitops', gitops_folder)
+    else:
+        shutil.rmtree('gitops')
+
+
 def init_version_control():
+    """Put all code we generate conveniently under version control."""
+    init_version_control_for('{{ cookiecutter.project_slug }}',
+                             '{{ cookiecutter.vcs_project }}')
+    if '{{ cookiecutter.deployment_strategy }}' == "gitops":
+        init_version_control_for('{{ cookiecutter.gitops_project }}',
+                                 '{{ cookiecutter.gitops_project }}')
+
+
+def init_version_control_for(local_project, remote_project):
     """Initialize a repository, commit the code, and prepare for pushing."""
-    init_version_control_for("{{ cookiecutter.vcs_project }}")
-    if '{{ cookiecutter.gitops }}' == "true":
-        init_version_control_for("{{ cookiecutter.vcs_project }}-gitops")
-
-
-def init_version_control_for(project):
-    chdir('../' + project)
     vcs_info = {
         'platform_name': '{{ cookiecutter.vcs_platform }}',
         'platform': '{{ cookiecutter.vcs_platform.lower() }}',
         'account': '{{ cookiecutter.vcs_account }}',
-        'project': project,
+        'project': remote_project,
     }
     vcs_info['remote_uri'] = \
         'git@{platform}:{account}/{project}.git'.format(**vcs_info)
     vcs_info['web_url'] = \
         'https://{platform}/{account}/{project}'.format(**vcs_info)
 
-    LOG.info('Initializing version control ...')
-    shell('git init --quiet')
-    shell('git add .')
+    repo_path = Path.cwd().parent / local_project
+    silent_shell = Shell(repo_path, capture=True)
+    shell = Shell(repo_path)
 
-    output = shell('git config --list', capture=True)
+    LOG.info('Initializing version control ...')
+    shell.run('git init --quiet')
+    shell.run('git add .')
+
+    output = silent_shell.run('git config --list')
     if 'user.email=' not in output:
         LOG.warning('I need to add user.email. BEWARE! Check with:'
                     ' git config --list')
-        shell('git config user.email "{{ cookiecutter.email }}"')
+        shell.run('git config user.email "{{ cookiecutter.email }}"')
     if 'user.name=' not in output:
         LOG.warning('I need to add user.name. BEWARE! Check with:'
                     ' git config --list')
-        shell('git config user.name "{{ cookiecutter.full_name }}"')
+        shell.run('git config user.name "{{ cookiecutter.full_name }}"')
 
-    shell('git commit --quiet'
-          ' -m "Initial commit by Painless Continuous Delivery"')
-    shell('git remote add origin {remote_uri}'.format(**vcs_info))
+    shell.run('git commit --quiet'
+              ' -m "Initial commit by Painless Continuous Delivery"')
+    shell.run('git remote add origin %(remote_uri)s' % vcs_info)
     LOG.info("You can now create a project '%(project)s' on %(platform_name)s."
              " %(web_url)s", vcs_info)
     LOG.info('Then push the code to it: git push -u origin --all')
 
 
-def manage_gitops():
-    """
-    Delete gitops folder in case a monorepo is used
-    Move gitops folder in case gitops strategy is used outside the application repository
-    """
-    if '{{ cookiecutter.gitops }}' == "true":
-        shutil.move('{{ cookiecutter.project_slug }}-gitops', "..")
-    else:
-        shutil.rmtree('{{ cookiecutter.project_slug }}-gitops')
-
-
 def deploy_field_test():
+    """
+    Push all generated code to the target repositories.
+    """
+    deploy_field_test_for("{{ cookiecutter.project_slug }}")
+    if '{{ cookiecutter.deployment_strategy }}' == "gitops":
+        deploy_field_test_for("{{ cookiecutter.gitops_project }}")
+
+
+def deploy_field_test_for(local_project):
     """
     Push the generated project to the target repo. Trigger this action
     using the ``push`` parameter, e.g. ``cookiecutter ... push=force``.
     """
-    deploy_field_test_for("{{ cookiecutter.vcs_project }}")
-    if '{{ cookiecutter.gitops }}' == "true":
-        deploy_field_test_for("{{ cookiecutter.vcs_project }}-gitops")
+    repo_path = Path.cwd().parent / local_project
+    shell = Shell(repo_path)
 
-
-def deploy_field_test_for(project):
-    chdir('../' + project)
     if '{{ cookiecutter.push }}' == 'automatic':
-        shell('git push origin master')
+        shell.run('git push origin master')
     elif '{{ cookiecutter.push }}' == 'force':
-        shell('git push origin master --force')
+        shell.run('git push origin master --force')
 
 
 if __name__ == "__main__":
@@ -219,6 +242,6 @@ if __name__ == "__main__":
     set_up_deployment()
     set_up_dev_tooling()
     remove_temporary_files()
-    manage_gitops()
+    move_gitops_repo()
     init_version_control()
     deploy_field_test()
