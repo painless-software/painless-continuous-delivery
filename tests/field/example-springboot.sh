@@ -9,36 +9,43 @@
 # To run this field test locally, see the instructions
 # in the CONTRIBUTING.rst document.
 
-BITBUCKET_PROJECT_NAME="appuio%2Fexample-bitbucket"
+GITLAB_PROJECT_NAME="appuio%2Fexample-bootstrap"
 
 BASEDIR=$(dirname $0)
 
 source ${BASEDIR}/include/logging.sh
-source ${BASEDIR}/include/api/bitbucket.sh
+source ${BASEDIR}/include/api/gitlab.sh
 
 log 1 'Delete existing merge requests, Git tags, etc.'
-# TODO: Bitbucket API operations
+for IID in $(gitlab GET 'merge_requests?state=all&scope=all' \
+           | sed -E -e 's/"iid":([0-9]*),/\n\1\n/g' | sed -e '/^[^0-9].*$/d'); do
+    echo 'Delete MR !'${IID}' ...'
+    gitlab DELETE merge_requests/$IID
+done
+for TAG in $(gitlab GET repository/tags \
+           | sed -E -e 's/"name":"([^"]*)",/\n\1\n/g' | sed -E -e '/^(\[|")/d'); do
+    echo 'Delete Git tag '${TAG}' ...'
+    gitlab DELETE repository/tags/$TAG
+done
 
 log 2 'Create demo project from scratch and push it'
 tox -e cookiecutter -- \
-    project_name="Example Bitbucket" \
-    project_description="Hello world on Bitbucket" \
-    vcs_platform=Bitbucket.org \
+    project_name="Example SpringBoot" \
+    project_description="Spring Boot Hello World" \
+    vcs_platform=GitLab.com \
     vcs_account=appuio \
-    ci_service=bitbucket-pipelines.yml \
+    ci_service=.gitlab-ci.yml \
     cloud_platform=APPUiO \
     cloud_account="demo4501@appuio.ch" \
     environment_strategy=dedicated \
-    cronjobs=complex \
-    framework=Django \
-    database=Postgres \
-    monitoring=Sentry \
+    deployment_strategy=gitops \
+    framework=SpringBoot \
     license=GPL-3 \
     push=force \
     ${*} \
     --no-input
 
-cd /tmp/painless-generated-projects/example-bitbucket
+cd /tmp/painless-generated-projects/example-springboot
 
 log 3 'Prepare feature branch'
 # TODO: reuse existing code
@@ -47,7 +54,7 @@ log 4 'Add an untested feature'
 # TODO: reuse existing code
 
 log 5 'Create merge request'
-# TODO: Bitbucket API operations
+# TODO: as existing code (see Example Django)
 
 log 6 'Allow pipeline to build and push an image'
 for minutes in $(seq 13 -1 1); do
