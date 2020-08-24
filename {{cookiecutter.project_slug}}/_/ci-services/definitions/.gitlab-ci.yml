@@ -6,7 +6,7 @@ stages:
 - check
 - test
 - build
-{%- if cookiecutter.gitops == 'false' %}
+{%- if cookiecutter.deployment_strategy == 'pipeline' %}
 - deploy
 {%- endif %}
 
@@ -49,7 +49,7 @@ stages:
                  -t "${IMAGE}:latest"
                  -f "Dockerfile" .
   - docker push "${IMAGE}"
-{%- if cookiecutter.gitops == 'false' %}
+{%- if cookiecutter.deployment_strategy == 'pipeline' %}
 
 .deploy-vars:
   variables:

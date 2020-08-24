@@ -43,4 +43,4 @@ RUN DJANGO_SECRET_KEY=collectstatic \
 {% endif %}
 ENTRYPOINT ["entrypoint.sh"]
 
-CMD ["uwsgi", "uwsgi.ini"]
+CMD ["uwsgi", "deployment/webserver/uwsgi.ini"]
