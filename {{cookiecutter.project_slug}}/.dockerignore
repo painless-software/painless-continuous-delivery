@@ -1,9 +1,19 @@
+{% if cookiecutter.framework not in ["SpringBoot"] -%}
 .*
 !.env*
 !.ssh
 
+{% endif -%}
 Dockerfile
 docker-compose*.yml
+{%- if cookiecutter.framework in ["Django", "Flask"] %}
 README.rst
 tests/
 tox.ini
+{%- elif cookiecutter.framework in ["Symfony", "TYPO3"] %}
+README.rst
+tests/
+{%- elif cookiecutter.framework in ["SpringBoot"] %}
+README.md
+test/
+{%- endif %}

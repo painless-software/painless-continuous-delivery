@@ -1,0 +1,46 @@
+# Painless local development with Docker Compose.
+# Visit the docs at https://docs.docker.com/compose/
+
+version: '3'
+
+services:
+  application:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    user: "${UID:-1000}:${GID:-1000}"
+    restart: on-failure
+{%- if cookiecutter.database in ['Postgres', 'MySQL'] %}
+    depends_on:
+      - database
+{% endif %}
+
+{%- if cookiecutter.database == 'Postgres' %}
+  database:
+    image: docker.io/bitnami/postgresql:12
+    environment:
+      POSTGRESQL_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - database_data:/bitnami/postgresql
+    restart: on-failure
+{%- elif cookiecutter.database == 'MySQL' %}
+  database:
+    image: docker.io/library/mariadb:10
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: mysql
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+    volumes:
+      - database_data:/var/lib/mysql/data
+{%- endif %}
+{%- if cookiecutter.database in ['Postgres', 'MySQL'] %}
+
+volumes:
+  database_data:
+    driver: local
+{%- endif %}

@@ -40,6 +40,7 @@ def get_framework_and_technology():
     framework_technology = {
         'Django': 'python',
         'Flask': 'python',
+        'SpringBoot': 'java',
         'Symfony': 'php',
         'TYPO3': 'php',
     }
