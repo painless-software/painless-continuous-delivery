@@ -91,7 +91,7 @@ def prune_cronjob_style():
     if cron_type != 'simple':
         (base_path / 'cronjob.yaml').unlink()
     if cron_type != 'complex':
-        shutil.rmtree(str(base_path / 'cronjob'))
+        shutil.rmtree(base_path / 'cronjob')
 
 
 def flatten_folder_structure(folder, technology):
@@ -103,10 +103,11 @@ def flatten_folder_structure(folder, technology):
 
     for config in subfolders:
         technology_folder = config / '_' / technology
-        if technology_folder.exists():
-            for file_or_folder in technology_folder.iterdir():
-                shutil.move(str(file_or_folder), str(config))
-            shutil.rmtree(str(technology_folder.parent))
+        if technology_folder.parent.exists():
+            if technology_folder.exists():
+                for file_or_folder in technology_folder.iterdir():
+                    shutil.move(str(file_or_folder), config)
+            shutil.rmtree(technology_folder.parent)
 
 
 def set_up_deployment():
@@ -120,7 +121,7 @@ def set_up_deployment():
     except KeyError:
         LOG.warning('Removing deployment configuration: '
                     'No framework specified.')
-        shutil.rmtree(str(deployment))
+        shutil.rmtree(deployment)
         return
 
     LOG.info('Set up deployment configuration for %s project ...', framework)
@@ -151,12 +152,31 @@ def remove_temporary_files():
     shutil.rmtree('_')
 
 
+def merge_folder_into(src_dir, dest_dir):
+    """Move all files of a directory into a target directory."""
+    source, destination = Path(src_dir), Path(dest_dir)
+
+    for file_or_folder in source.iterdir():
+        target = destination / file_or_folder.name
+
+        if file_or_folder.is_dir() and target.exists():
+            merge_folder_into(file_or_folder, target)
+        elif not target.exists():
+            file_or_folder.rename(target)
+        else:
+            raise FileExistsError(target)
+
+    source.rmdir()
+
+
 def move_gitops_repo():
     """
     Delete gitops folder in case a monorepo is used, or move gitops folder
     outside the application repository in case gitops strategy is used.
     """
     if '{{ cookiecutter.deployment_strategy }}' == "gitops":
+        LOG.info('Setting up GitOps repository ...')
+        merge_folder_into('deployment', 'gitops/deployment')
         gitops_folder = Path.cwd().parent / '{{ cookiecutter.gitops_project }}'
         shutil.move('gitops', gitops_folder)
     else:
