@@ -12,9 +12,6 @@ class TestFramework:
     scenarios = [
         ('django', {
             'project_slug': 'django-project',
-            'vcs_account': 'painless-software',
-            'vcs_platform': 'GitHub.com',
-            'ci_service': '.travis.yml',
             'framework': 'Django',
             'checks': 'flake8,pylint',
             'tests': 'py36,py37,py38,pypy3,behave',
@@ -53,9 +50,6 @@ class TestFramework:
         }),
         ('flask', {
             'project_slug': 'flask-project',
-            'vcs_account': 'painless-software',
-            'vcs_platform': 'GitHub.com',
-            'ci_service': '.travis.yml',
             'framework': 'Flask',
             'checks': 'flake8,pylint',
             'tests': 'py36,py37,py38,pypy3,behave',
@@ -91,11 +85,48 @@ class TestFramework:
                 ('pip install -r %s', 'requirements.txt'),
             ],
         }),
+        ('springboot', {
+            'project_slug': 'springboot-project',
+            'framework': 'SpringBoot',
+            'checks': 'lint',
+            'tests': 'test',
+            'required_files': [
+                '.envrc',
+                '.gitignore',
+                'build.gradle',
+                'Dockerfile',
+                'docker-compose.yml',
+                'gradle.properties',
+                'gradlew',
+                'gradlew.bat',
+                'mvnw',
+                'mvnw.cmd',
+                'pom.xml',
+                'settings.gradle',
+                '.mvn/wrapper/maven-wrapper.jar',
+                '.mvn/wrapper/maven-wrapper.properties',
+                '.mvn/wrapper/MavenWrapperDownloader.java',
+                'gradle/wrapper/gradle-wrapper.jar',
+                'gradle/wrapper/gradle-wrapper.properties',
+                'src/main/java/hello/Application.java',
+                'src/main/resources/application.yml',
+            ],
+            'required_content': [
+                ('Dockerfile', [
+                    'FROM openjdk:8-jdk-alpine',
+                    'COPY . .',
+                ]),
+                ('docker-compose.yml', [
+                    '      dockerfile: Dockerfile',
+                    '    ports:',
+                    '      - "8080:8080"',
+                ]),
+            ],
+            'install_commands': [
+            ],
+        }),
         ('symfony', {
             'project_slug': 'symfony-project',
-            'vcs_account': 'painless-software',
-            'vcs_platform': 'GitHub.com',
-            'ci_service': '.travis.yml',
             'framework': 'Symfony',
             'checks': 'phpcs,twig',
             'tests': 'phpunit',
@@ -122,9 +153,6 @@ class TestFramework:
         }),
         ('typo3', {
             'project_slug': 'typo3-project',
-            'vcs_account': 'painless-software',
-            'vcs_platform': 'GitHub.com',
-            'ci_service': '.travis.yml',
             'framework': 'TYPO3',
             'checks': 'phpcs',
             'tests': 'phpunit',
@@ -150,17 +178,13 @@ class TestFramework:
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
-    def test_framework(self, cookies, project_slug, vcs_account, vcs_platform,
-                       ci_service, framework, checks, tests, required_files,
-                       required_content, install_commands):
+    def test_framework(self, cookies, project_slug, framework, checks, tests,
+                       required_files, required_content, install_commands):
         """
         Generate a framework project and verify it is complete and working.
         """
         result = cookies.bake(extra_context={
             'project_slug': project_slug,
-            'vcs_platform': vcs_platform,
-            'vcs_account': vcs_account,
-            'ci_service': ci_service,
             'framework': framework,
             'checks': checks,
             'tests': tests,
