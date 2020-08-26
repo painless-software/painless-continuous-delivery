@@ -2,6 +2,7 @@
 # Visit the docs at https://docs.travis-ci.com/
 
 os: linux
+dist: bionic
 language: python
 python:
 {%- for env in cookiecutter.tests.split(",") if env not in ["behave", "py37"] %}
