@@ -2,6 +2,7 @@
 # Visit the docs at https://docs.travis-ci.com/
 
 os: linux
+dist: bionic
 language: python
 python:
 - 3.6
