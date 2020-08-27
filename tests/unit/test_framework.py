@@ -25,8 +25,8 @@ class TestFramework:
                 'application/wsgi.py',
                 'Dockerfile',
                 'entrypoint.sh',
-                'deployment/webserver/nginx.conf',
-                'deployment/webserver/uwsgi.ini',
+                'deployment/nginx.conf',
+                'deployment/uwsgi.ini',
                 'tox.ini',
                 'tests/README.rst',
             ],
@@ -34,6 +34,7 @@ class TestFramework:
                 ('Dockerfile', [
                     'ARG REQUIREMENTS=requirements.txt',
                     'COPY requirements* ./',
+                    'CMD ["uwsgi", "deployment/uwsgi.ini"]',
                 ]),
                 ('docker-compose.yml', [
                     '    environment:',
@@ -62,8 +63,8 @@ class TestFramework:
                 'application/wsgi.py',
                 'Dockerfile',
                 'entrypoint.sh',
-                'deployment/webserver/nginx.conf',
-                'deployment/webserver/uwsgi.ini',
+                'deployment/nginx.conf',
+                'deployment/uwsgi.ini',
                 'tox.ini',
                 'tests/README.rst',
             ],
@@ -71,6 +72,7 @@ class TestFramework:
                 ('Dockerfile', [
                     'ARG REQUIREMENTS=requirements.txt',
                     'COPY requirements* ./',
+                    'CMD ["uwsgi", "deployment/uwsgi.ini"]',
                 ]),
                 ('docker-compose.yml', [
                     '    environment:',
@@ -136,8 +138,8 @@ class TestFramework:
                 'composer.json',
                 'composer.lock',
                 'Dockerfile',
-                'deployment/webserver/000-default.conf',
-                'deployment/webserver/php.ini',
+                'deployment/000-default.conf',
+                'deployment/php.ini',
                 'docker-compose.yml',
                 'docker-compose.override.yml',
                 'docker-compose.final.yml',
@@ -147,6 +149,10 @@ class TestFramework:
                 'web/app.php',
             ],
             'required_content': [
+                ('Dockerfile', [
+                    'FROM php:7.0-apache',
+                    ' && mv deployment/php.ini /usr/local/etc/php/ \\',
+                ]),
             ],
             'install_commands': [
             ],
@@ -162,8 +168,8 @@ class TestFramework:
                 'composer.json',
                 'composer.lock',
                 'Dockerfile',
-                'deployment/webserver/000-default.conf',
-                'deployment/webserver/php.ini',
+                'deployment/000-default.conf',
+                'deployment/php.ini',
                 'docker-compose.yml',
                 'docker-compose.override.yml',
                 'docker-compose.final.yml',
@@ -171,6 +177,10 @@ class TestFramework:
                 'web/typo3conf/ext/typo3_console/ext_icon.png',
             ],
             'required_content': [
+                ('Dockerfile', [
+                    'FROM php:7.0-apache',
+                    ' && mv deployment/php.ini /usr/local/etc/php/ \\',
+                ]),
             ],
             'install_commands': [
             ],
