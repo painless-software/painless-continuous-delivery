@@ -38,6 +38,8 @@ class TestFramework:
                     'CMD ["uwsgi", "deployment/uwsgi.ini"]',
                 ]),
                 ('docker-compose.yml', [
+                    '    build:',
+                    '      context: .',
                     '    environment:',
                     '      - DJANGO_DEBUG=True',
                     '    command: '
@@ -77,6 +79,8 @@ class TestFramework:
                     'CMD ["uwsgi", "deployment/uwsgi.ini"]',
                 ]),
                 ('docker-compose.yml', [
+                    '    build:',
+                    '      context: .',
                     '    environment:',
                     '      - FLASK_APP=application',
                     '      - FLASK_ENV=development',
@@ -121,7 +125,7 @@ class TestFramework:
                     'COPY . .',
                 ]),
                 ('docker-compose.yml', [
-                    '      dockerfile: Dockerfile',
+                    '    build: .',
                     '    ports:',
                     '      - "8080:8080"',
                 ]),
@@ -154,6 +158,9 @@ class TestFramework:
                 ('Dockerfile', [
                     'FROM php:7.0-apache',
                     ' && mv deployment/php.ini /usr/local/etc/php/ \\',
+                ]),
+                ('docker-compose.override.yml', [
+                    '    build: .',
                 ]),
             ],
             'install_commands': [

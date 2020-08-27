@@ -5,9 +5,7 @@ version: '3'
 
 services:
   application:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     ports:
       - "8080:8080"
     user: "${UID:-1000}:${GID:-1000}"
