@@ -99,9 +99,9 @@ def flatten_folder_structure(folder, technology):
     Integrate content from subfolders with special meaning (underscore
     folders) into the parent folder.
     """
-    subfolders = [elem for elem in folder.iterdir() if elem.is_dir()]
+    subfolders = [_ for _ in folder.iterdir() if _.is_dir()]
 
-    for config in subfolders:
+    for config in [folder] + subfolders:
         technology_folder = config / '_' / technology
         if technology_folder.parent.exists():
             if technology_folder.exists():
@@ -147,13 +147,17 @@ def set_up_dev_tooling():
 
 
 def remove_temporary_files():
-    """Remove files and folders only needed as input for generation."""
+    """
+    Remove files and folders only needed as input for generation.
+    """
     LOG.info('Removing input data folder ...')
     shutil.rmtree('_')
 
 
 def merge_folder_into(src_dir, dest_dir):
-    """Move all files of a directory into a target directory."""
+    """
+    Move all files of a directory into a target directory.
+    """
     source, destination = Path(src_dir), Path(dest_dir)
 
     for file_or_folder in source.iterdir():
@@ -169,22 +173,36 @@ def merge_folder_into(src_dir, dest_dir):
     source.rmdir()
 
 
+def move_appconfigs_to_gitops():
+    """
+    Add manifests for all deployed components to the GitOps setup.
+    """
+    directories = [_ for _ in Path('deployment').iterdir() if _.is_dir()]
+
+    for app_config in directories:
+        target = Path('gitops') / 'deployment' / app_config.name
+        merge_folder_into(app_config, target)
+
+
 def move_gitops_repo():
     """
     Delete gitops folder in case a monorepo is used, or move gitops folder
     outside the application repository in case gitops strategy is used.
     """
     if '{{ cookiecutter.deployment_strategy }}' == "gitops":
-        LOG.info('Setting up GitOps repository ...')
-        merge_folder_into('deployment', 'gitops/deployment')
         gitops_folder = Path.cwd().parent / '{{ cookiecutter.gitops_project }}'
+
+        LOG.info('Setting up GitOps repository ...')
+        move_appconfigs_to_gitops()
         shutil.move('gitops', gitops_folder)
     else:
         shutil.rmtree('gitops')
 
 
 def init_version_control():
-    """Put all code we generate conveniently under version control."""
+    """
+    Put all code we generate conveniently under version control.
+    """
     init_version_control_for('{{ cookiecutter.project_slug }}',
                              '{{ cookiecutter.vcs_project }}')
     if '{{ cookiecutter.deployment_strategy }}' == "gitops":
@@ -193,7 +211,9 @@ def init_version_control():
 
 
 def init_version_control_for(local_project, remote_project):
-    """Initialize a repository, commit the code, and prepare for pushing."""
+    """
+    Initialize a repository, commit the code, and prepare for pushing.
+    """
     vcs_info = {
         'platform_name': '{{ cookiecutter.vcs_platform }}',
         'platform': '{{ cookiecutter.vcs_platform.lower() }}',

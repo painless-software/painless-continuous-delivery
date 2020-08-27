@@ -17,7 +17,6 @@ class TestGitops:
                 'monolith/.gitignore',
                 'monolith/deployment/application/base/kustomization.yaml',
                 'monolith/deployment/database/base/kustomization.yaml',
-                'monolith/deployment/webserver/',
                 'monolith/docker-compose.yml',
                 'monolith/Dockerfile',
                 'monolith/README.rst',
@@ -42,11 +41,9 @@ class TestGitops:
                 'microsrvc-gitops/.gitignore',
                 'microsrvc-gitops/deployment/application/base/kustomization.yaml',  # noqa
                 'microsrvc-gitops/deployment/database/base/kustomization.yaml',
-                'microsrvc-gitops/deployment/webserver/',
                 'microsrvc-gitops/README.rst',
             ],
             'files_absent': [
-                'microsrvc/deployment/',
                 'microsrvc/gitops/',
                 'microsrvc-gitops/docker-compose.yml',
                 'microsrvc-gitops/Dockerfile',

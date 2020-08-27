@@ -26,7 +26,7 @@ RUN apt-get update \
     python3-dev \
  && apt-get autoremove -y --purge \
  && apt-get clean \
- && ln -sfv /app/deployment/webserver/nginx.conf /etc/nginx/nginx.conf \
+ && ln -sfv /app/deployment/nginx.conf /etc/nginx/nginx.conf \
  && ln -sfv /dev/stdout /var/log/nginx/access.log \
  && ln -sfv /dev/stderr /var/log/nginx/error.log
 
@@ -43,4 +43,4 @@ RUN DJANGO_SECRET_KEY=collectstatic \
 {% endif %}
 ENTRYPOINT ["entrypoint.sh"]
 
-CMD ["uwsgi", "deployment/webserver/uwsgi.ini"]
+CMD ["uwsgi", "deployment/uwsgi.ini"]
