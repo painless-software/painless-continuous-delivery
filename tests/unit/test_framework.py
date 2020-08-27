@@ -34,6 +34,7 @@ class TestFramework:
                 ('Dockerfile', [
                     'ARG REQUIREMENTS=requirements.txt',
                     'COPY requirements* ./',
+                    'ENTRYPOINT ["./entrypoint.sh"]',
                     'CMD ["uwsgi", "deployment/uwsgi.ini"]',
                 ]),
                 ('docker-compose.yml', [
@@ -72,6 +73,7 @@ class TestFramework:
                 ('Dockerfile', [
                     'ARG REQUIREMENTS=requirements.txt',
                     'COPY requirements* ./',
+                    'ENTRYPOINT ["./entrypoint.sh"]',
                     'CMD ["uwsgi", "deployment/uwsgi.ini"]',
                 ]),
                 ('docker-compose.yml', [
