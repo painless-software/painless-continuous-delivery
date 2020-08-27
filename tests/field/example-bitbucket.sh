@@ -7,7 +7,7 @@
 # pipeline in GitLab > CI/CD > Schedules.
 #
 # To run this field test locally, see the instructions
-# in the CONTRIBUTING.rst document.
+# in the /tests/README.rst document.
 
 BITBUCKET_PROJECT_NAME="appuio%2Fexample-bitbucket"
 
