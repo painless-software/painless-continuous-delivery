@@ -7,7 +7,7 @@
 # pipeline in GitLab > CI/CD > Schedules.
 #
 # To run this field test locally, see the instructions
-# in the CONTRIBUTING.rst document.
+# in the /tests/README.rst document.
 
 GITLAB_PROJECT_NAME="appuio%2Fexample-django"
 
