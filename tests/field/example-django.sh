@@ -10,7 +10,6 @@
 # in the /tests/README.rst document.
 
 GITLAB_PROJECT_NAME="appuio%2Fexample-django"
-
 BASEDIR=$(dirname $0)
 
 source ${BASEDIR}/include/logging.sh

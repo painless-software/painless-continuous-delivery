@@ -1,8 +1,8 @@
 # Painless deployment with Bitbucket Pipelines.
-# Visit the docs at https://confluence.atlassian.com/bitbucket/configure-bitbucket-pipelines-yml-792298910.html
+# Visit the docs at https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
 
 options:
-    docker: true
+  docker: true
 
 image: docker.io/painless/tox
 
@@ -45,10 +45,10 @@ definitions:
         - tox -e behave
 
   - step: &field-test
-      name: Deploy example-bitbucket
+      name: Deploy example-flask
       deployment: Production
       script:
-      - tests/field/example-bitbucket.sh
+      - tests/field/example-flask.sh
 
 pipelines:
   pull-requests:

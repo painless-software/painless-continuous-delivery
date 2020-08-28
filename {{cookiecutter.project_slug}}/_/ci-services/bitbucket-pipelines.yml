@@ -1,5 +1,5 @@
 # Painless deployment with Bitbucket Pipelines.
-# Visit the docs at https://confluence.atlassian.com/bitbucket/configure-bitbucket-pipelines-yml-792298910.html
+# Visit the docs at https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
 
 {% include '_/ci-services/definitions/%s' % cookiecutter.ci_service %}
 pipelines:
