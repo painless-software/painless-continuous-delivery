@@ -9,8 +9,7 @@
 # To run this field test locally, see the instructions
 # in the /tests/README.rst document.
 
-BITBUCKET_PROJECT_NAME="appuio%2Fexample-bitbucket"
-
+BITBUCKET_PROJECT_NAME="appuio%2Fexample-flask"
 BASEDIR=$(dirname $0)
 
 source ${BASEDIR}/include/logging.sh
@@ -21,8 +20,8 @@ log 1 'Delete existing merge requests, Git tags, etc.'
 
 log 2 'Create demo project from scratch and push it'
 tox -e cookiecutter -- \
-    project_name="Example Bitbucket" \
-    project_description="Hello world on Bitbucket" \
+    project_name="Example Flask" \
+    project_description="Hello world with Flask" \
     vcs_platform=Bitbucket.org \
     vcs_account=appuio \
     ci_service=bitbucket-pipelines.yml \
@@ -30,15 +29,14 @@ tox -e cookiecutter -- \
     cloud_account="demo4501@appuio.ch" \
     environment_strategy=dedicated \
     cronjobs=complex \
-    framework=Django \
-    database=Postgres \
+    framework=Flask \
     monitoring=Sentry \
     license=GPL-3 \
     push=force \
     ${*} \
     --no-input
 
-cd /tmp/painless-generated-projects/example-bitbucket
+cd /tmp/painless-generated-projects/example-flask
 
 log 3 'Prepare feature branch'
 # TODO: reuse existing code

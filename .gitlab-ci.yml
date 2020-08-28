@@ -61,3 +61,7 @@ behave:
 example-django:
   extends: .cookiecutter
   script: tests/field/example-django.sh
+
+example-springboot:
+  extends: .cookiecutter
+  script: tests/field/example-springboot.sh

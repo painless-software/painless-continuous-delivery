@@ -10,7 +10,6 @@
 # in the /tests/README.rst document.
 
 GITLAB_PROJECT_NAME="appuio%2Fexample-springboot"
-
 BASEDIR=$(dirname $0)
 
 source ${BASEDIR}/include/logging.sh
@@ -40,6 +39,8 @@ tox -e cookiecutter -- \
     environment_strategy=dedicated \
     deployment_strategy=gitops \
     framework=SpringBoot \
+    checks=kubernetes \
+    tests=junit \
     license=GPL-3 \
     push=force \
     ${*} \

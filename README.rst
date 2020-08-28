@@ -21,6 +21,7 @@ Supported Technologies and Services
 **Languages**        Python (generic, Django, Flask)
 ..                   Frontend Web technologies (JavaScript, CSS, Sass/SCSS)
 ..                   PHP (Symfony, TYPO3, Magento)
+..                   Java (Spring Boot)
 **Version Control**  Git
 **Repo Services**    Bitbucket
 ..                   GitHub
@@ -30,7 +31,7 @@ Supported Technologies and Services
 ..                   GitLab CI  - |gitlab-ci|
 ..                   Shippable  - |shippable|
 ..                   Travis CI  - |travis-ci|
-**App Platforms**    APPUiO (OpenShift)
+**App Platforms**    APPUiO (OpenShift, Kubernetes)
 ==================== =========================================================
 
 
@@ -55,7 +56,9 @@ Demos
 
 Sample projects generated automatically on a daily basis: (`field tests`_)
 
-- `APPUiO, GitLab CI, Django`_
+- `Django ➜ GitLab CI ➜ APPUiO <https://gitlab.com/appuio/example-django>`__
+- `Spring Boot ➜ GitLab CI ➜ APPUiO <https://gitlab.com/appuio/example-springboot>`__
+- `Flask ➜ Bitbucket Pipelines ➜ APPUiO <https://bitbucket.org/appuio/example-flask>`__
 
 Usage
 =====
@@ -75,9 +78,10 @@ Generate a new Cookiecutter template layout:
 Under The Hood
 ==============
 
-The underscore folder, ``{{cookiecutter.project_slug}}/_``, contains files
-that are integrated by the post generate hook, ``hooks/post_gen_project.py``,
-according to the choices made during the cookiecutter execution.
+The underscore folders, e.g. ``{{cookiecutter.project_slug}}/_``, contain
+files that are used to integrate optional content through template includes
+or by the `post generate hook`_, according to the choices made during the
+cookiecutter execution.
 
 The ``generators`` folder contains scripts to pre-generate code skeletons
 that are integrated manually in this cookiecutter (e.g. framework setups).
@@ -97,8 +101,8 @@ consultancy in software development.  Less pain, more fun.
 
 
 .. _field tests: tests/field/
-.. _APPUiO, GitLab CI, Django: https://gitlab.com/appuio/example-django
 .. _cookiecutter: https://github.com/cookiecutter/cookiecutter
+.. _post generate hook: hooks/post_gen_project.py
 .. _contributing guide: CONTRIBUTING.rst
 .. _Wiki: https://github.com/painless-software/painless-continuous-delivery/wiki
 .. _Painless Software: https://painless.software/
