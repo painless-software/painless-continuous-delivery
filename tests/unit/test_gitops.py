@@ -12,9 +12,11 @@ class TestGitops:
             'deployment_strategy': 'pipeline',
             'project_slug': 'monolith',
             'framework': 'SpringBoot',
+            'ci_service': 'bitbucket-pipelines.yml',
             'files_present': [
                 'monolith/.git/config',
                 'monolith/.gitignore',
+                'monolith/bitbucket-pipelines.yml',
                 'monolith/deployment/application/base/kustomization.yaml',
                 'monolith/deployment/database/base/kustomization.yaml',
                 'monolith/docker-compose.yml',
@@ -30,21 +32,27 @@ class TestGitops:
             'deployment_strategy': 'gitops',
             'project_slug': 'microsrvc',
             'framework': 'SpringBoot',
+            'ci_service': 'codeship-steps.yml',
             'files_present': [
                 'microsrvc/.git/config',
                 'microsrvc/.gitignore',
                 'microsrvc/.dockerignore',
+                'microsrvc-gitops/codeship-services.yml',
+                'microsrvc-gitops/codeship-steps.yml',
                 'microsrvc/README.rst',
                 'microsrvc/docker-compose.yml',
                 'microsrvc/Dockerfile',
                 'microsrvc-gitops/.git/config',
                 'microsrvc-gitops/.gitignore',
+                'microsrvc-gitops/codeship-services.yml',
+                'microsrvc-gitops/codeship-steps.yml',
                 'microsrvc-gitops/deployment/application/base/kustomization.yaml',  # noqa
                 'microsrvc-gitops/deployment/database/base/kustomization.yaml',
                 'microsrvc-gitops/README.rst',
             ],
             'files_absent': [
                 'microsrvc/gitops/',
+                'microsrvc-gitops/_/',
                 'microsrvc-gitops/docker-compose.yml',
                 'microsrvc-gitops/Dockerfile',
             ],
@@ -53,7 +61,7 @@ class TestGitops:
 
     # pylint: disable=too-many-arguments,no-self-use
     def test_gitops(self, cookies, deployment_strategy, project_slug,
-                    framework, files_present, files_absent):
+                    framework, ci_service, files_present, files_absent):
         """
         Generate a project with a specific deployment strategy and verify
         it is complete and working.
@@ -62,6 +70,7 @@ class TestGitops:
             'deployment_strategy': deployment_strategy,
             'project_slug': project_slug,
             'framework': framework,
+            'ci_service': ci_service,
         })
 
         assert result.exit_code == 0
