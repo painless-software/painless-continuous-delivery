@@ -1,0 +1,13 @@
+# Painless deployment with GitLab CI.
+# Visit the docs at https://docs.gitlab.com/ce/ci/
+
+stages:
+- lint
+
+lint:
+  stage: lint
+  image:
+    name: docker.io/garethr/kubeval:latest
+    entrypoint: [""]
+  script:
+  - /kubeval --strict --ignore-missing-schemas **/*.yaml

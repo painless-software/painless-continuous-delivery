@@ -1,0 +1,18 @@
+# Painless deployment with Travis CI.
+# Visit the docs at https://docs.travis-ci.com/
+
+os: linux
+dist: bionic
+
+stages:
+- lint
+
+jobs:
+  include:
+  - stage: lint
+    install:
+    - wget https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+    - tar xf kubeval-linux-amd64.tar.gz
+    - sudo cp kubeval /usr/local/bin
+    script:
+    - /kubeval --strict --ignore-missing-schemas **/*.yaml

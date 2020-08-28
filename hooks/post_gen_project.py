@@ -34,8 +34,8 @@ class Shell:  # pylint: disable=too-few-public-methods)
 
 def get_framework_and_technology():
     """
-    Returns the framework and its related technology (e.g. Django, python)
-    as a tuple. Fails with a ``KeyError`` if no framework is specified.
+    Return the framework and its related technology (e.g. Django, python) as
+    a tuple.  Fails with a ``KeyError`` if user didn't choose a framework.
     """
     framework_technology = {
         'Django': 'python',
@@ -50,17 +50,25 @@ def get_framework_and_technology():
 
 
 def set_up_ci_service():
-    """If a framework project was created move it to project root."""
+    """
+    Handle special case for CI services having more than one config file.
+    """
     ci_service = '{{ cookiecutter.ci_service }}'
 
     if ci_service == 'codeship-steps.yml':
         LOG.info('Adding additional files for this CI setup ...')
-        codeship_services = Path('_') / 'ci-services' / 'codeship-services.yml'
-        shutil.move(str(codeship_services), '.')
+
+        codeship_conf = Path('_') / 'ci-services' / 'codeship-services.yml'
+        shutil.move(str(codeship_conf), '.')
+
+        codeship_conf_gitops = Path('gitops') / '_' / 'codeship-services.yml'
+        shutil.move(str(codeship_conf_gitops), 'gitops')
 
 
 def set_up_framework_and_tests():
-    """If a framework project was created move it to project root."""
+    """
+    If a framework project was created move it to project root.
+    """
     try:
         framework, technology = get_framework_and_technology()
     except KeyError:
@@ -152,6 +160,7 @@ def remove_temporary_files():
     """
     LOG.info('Removing input data folder ...')
     shutil.rmtree('_')
+    shutil.rmtree('gitops/_')
 
 
 def merge_folder_into(src_dir, dest_dir):

@@ -1,0 +1,9 @@
+# Painless deployment with Codeship.
+# Visit the docs at https://documentation.codeship.com/docker/steps/
+
+- name: Checks
+  type: parallel
+  service: app
+  steps:
+  - name: Lint manifests
+    command: /kubeval --strict --ignore-missing-schemas **/*.yaml
