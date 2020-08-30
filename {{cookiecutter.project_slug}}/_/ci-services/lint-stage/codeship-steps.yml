@@ -5,5 +5,11 @@
   steps:
   {%- for env in cookiecutter.checks.split(',') %}
   - name: {{ env|capitalize }}
-    command: tox -e {{ env }}
+    command: {% if cookiecutter.framework in ['Django', 'Flask'] -%}
+      tox -e {{ env }}
+        {%- elif cookiecutter.framework in ['Symfony', 'TYPO3'] -%}
+      echo "This should run {{ env }}"
+        {%- elif cookiecutter.framework in ['SpringBoot'] -%}
+      echo "This should run {{ env }}"
+        {%- endif %}
   {%- endfor %}

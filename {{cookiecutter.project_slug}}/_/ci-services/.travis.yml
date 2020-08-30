@@ -3,11 +3,19 @@
 
 os: linux
 dist: bionic
+{%- if cookiecutter.framework in ['Django', 'Flask'] %}
 language: python
 python:
-{%- for env in cookiecutter.tests.split(",") if env not in ["behave", "py37"] %}
+{%- for env in cookiecutter.tests.split(",")|select("in",["py36","py37","py38"]) %}
 - {{ env|replace('py36','3.6')|replace('py37','3.7')|replace('py38','3.8') }}
 {%- endfor %}
+{%- elif cookiecutter.framework in ['Symfony', 'TYPO3'] %}
+language: php
+php: 7.2
+{%- elif cookiecutter.framework in ['SpringBoot'] %}
+language: java
+java: 8.0
+{%- endif %}
 
 stages:
 - lint
@@ -20,6 +28,8 @@ jobs:
 {% include '_/ci-services/test-stage/%s' % cookiecutter.ci_service -%}
 {% include '_/ci-services/build-stage/%s' % cookiecutter.ci_service -%}
 {% include '_/ci-services/deploy-stage/%s' % cookiecutter.ci_service %}
+{%- if cookiecutter.framework in ['Django', 'Flask'] %}
 
 install: pip install tox-travis
 script: tox
+{%- endif %}

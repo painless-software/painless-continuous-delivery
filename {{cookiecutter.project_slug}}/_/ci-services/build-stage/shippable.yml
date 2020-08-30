@@ -1,6 +1,12 @@
 
 build:
   ci:
+  {%- if cookiecutter.framework in ['Django', 'Flask'] %}
   - pip install tox
   - tox
+  {%- elif cookiecutter.framework in ['Symfony', 'TYPO3'] %}
+  - echo "This should run ???"
+  {%- elif cookiecutter.framework in ['SpringBoot'] -%}
+  - echo "This should run ???"
+  {%- endif %}
   - mv -v tests/reports/* shippable/testresults/ || true
