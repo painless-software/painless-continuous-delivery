@@ -1,3 +1,9 @@
-  {%- for env in cookiecutter.tests.split(',') %}
+{% for env in cookiecutter.tests.split(',') -%}
+  {%- if cookiecutter.framework in ['Django', 'Flask'] %}
   - TOXENV={{ env }}
-  {%- endfor -%}
+  {%- elif cookiecutter.framework in ['Symfony', 'TYPO3'] %}
+  - echo "This should run {{ env }}"
+  {%- elif cookiecutter.framework in ['SpringBoot'] -%}
+  - echo "This should run {{ env }}"
+  {%- endif -%}
+{%- endfor -%}

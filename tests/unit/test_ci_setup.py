@@ -291,6 +291,7 @@ class TestCISetup:
             'ci_service': ci_service,
             'checks': checks,
             'tests': tests,
+            'framework': 'Django',
             'database': 'Postgres',
             'cloud_platform': cloud_platform,
             'environment_strategy': environment_strategy,
