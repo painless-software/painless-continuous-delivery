@@ -1,3 +1,20 @@
+{% if cookiecutter.deployment_strategy == 'gitops' %}
+  - step: &build
+      name: Build image
+      image: docker.io/library/docker:19.03.8
+      caches:
+      - docker
+      script:
+      - REGISTRY={{ cookiecutter.docker_registry }}
+        TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
+        IMAGE="${REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}"
+      - &docker-login
+        docker login -u bitbucket-pipelines -p ${KUBE_TOKEN} ${REGISTRY}
+      - docker build . -t "${IMAGE}:${BITBUCKET_COMMIT}"
+      - &push-image
+        docker push "${IMAGE}"
+
+{%- else %}
   - step: &build
       name: Build image
       image: docker.io/library/docker:19.03.8
@@ -8,8 +25,8 @@
         TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
         IMAGE="${REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}"
       - docker login -u bitbucket-pipelines -p ${KUBE_TOKEN} ${REGISTRY}
-      - docker pull "${IMAGE}:latest" || true
       - docker build -t "${IMAGE}:${BITBUCKET_COMMIT}"
                      -t "${IMAGE}:latest"
                      -f "Dockerfile" .
       - docker push "${IMAGE}"
+{%- endif %}

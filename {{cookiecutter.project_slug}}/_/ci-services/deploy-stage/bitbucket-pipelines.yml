@@ -1,14 +1,61 @@
+{% if cookiecutter.deployment_strategy == 'gitops' %}
+  - script:
+    - &define-vars
+      REGISTRY={{ cookiecutter.docker_registry }}
+      TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
+      IMAGE="${REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}"
+    - &tag-image
+      docker tag "${IMAGE}:${BITBUCKET_COMMIT}" "${IMAGE}:${IMAGE_TAG}"
+
+  - step: &tag-review-app-image
+      name: Tag review app image
+      deployment: development
+      image: docker.io/library/docker:19.03.8
+      caches:
+      - docker
+      script:
+      - IMAGE_TAG=review-pr${BITBUCKET_PR_ID}
+      - *define-vars
+      - *docker-login
+      - *tag-image
+      - *push-image
+
+  - step: &tag-integration-image
+      name: Tag integration image
+      deployment: integration
+      image: docker.io/library/docker:19.03.8
+      caches:
+      - docker
+      script:
+      - IMAGE_TAG=latest
+      - *define-vars
+      - *docker-login
+      - *tag-image
+      - *push-image
+
+  - step: &tag-production-image
+      name: Tag production image
+      deployment: production
+      image: docker.io/library/docker:19.03.8
+      script:
+      - IMAGE_TAG=${BITBUCKET_TAG}
+      - *define-vars
+      - *docker-login
+      - *tag-image
+      - *push-image
+
+{%- else %}
   - script:
     - &define-vars
       DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
       DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
-{%- if cookiecutter.environment_strategy == 'shared' %}
+      {%- if cookiecutter.environment_strategy == 'shared' %}
       SOURCE={{ cookiecutter.cloud_project }}
       TARGET={{ cookiecutter.cloud_project }}
-{%- else %}
+      {%- else %}
       SOURCE=${SOURCE:-{{ cookiecutter.cloud_project }}}
       TARGET=${TARGET:-{{ cookiecutter.cloud_project }}}
-{%- endif %}
+      {%- endif %}
       SUFFIX="${SUFFIX}"
       LABEL={{ cookiecutter.project_slug }}${SUFFIX}
       APPLICATION=${APPLICATION:-application${SUFFIX}}
@@ -20,9 +67,9 @@
       oc create secret generic ${APPLICATION}
         --from-literal=DJANGO_DATABASE_URL={{ cookiecutter.database|lower }}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}
         --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-  {%- if cookiecutter.monitoring == 'Sentry' %}
+      {%- if cookiecutter.monitoring == 'Sentry' %}
         --from-literal=SENTRY_DSN=${SENTRY_DSN}
-  {%- endif %}
+      {%- endif %}
     - &generate-secrets-db
       oc get secret ${DATABASE_HOST} ||
       oc create secret generic ${DATABASE_HOST}
@@ -62,10 +109,10 @@
       image: docker.io/appuio/oc:v3.11
       script:
       - IMAGE_TAG=${BITBUCKET_COMMIT}
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
+        {%- if cookiecutter.environment_strategy == 'dedicated' %}
         SOURCE={{ cookiecutter.cloud_project }}-development
         TARGET={{ cookiecutter.cloud_project }}-development
-{%- endif %}
+        {%- endif %}
         SUFFIX=-review-pr${BITBUCKET_PR_ID}
       - *define-vars
       - *cloud-login
@@ -91,12 +138,12 @@
       image: docker.io/appuio/oc:v3.11
       script:
       - IMAGE_TAG=${BITBUCKET_COMMIT}
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
+        {%- if cookiecutter.environment_strategy == 'dedicated' %}
         SOURCE={{ cookiecutter.cloud_project }}-development
         TARGET={{ cookiecutter.cloud_project }}-integration
-{%- else %}
+        {%- else %}
         SUFFIX=-integration
-{%- endif %}
+        {%- endif %}
       - *define-vars
       - *cloud-login
       - *cloud-tag-image
@@ -119,12 +166,12 @@
       image: docker.io/appuio/oc:v3.11
       script:
       - IMAGE_TAG=${BITBUCKET_TAG}
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
+        {%- if cookiecutter.environment_strategy == 'dedicated' %}
         SOURCE={{ cookiecutter.cloud_project }}-development
         TARGET={{ cookiecutter.cloud_project }}-production
-{%- else %}
+        {%- else %}
         SUFFIX=-production
-{%- endif %}
+        {%- endif %}
       - *define-vars
       - *cloud-login
       - *cloud-tag-image
@@ -137,3 +184,4 @@
       - echo -e "\n"
                 "Application has been deployed to:\n"
                 "- ${KUBE_URL}/console/project/${TARGET}/overview\n"
+{%- endif %}

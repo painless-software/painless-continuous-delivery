@@ -1,7 +1,14 @@
+
   - parallel: &checks
     {%- for env in cookiecutter.checks.split(",") %}
     - step:
         name: {{ env|capitalize }}
         script:
+        {%- if cookiecutter.framework in ['Django', 'Flask'] %}
         - tox -e {{ env }}
-    {%- endfor %}
+        {%- elif cookiecutter.framework in ['Symfony', 'TYPO3'] %}
+        - echo "This should run {{ env }}"
+        {%- elif cookiecutter.framework in ['SpringBoot'] %}
+        - echo "This should run {{ env }}"
+        {%- endif %}
+    {%- endfor -%}

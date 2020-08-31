@@ -1,5 +1,6 @@
 # Painless deployment with Bitbucket Pipelines.
 # Visit the docs at https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
+# Validator: https://bitbucket-pipelines.prod.public.atl-paas.net/validator
 
 {% include '_/ci-services/definitions/%s' % cookiecutter.ci_service %}
 pipelines:
@@ -12,7 +13,11 @@ pipelines:
     - parallel: *tests
     {%- endif %}
     - step: *build
+    {%- if cookiecutter.deployment_strategy == 'gitops' %}
+    - step: *tag-review-app-image
+    {%- else %}
     - step: *deploy-review-app
+    {%- endif %}
 
   branches:
     master:
@@ -23,8 +28,16 @@ pipelines:
     - parallel: *tests
     {%- endif %}
     - step: *build
+    {%- if cookiecutter.deployment_strategy == 'gitops' %}
+    - step: *tag-integration-image
+    {%- else %}
     - step: *deploy-integration
+    {%- endif %}
 
   tags:
     '*':
-    - step: *deploy-production
+      {%- if cookiecutter.deployment_strategy == 'gitops' %}
+      - step: *tag-production-image
+      {%- else %}
+      - step: *deploy-production
+      {%- endif %}
