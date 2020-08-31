@@ -1,5 +1,6 @@
 # Painless deployment with Bitbucket Pipelines.
 # Visit the docs at https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
+# Validator: https://bitbucket-pipelines.prod.public.atl-paas.net/validator
 
 options:
   docker: true

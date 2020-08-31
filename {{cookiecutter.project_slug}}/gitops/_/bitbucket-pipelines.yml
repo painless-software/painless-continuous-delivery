@@ -1,11 +1,16 @@
 # Painless deployment with Bitbucket Pipelines.
 # Visit the docs at https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
+# Validator: https://bitbucket-pipelines.prod.public.atl-paas.net/validator
 
-pipelines:
-  default:
-  - parallel:
+definitions:
+  steps:
+  - parallel: &checks
     - step:
         name: Lint manifests
         image: docker.io/garethr/kubeval:latest
         script:
         - /kubeval --strict --ignore-missing-schemas **/*.yaml
+
+pipelines:
+  default:
+  - parallel: *checks

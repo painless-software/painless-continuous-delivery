@@ -42,15 +42,20 @@ class TestGitops:
                 ]),
                 ('bitbucket-gitops/bitbucket-pipelines.yml', [
                     """
-                    pipelines:
-                      default:
-                      - parallel:
+                    definitions:
+                      steps:
+                      - parallel: &checks
                         - step:
                             name: Lint manifests
                             image: docker.io/garethr/kubeval:latest
                             script:
                             - /kubeval --strict --ignore-missing-schemas **/*.yaml
                     """,  # noqa
+                    """
+                    pipelines:
+                      default:
+                      - parallel: *checks
+                    """,
                 ]),
             ],
         }),
