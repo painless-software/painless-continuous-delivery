@@ -7,6 +7,86 @@ image: docker.io/painless/tox
 {% endif -%}
 definitions:
   steps:
+  - script:
+{%- if cookiecutter.deployment_strategy == 'gitops' %}
+    - &define-vars
+      REGISTRY={{ cookiecutter.docker_registry }}
+      TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
+      IMAGE="${REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}"
+    - &docker-login
+      docker login -u bitbucket-pipelines -p ${KUBE_TOKEN} ${REGISTRY}
+    - &build-image
+      docker build . -t "${IMAGE}:${BITBUCKET_COMMIT}"
+    - &tag-image
+      docker tag "${IMAGE}:${BITBUCKET_COMMIT}" "${IMAGE}:${IMAGE_TAG}"
+    - &push-image
+      docker push "${IMAGE}"
+{%- else %}
+    - &define-vars
+      DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
+      DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
+      {%- if cookiecutter.environment_strategy == 'shared' %}
+      SOURCE={{ cookiecutter.cloud_project }}
+      TARGET={{ cookiecutter.cloud_project }}
+      {%- else %}
+      SOURCE=${SOURCE:-{{ cookiecutter.cloud_project }}}
+      TARGET=${TARGET:-{{ cookiecutter.cloud_project }}}
+      {%- endif %}
+      SUFFIX="${SUFFIX}"
+      LABEL={{ cookiecutter.project_slug }}${SUFFIX}
+      APPLICATION=${APPLICATION:-application${SUFFIX}}
+      DATABASE_HOST=${DATABASE_HOST:-{{ cookiecutter.database|lower }}${SUFFIX}}
+      DATABASE_NAME={{ cookiecutter.project_slug.replace('-', '_') }}
+      DATABASE_USER={{ cookiecutter.project_slug.replace('-', '_') }}
+    - &docker-login
+      docker login -u bitbucket-pipelines -p ${KUBE_TOKEN} ${REGISTRY}
+    - &build-image
+      docker build . -t "${IMAGE}:${BITBUCKET_COMMIT}"
+                     -t "${IMAGE}:latest"
+    - &push-image
+      docker push "${IMAGE}"
+    - &generate-secrets-app
+      oc get secret ${APPLICATION} ||
+      oc create secret generic ${APPLICATION}
+        --from-literal=DJANGO_DATABASE_URL={{ cookiecutter.database|lower }}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}
+        --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      {%- if cookiecutter.monitoring == 'Sentry' %}
+        --from-literal=SENTRY_DSN=${SENTRY_DSN}
+      {%- endif %}
+    - &generate-secrets-db
+      oc get secret ${DATABASE_HOST} ||
+      oc create secret generic ${DATABASE_HOST}
+        --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}
+        --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}
+        --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
+    - &cleanup-resources
+      seiso configmaps -l app=${LABEL} --delete &&
+      seiso secrets -l app=${LABEL} --delete &&
+      seiso image history {{ cookiecutter.project_slug }} --delete &&
+      seiso image orphans {{ cookiecutter.project_slug }} --delete
+    - &cloud-login
+      oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n ${TARGET}
+    - &cloud-tag-image
+      oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}"
+             "${TARGET}/{{ cookiecutter.project_slug }}:${IMAGE_TAG}"
+    - &cloud-set-image
+      pushd deployment/application/base &&
+      kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${IMAGE_TAG}" &&
+      popd
+    - &cloud-apply-app
+      pushd deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
+      kustomize edit set namesuffix -- "${SUFFIX}" &&
+      kustomize edit add label "app:${LABEL}" &&
+      kustomize build | oc apply -f - &&
+      popd
+    - &cloud-apply-db
+      pushd deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
+      kustomize edit set namesuffix -- "${SUFFIX}" &&
+      kustomize edit add label "app:${LABEL}" &&
+      kustomize build | oc apply -f - &&
+      popd
+{%- endif %}
+
 {%- if cookiecutter.checks %}
 {% include '_/ci-services/lint-stage/%s' % cookiecutter.ci_service %}{% endif %}
 {%- if cookiecutter.tests %}
