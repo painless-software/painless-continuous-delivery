@@ -1,7 +1,12 @@
 """Tests for the GitOps deployment strategy."""
-from textwrap import dedent
+from textwrap import dedent, indent
 
 from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
+
+
+def indent2(text):
+    """Remove common indentation and ensure a specific indentation"""
+    return indent(dedent(text), 2 * ' ')
 
 
 # pylint: disable=too-few-public-methods
@@ -37,25 +42,99 @@ class TestGitops:
             ],
             'required_content': [
                 ('bitbucket/bitbucket-pipelines.yml', [
-                    """
-                    """,
+                    indent2("""
+                    - step: &build
+                        name: Build image
+                        image: docker.io/library/docker:19.03.8
+                        caches:
+                        - docker
+                        script:
+                        - REGISTRY=registry.gitlab.com/company-or-username
+                          TARGET=bitbucket
+                          IMAGE="${REGISTRY}/${TARGET}/bitbucket"
+                        - *docker-login
+                        - *build-image
+                        - *push-image
+                    """),
+                    indent2("""
+                    - step: &tag-review-app-image
+                        name: Tag review app image
+                        deployment: development
+                        image: docker.io/library/docker:19.03.8
+                        caches:
+                        - docker
+                        script:
+                        - IMAGE_TAG=review-pr${BITBUCKET_PR_ID}
+                        - *define-vars
+                        - *docker-login
+                        - *tag-image
+                        - *push-image
+                    """),
+                    indent2("""
+                    - step: &tag-integration-image
+                        name: Tag integration image
+                        deployment: integration
+                        image: docker.io/library/docker:19.03.8
+                        caches:
+                        - docker
+                        script:
+                        - IMAGE_TAG=latest
+                        - *define-vars
+                        - *docker-login
+                        - *tag-image
+                        - *push-image
+                    """),
+                    indent2("""
+                    - step: &tag-production-image
+                        name: Tag production image
+                        deployment: production
+                        image: docker.io/library/docker:19.03.8
+                        script:
+                        - IMAGE_TAG=${BITBUCKET_TAG}
+                        - *define-vars
+                        - *docker-login
+                        - *tag-image
+                        - *push-image
+                    """),
+                    dedent("""
+                    pipelines:
+                      pull-requests:
+                        '**':
+                        - parallel: *checks
+                        - parallel: *tests
+                        - step: *build
+                        - step: *tag-review-app-image
+                    """),
+                    indent2("""
+                      branches:
+                        master:
+                        - parallel: *checks
+                        - parallel: *tests
+                        - step: *build
+                        - step: *tag-integration-image
+                    """),
+                    indent2("""
+                      tags:
+                        '*':
+                        - step: *tag-production-image
+                    """),
                 ]),
                 ('bitbucket-gitops/bitbucket-pipelines.yml', [
-                    """
-                    definitions:
-                      steps:
-                      - parallel: &checks
-                        - step:
-                            name: Lint manifests
-                            image: docker.io/garethr/kubeval:latest
-                            script:
-                            - /kubeval --strict --ignore-missing-schemas **/*.yaml
-                    """,  # noqa
-                    """
+                    dedent("""
+                definitions:
+                  steps:
+                  - parallel: &checks
+                    - step:
+                        name: Lint manifests
+                        image: docker.io/garethr/kubeval:latest
+                        script:
+                        - /kubeval --strict --ignore-missing-schemas **/*.yaml
+                    """),
+                    dedent("""
                     pipelines:
                       default:
                       - parallel: *checks
-                    """,
+                    """),
                 ]),
             ],
         }),
@@ -88,14 +167,14 @@ class TestGitops:
             ],
             'required_content': [
                 ('codeship-gitops/codeship-steps.yml', [
-                    """
-                    - name: Checks
-                      type: parallel
-                      service: app
-                      steps:
-                      - name: Lint manifests
-                        command: /kubeval --strict --ignore-missing-schemas **/*.yaml
-                    """,  # noqa
+                    dedent("""
+            - name: Checks
+              type: parallel
+              service: app
+              steps:
+              - name: Lint manifests
+                command: /kubeval --strict --ignore-missing-schemas **/*.yaml
+                    """),
                 ]),
             ],
         }),
@@ -126,7 +205,7 @@ class TestGitops:
             ],
             'required_content': [
                 ('gitlab/.gitlab-ci.yml', [
-                    """
+                    dedent("""
                     app-image:
                       extends: .build
                       environment:
@@ -134,34 +213,34 @@ class TestGitops:
                       only:
                       - merge_requests
                       - master
-                    """,
-                    """
+                    """),
+                    dedent("""
                     review:
                       extends: .tag-image
                       variables:
                         IMAGE_TAG: review-mr${CI_MERGE_REQUEST_IID}
                       only:
                       - merge_requests
-                    """,
-                    """
+                    """),
+                    dedent("""
                     integration:
                       extends: .tag-image
                       variables:
                         IMAGE_TAG: latest
                       only:
                       - master
-                    """,
-                    """
+                    """),
+                    dedent("""
                     production:
                       extends: .tag-image
                       variables:
                         IMAGE_TAG: "${CI_COMMIT_TAG}"
                       only:
                       - tags
-                    """,
+                    """),
                 ]),
                 ('gitlab-gitops/.gitlab-ci.yml', [
-                    """
+                    dedent("""
                     stages:
                     - lint
 
@@ -172,7 +251,7 @@ class TestGitops:
                         entrypoint: [""]
                       script:
                       - /kubeval --strict --ignore-missing-schemas **/*.yaml
-                    """,
+                    """),
                 ]),
             ],
         }),
@@ -217,6 +296,7 @@ class TestGitops:
         for filename, chunks in required_content:
             file_content = result.project.join('..').join(filename).read()
             for chunk in chunks:
-                assert dedent(chunk) in file_content, \
-                    'Not found in generated file %s: "%s"' % \
-                    (filename, dedent(chunk))
+                assert chunk in file_content, \
+                    'Not found in generated file %s:\n"%s"\n' \
+                    '-----------\n%s' % \
+                    (filename, chunk, file_content)
