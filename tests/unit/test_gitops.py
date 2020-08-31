@@ -37,7 +37,21 @@ class TestGitops:
             ],
             'required_content': [
                 ('bitbucket/bitbucket-pipelines.yml', [
-                    ]),
+                    """
+                    """,
+                ]),
+                ('bitbucket-gitops/bitbucket-pipelines.yml', [
+                    """
+                    pipelines:
+                      default:
+                      - parallel:
+                        - step:
+                            name: Lint manifests
+                            image: docker.io/garethr/kubeval:latest
+                            script:
+                            - /kubeval --strict --ignore-missing-schemas **/*.yaml
+                    """,  # noqa
+                ]),
             ],
         }),
         ('Codeship', {
@@ -68,8 +82,16 @@ class TestGitops:
                 'codeship-gitops/Dockerfile',
             ],
             'required_content': [
-                ('codeship/codeship-steps.yml', [
-                    ]),
+                ('codeship-gitops/codeship-steps.yml', [
+                    """
+                    - name: Checks
+                      type: parallel
+                      service: app
+                      steps:
+                      - name: Lint manifests
+                        command: /kubeval --strict --ignore-missing-schemas **/*.yaml
+                    """,  # noqa
+                ]),
             ],
         }),
         ('GitLab', {
@@ -131,6 +153,20 @@ class TestGitops:
                         IMAGE_TAG: "${CI_COMMIT_TAG}"
                       only:
                       - tags
+                    """,
+                ]),
+                ('gitlab-gitops/.gitlab-ci.yml', [
+                    """
+                    stages:
+                    - lint
+
+                    lint:
+                      stage: lint
+                      image:
+                        name: docker.io/garethr/kubeval:latest
+                        entrypoint: [""]
+                      script:
+                      - /kubeval --strict --ignore-missing-schemas **/*.yaml
                     """,
                 ]),
             ],
