@@ -1,5 +1,5 @@
 
-application:
+app-image:
   extends: .build
   environment:
     name: development

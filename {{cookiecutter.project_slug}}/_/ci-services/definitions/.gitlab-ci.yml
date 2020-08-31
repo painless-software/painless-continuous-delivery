@@ -6,13 +6,15 @@ stages:
 - check
 - test
 - build
-{%- if cookiecutter.deployment_strategy == 'pipeline' %}
 - deploy
-{%- endif %}
 
 .check:
   stage: check
+{%- if cookiecutter.framework in ['Django', 'Flask'] %}
   image: docker.io/painless/tox
+{%- else %}
+  image: docker.io/appuio/oc:v3.11
+{%- endif %}
   variables:
     GIT_DEPTH: 7
   only:
@@ -21,7 +23,11 @@ stages:
 
 .test:
   stage: test
+{%- if cookiecutter.framework in ['Django', 'Flask'] %}
   image: docker.io/painless/tox
+{%- else %}
+  image: docker.io/painless/tox
+{%- endif %}
   artifacts:
     reports:
       junit: tests/reports/*.xml
@@ -45,11 +51,18 @@ stages:
   - docker login -u gitlab-ci -p ${KUBE_TOKEN} ${REGISTRY}
   - docker pull "${IMAGE}:latest" || true
   script:
-  - docker build -t "${IMAGE}:${CI_COMMIT_SHA}"
-                 -t "${IMAGE}:latest"
-                 -f "Dockerfile" .
+  - docker build . -t "${IMAGE}:${CI_COMMIT_SHA}"
   - docker push "${IMAGE}"
-{%- if cookiecutter.deployment_strategy == 'pipeline' %}
+
+{% if cookiecutter.deployment_strategy == 'gitops' -%}
+.tag-image:
+  extends: .build
+  stage: deploy
+  script:
+  - docker tag "${IMAGE}:${CI_COMMIT_SHA}" "${IMAGE}:${IMAGE_TAG}"
+  - docker push "${IMAGE}"
+
+{%- else -%}
 
 .deploy-vars:
   variables:

@@ -305,6 +305,9 @@ class TestCISetup:
         assert result.project.join('README.rst').isfile()
 
         ci_service_conf = result.project.join(ci_service).readlines(cr=False)
+        assert '\n\n\n' not in '\n'.join(ci_service_conf), \
+            "Excessive newlines in CI configuration."
+
         for line in required_lines:
             assert line in ci_service_conf, "Not found in CI config: " \
                 "'%s'\n%s" % (line, '\n'.join(ci_service_conf))
@@ -312,6 +315,12 @@ class TestCISetup:
         codeship_services = result.project.join('codeship-services.yml')
         assert (ci_service == 'codeship-steps.yml' and
                 codeship_services.isfile()) or not codeship_services.exists()
+
+        files_absent = ['gitops', f"../{project_slug}-gitops"]
+        for filename in files_absent:
+            thefile = result.project.join(filename)
+            assert not thefile.exists(), \
+                'File %s found in generated project.' % filename
 
         # ensure this project itself stays up-to-date with the template
         verify_file_matches_repo_root(result, ci_service,
