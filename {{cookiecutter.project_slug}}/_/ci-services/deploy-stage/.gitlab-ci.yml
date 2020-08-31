@@ -1,4 +1,26 @@
-{%- if cookiecutter.deployment_strategy == 'pipeline' %}
+{%- if cookiecutter.deployment_strategy == 'gitops' %}
+review:
+  extends: .tag-image
+  variables:
+    IMAGE_TAG: review-mr${CI_MERGE_REQUEST_IID}
+  only:
+  - merge_requests
+
+integration:
+  extends: .tag-image
+  variables:
+    IMAGE_TAG: latest
+  only:
+  - master
+
+production:
+  extends: .tag-image
+  variables:
+    IMAGE_TAG: "${CI_COMMIT_TAG}"
+  only:
+  - tags
+
+{%- else %}
 review:
   extends: .deploy
   environment:
@@ -54,24 +76,6 @@ production:
     TARGET: {{ cookiecutter.cloud_project }}-production
 {%- endif %}
     IMAGE_TAG: ${CI_COMMIT_TAG}
-  only:
-  - tags
-{%- endif %}
-{%- if cookiecutter.deployment_strategy == 'gitops' %}
-production_tag:
-  stage: tag
-  image: docker.io/library/docker
-  services:
-  - name: docker:dind
-  variables:
-    IMAGE: ${REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}
-    TARGET: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
-  before_script:
-  - docker login -u gitlab-ci -p ${KUBE_TOKEN} ${REGISTRY}
-  script:
-  - docker pull "${IMAGE}:${CI_COMMIT_SHA}"
-  - docker tag "${IMAGE}:${CI_COMMIT_SHA}" "${IMAGE}:${CI_COMMIT_TAG}"
-  - docker push "${IMAGE}"
   only:
   - tags
 {%- endif %}
