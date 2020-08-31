@@ -36,8 +36,8 @@ pipelines:
 
   tags:
     '*':
-      {%- if cookiecutter.deployment_strategy == 'gitops' %}
-      - step: *tag-production-image
-      {%- else %}
-      - step: *deploy-production
-      {%- endif %}
+    {%- if cookiecutter.deployment_strategy == 'gitops' %}
+    - step: *tag-production-image
+    {%- else %}
+    - step: *deploy-production
+    {%- endif %}
