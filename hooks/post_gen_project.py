@@ -162,6 +162,9 @@ def remove_temporary_files():
     shutil.rmtree('_')
     shutil.rmtree('gitops/_')
 
+    if '{{ cookiecutter.database }}' == '(none)':
+        shutil.rmtree('deployment/database')
+
 
 def merge_folder_into(src_dir, dest_dir):
     """

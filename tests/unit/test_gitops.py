@@ -31,12 +31,12 @@ class TestGitops:
                 'bitbucket-gitops/.gitignore',
                 'bitbucket-gitops/bitbucket-pipelines.yml',
                 'bitbucket-gitops/deployment/application/base/kustomization.yaml',  # noqa
-                'bitbucket-gitops/deployment/database/base/kustomization.yaml',
                 'bitbucket-gitops/README.rst',
             ],
             'files_absent': [
                 'bitbucket/gitops/',
                 'bitbucket-gitops/_/',
+                'bitbucket-gitops/deployment/database/base/kustomization.yaml',
                 'bitbucket-gitops/docker-compose.yml',
                 'bitbucket-gitops/Dockerfile',
             ],
@@ -156,12 +156,12 @@ class TestGitops:
                 'codeship-gitops/codeship-services.yml',
                 'codeship-gitops/codeship-steps.yml',
                 'codeship-gitops/deployment/application/base/kustomization.yaml',  # noqa
-                'codeship-gitops/deployment/database/base/kustomization.yaml',
                 'codeship-gitops/README.rst',
             ],
             'files_absent': [
                 'codeship/gitops/',
                 'codeship-gitops/_/',
+                'codeship-gitops/deployment/database/base/kustomization.yaml',
                 'codeship-gitops/docker-compose.yml',
                 'codeship-gitops/Dockerfile',
             ],
@@ -194,12 +194,12 @@ class TestGitops:
                 'gitlab-gitops/.gitignore',
                 'gitlab-gitops/.gitlab-ci.yml',
                 'gitlab-gitops/deployment/application/base/kustomization.yaml',  # noqa
-                'gitlab-gitops/deployment/database/base/kustomization.yaml',
                 'gitlab-gitops/README.rst',
             ],
             'files_absent': [
                 'gitlab/gitops/',
                 'gitlab-gitops/_/',
+                'gitlab-gitops/deployment/database/base/kustomization.yaml',
                 'gitlab-gitops/docker-compose.yml',
                 'gitlab-gitops/Dockerfile',
             ],
