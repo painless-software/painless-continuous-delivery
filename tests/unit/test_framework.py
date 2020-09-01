@@ -1,7 +1,11 @@
-"""Tests for generating a Web framework project."""
+"""
+Tests for generating a Web framework project.
+"""
 from os import system
 
-from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
+from . import (  # noqa, pylint: disable=unused-import
+    pytest_generate_tests,
+)
 
 
 # pylint: disable=too-few-public-methods

@@ -1,10 +1,13 @@
-"""Common helper functions and values for running tests with py.test."""
+"""
+Common helper functions and values for running tests with py.test.
+"""
 from difflib import context_diff
-from os.path import dirname
-import os.path
+from pathlib import Path
+from textwrap import dedent, indent
+
 from py._path.local import LocalPath
 
-REPO_ROOT_PATH = LocalPath(dirname(dirname(dirname(__file__))))
+REPO_ROOT_PATH = LocalPath(Path(__file__).parent.parent.parent)
 
 
 def pytest_generate_tests(metafunc):
@@ -22,6 +25,11 @@ def pytest_generate_tests(metafunc):
         argnames = [x[0] for x in items]
         argvalues.append(([x[1] for x in items]))
     metafunc.parametrize(argnames, argvalues, ids=idlist, scope="class")
+
+
+def indent2(text):
+    """Remove common indentation and ensure a specific indentation"""
+    return indent(dedent(text), 2 * ' ')
 
 
 def get_lines_for(identifier, module_lines, block_type):
@@ -116,4 +124,4 @@ def verify_file_matches_repo_root(result, *file, max_compare_bytes=-1):
                                     tofile=generated_file))
     assert not diff, \
         "Mother project '{}' not matching template.\n{}".format(
-            os.path.sep.join(file), diff)
+            Path(*file), diff)

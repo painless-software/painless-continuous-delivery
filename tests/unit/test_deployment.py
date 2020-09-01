@@ -1,5 +1,9 @@
-"""Tests for generating a deployment configuration."""
-from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
+"""
+Tests for generating a deployment configuration.
+"""
+from . import (  # noqa, pylint: disable=unused-import
+    pytest_generate_tests,
+)
 
 
 # pylint: disable=attribute-defined-outside-init,too-many-instance-attributes
