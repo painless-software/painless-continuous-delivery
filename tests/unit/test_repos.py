@@ -1,5 +1,9 @@
-"""Tests for generating a local Git repository and Docker registry setup."""
-from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
+"""
+Tests for generating a local Git repository and Docker registry setup.
+"""
+from . import (  # noqa, pylint: disable=unused-import
+    pytest_generate_tests,
+)
 
 
 # pylint: disable=too-few-public-methods

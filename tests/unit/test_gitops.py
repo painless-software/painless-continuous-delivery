@@ -1,12 +1,11 @@
-"""Tests for the GitOps deployment strategy."""
-from textwrap import dedent, indent
-
-from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
-
-
-def indent2(text):
-    """Remove common indentation and ensure a specific indentation"""
-    return indent(dedent(text), 2 * ' ')
+"""
+Tests for the GitOps deployment strategy.
+"""
+from . import (  # noqa, pylint: disable=unused-import
+    dedent,
+    indent2,
+    pytest_generate_tests,
+)
 
 
 # pylint: disable=too-few-public-methods

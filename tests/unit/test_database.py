@@ -1,8 +1,15 @@
-"""Tests for correctly generated database configurations."""
+"""
+Tests for correctly generated database configurations.
+"""
 from os import system
 
-from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
-from . import FunctionCall, verify_required_settings
+from . import (  # noqa, pylint: disable=unused-import
+    FunctionCall,
+    dedent,
+    indent2,
+    pytest_generate_tests,
+    verify_required_settings,
+)
 
 
 # pylint: disable=too-few-public-methods

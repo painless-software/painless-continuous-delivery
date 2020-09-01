@@ -1,8 +1,12 @@
-"""Tests for correctly generated monitoring configurations."""
+"""
+Tests for correctly generated monitoring configurations.
+"""
 from os import system
 
-from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
-from . import verify_required_settings
+from . import (  # noqa, pylint: disable=unused-import
+    pytest_generate_tests,
+    verify_required_settings,
+)
 
 
 # pylint: disable=too-few-public-methods

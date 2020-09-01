@@ -1,6 +1,12 @@
-"""Tests for generating a continuous integration setup."""
-from . import pytest_generate_tests  # noqa, pylint: disable=unused-import
-from . import verify_file_matches_repo_root
+"""
+Tests for generating a continuous integration setup.
+"""
+from . import (  # noqa, pylint: disable=unused-import
+    dedent,
+    indent2,
+    pytest_generate_tests,
+    verify_file_matches_repo_root,
+)
 
 
 # pylint: disable=too-few-public-methods
