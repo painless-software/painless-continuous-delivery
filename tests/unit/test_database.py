@@ -3,7 +3,7 @@ Tests for correctly generated database configurations.
 """
 from os import system
 
-from . import (  # noqa, pylint: disable=unused-import
+from helpers import (  # noqa, pylint: disable=unused-import
     FunctionCall,
     dedent,
     indent2,

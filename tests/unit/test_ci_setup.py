@@ -1,7 +1,7 @@
 """
 Tests for generating a continuous integration setup.
 """
-from . import (  # noqa, pylint: disable=unused-import
+from helpers import (  # noqa, pylint: disable=unused-import
     dedent,
     indent2,
     pytest_generate_tests,

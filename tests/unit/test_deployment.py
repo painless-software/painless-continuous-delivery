@@ -1,7 +1,7 @@
 """
 Tests for generating a deployment configuration.
 """
-from . import (  # noqa, pylint: disable=unused-import
+from helpers import (  # noqa, pylint: disable=unused-import
     pytest_generate_tests,
 )
 
