@@ -216,6 +216,8 @@ class TestGitops:
                     dedent("""
                     review:
                       extends: .tag-image
+                      environment:
+                        name: development
                       variables:
                         IMAGE_TAG: review-mr${CI_MERGE_REQUEST_IID}
                       only:
@@ -224,6 +226,8 @@ class TestGitops:
                     dedent("""
                     integration:
                       extends: .tag-image
+                      environment:
+                        name: integration
                       variables:
                         IMAGE_TAG: latest
                       only:
@@ -232,6 +236,8 @@ class TestGitops:
                     dedent("""
                     production:
                       extends: .tag-image
+                      environment:
+                        name: production
                       variables:
                         IMAGE_TAG: "${CI_COMMIT_TAG}"
                       only:
