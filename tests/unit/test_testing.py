@@ -1,7 +1,7 @@
 """
 Tests for generating a testing setup for a project.
 """
-from helpers import (  # noqa, pylint: disable=unused-import
+from helpers import (  # noqa, pylint: disable=no-name-in-module,unused-import
     pytest_generate_tests,
     verify_file_matches_repo_root,
 )

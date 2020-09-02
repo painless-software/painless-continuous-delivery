@@ -47,11 +47,11 @@ def step_impl(context):
 
 @then('the application is available at {appurl} showing {appcontent}')  # noqa
 def step_impl(context, appurl, appcontent):
-    r = requests.get(appurl, appcontent)
-    assert r.status_code == 200, \
-        'Application returns status code %s' % r.status_code
+    resp = requests.get(appurl, appcontent)
+    assert resp.status_code == 200, \
+        'Application returns status code %s' % resp.status_code
 
-    response_body = r.content.decode('utf-8')
+    response_body = resp.content.decode('utf-8')
     assert appcontent in response_body, \
         "Application doesn't show expected content: {expected}\n" \
         "----------------- (response body follows)\n" \
