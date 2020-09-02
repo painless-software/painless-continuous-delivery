@@ -31,7 +31,9 @@ review:
     SUFFIX: -review-mr${CI_MERGE_REQUEST_IID}
     LABEL: {{ cookiecutter.project_slug }}-review-mr${CI_MERGE_REQUEST_IID}
     APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}
+    {%- if cookiecutter.database != '(none)' %}
     DATABASE_HOST: {{ cookiecutter.database|lower }}-review-mr${CI_MERGE_REQUEST_IID}
+    {%- endif %}
     IMAGE_TAG: ${CI_COMMIT_SHA}
   only:
   - merge_requests
