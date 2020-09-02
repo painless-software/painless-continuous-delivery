@@ -5,8 +5,8 @@ from os import system
 from cookiecutter.main import cookiecutter
 
 
-@given('I have just created a {framework} project checking {checks} and testing {tests}')  # noqa
-def step_impl(context, framework, checks, tests):
+@given('I have just created a {framework} {database} project checking {checks} and testing {tests}')  # noqa
+def step_impl(context, framework, database, checks, tests):
 
     project_slug = 'painless-%s-project' % framework.lower()
     context.set_logfilename(project_slug)
@@ -18,9 +18,9 @@ def step_impl(context, framework, checks, tests):
         extra_context={
             'project_slug': project_slug,
             'framework': framework,
+            'database': database,
             'checks': checks,
             'tests': tests,
-            'database': 'MySQL',
             'vcs_platform': 'GitLab.com',
             'ci_service': '.gitlab-ci.yml',
         })

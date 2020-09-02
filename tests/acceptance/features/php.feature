@@ -5,14 +5,14 @@ Feature: Painless Continuous Delivery project setup powered by Cookiecutter
 
   @php
   Scenario Outline: Default tests pass after project generation
-    Given I have just created a <framework> project checking <checks> and testing <tests>
+    Given I have just created a <framework> <database> project checking <checks> and testing <tests>
     And system libraries have been installed for developing with PHP
     When I run the test suite with <testcommands>
     Then all tests pass successfully
 
     Examples: PHP frameworks
-      | framework | checks            | tests          | testcommands                    |
-      | Symfony   | phpcs,twig,jshint | phpunit,jsunit | composer check && composer test |
+      | framework | database | checks            | tests          | testcommands                    |
+      | Symfony   | MySQL    | phpcs,twig,jshint | phpunit,jsunit | composer check && composer test |
 
   @php @docker
   Scenario Outline: Starting to develop is simple and quick

@@ -4,11 +4,11 @@ Feature: Painless Continuous Delivery project setup powered by Cookiecutter
   So that I get a working best-practice setup for software development
 
   Scenario Outline: Default tests pass after project generation
-    Given I have just created a <framework> project checking <checks> and testing <tests>
+    Given I have just created a <framework> <database> project checking <checks> and testing <tests>
     When I run the test suite with <commands>
     Then all tests pass successfully
 
     Examples: Python frameworks
-      | framework | checks        | tests       | commands |
-      | Django    | flake8,pylint | py37,behave | tox      |
-      | Flask     | flake8,pylint | py37,behave | tox      |
+      | framework | database | checks                   | tests       | commands |
+      | Django    | Postgres | flake8,pylint,kubernetes | py37,behave | tox      |
+      | Flask     | (none)   | flake8,pylint,kubernetes | py37,behave | tox      |
