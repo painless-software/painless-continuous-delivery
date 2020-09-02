@@ -24,7 +24,9 @@ definitions:
 {%- else %}
     - &define-vars
       DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
+      {%- if cookiecutter.database != '(none)' %}
       DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
+      {%- endif %}
       {%- if cookiecutter.environment_strategy == 'shared' %}
       SOURCE={{ cookiecutter.cloud_project }}
       TARGET={{ cookiecutter.cloud_project }}
@@ -35,9 +37,11 @@ definitions:
       SUFFIX="${SUFFIX}"
       LABEL={{ cookiecutter.project_slug }}${SUFFIX}
       APPLICATION=${APPLICATION:-application${SUFFIX}}
+      {%- if cookiecutter.database != '(none)' %}
       DATABASE_HOST=${DATABASE_HOST:-{{ cookiecutter.database|lower }}${SUFFIX}}
       DATABASE_NAME={{ cookiecutter.project_slug.replace('-', '_') }}
       DATABASE_USER={{ cookiecutter.project_slug.replace('-', '_') }}
+      {%- endif %}
     - &docker-login
       docker login -u bitbucket-pipelines -p ${KUBE_TOKEN} ${REGISTRY}
     - &build-image
@@ -48,17 +52,21 @@ definitions:
     - &generate-secrets-app
       oc get secret ${APPLICATION} ||
       oc create secret generic ${APPLICATION}
+      {%- if cookiecutter.database != '(none)' %}
         --from-literal=DJANGO_DATABASE_URL={{ cookiecutter.database|lower }}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}
+      {%- endif %}
         --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       {%- if cookiecutter.monitoring == 'Sentry' %}
         --from-literal=SENTRY_DSN=${SENTRY_DSN}
       {%- endif %}
+    {%- if cookiecutter.database != '(none)' %}
     - &generate-secrets-db
       oc get secret ${DATABASE_HOST} ||
       oc create secret generic ${DATABASE_HOST}
         --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}
         --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}
         --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
+    {%- endif %}
     - &cleanup-resources
       seiso configmaps -l app=${LABEL} --delete &&
       seiso secrets -l app=${LABEL} --delete &&
@@ -79,12 +87,14 @@ definitions:
       kustomize edit add label "app:${LABEL}" &&
       kustomize build | oc apply -f - &&
       popd
+    {%- if cookiecutter.database != '(none)' %}
     - &cloud-apply-db
       pushd deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
       kustomize edit set namesuffix -- "${SUFFIX}" &&
       kustomize edit add label "app:${LABEL}" &&
       kustomize build | oc apply -f - &&
       popd
+    {%- endif %}
 {%- endif %}
 
 {%- if cookiecutter.checks %}

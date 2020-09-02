@@ -52,10 +52,14 @@
       - *cloud-login
       - *cloud-tag-image
       - *generate-secrets-app
+      {%- if cookiecutter.database != '(none)' %}
       - *generate-secrets-db
+      {%- endif %}
       - *cloud-set-image
       - *cloud-apply-app
+      {%- if cookiecutter.database != '(none)' %}
       - *cloud-apply-db
+      {%- endif %}
       - echo -e "\n"
                 "Review App has been deployed to:\n"
                 "- ${KUBE_URL}/console/project/${TARGET}/overview\n"
@@ -83,10 +87,14 @@
       - *cloud-tag-image
       - *cleanup-resources
       - *generate-secrets-app
+      {%- if cookiecutter.database != '(none)' %}
       - *generate-secrets-db
+      {%- endif %}
       - *cloud-set-image
       - *cloud-apply-app
+      {%- if cookiecutter.database != '(none)' %}
       - *cloud-apply-db
+      {%- endif %}
       - echo -e "\n"
                 "Application has been deployed to:\n"
                 "- ${KUBE_URL}/console/project/${TARGET}/overview\n"
@@ -111,10 +119,14 @@
       - *cloud-tag-image
       - *cleanup-resources
       - *generate-secrets-app
+      {%- if cookiecutter.database != '(none)' %}
       - *generate-secrets-db
+      {%- endif %}
       - *cloud-set-image
       - *cloud-apply-app
+      {%- if cookiecutter.database != '(none)' %}
       - *cloud-apply-db
+      {%- endif %}
       - echo -e "\n"
                 "Application has been deployed to:\n"
                 "- ${KUBE_URL}/console/project/${TARGET}/overview\n"

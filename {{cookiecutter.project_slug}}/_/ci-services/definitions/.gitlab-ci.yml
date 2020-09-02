@@ -71,29 +71,37 @@ stages:
     SOURCE: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
     TARGET: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}
     APPLICATION: application{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
+    {%- if cookiecutter.database != '(none)' %}
     DATABASE_HOST: {{ cookiecutter.database|lower }}{% if cookiecutter.environment_strategy == 'shared' %}-${CI_ENVIRONMENT_NAME}{% endif %}
     DATABASE_NAME: {{ cookiecutter.project_slug.replace('-', '_') }}
     DATABASE_USER: {{ cookiecutter.project_slug.replace('-', '_') }}
+    {%- endif %}
     GIT_STRATEGY: clone
 
 .generate-secrets:
   extends: .deploy-vars
   before_script:
   - export DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
+  {%- if cookiecutter.database != '(none)' %}
   - export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)
+  {%- endif %}
   - oc project ${TARGET}
   - oc get secret ${APPLICATION} ||
     oc create secret generic ${APPLICATION}
+    {%- if cookiecutter.database != '(none)' %}
       --from-literal=DJANGO_DATABASE_URL={{ cookiecutter.database|lower }}://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}
+    {%- endif %}
       --from-literal=DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-{%- if cookiecutter.monitoring == 'Sentry' %}
+    {%- if cookiecutter.monitoring == 'Sentry' %}
       --from-literal=SENTRY_DSN=${SENTRY_DSN}
-{%- endif %}
+    {%- endif %}
+  {%- if cookiecutter.database != '(none)' %}
   - oc get secret ${DATABASE_HOST} ||
     oc create secret generic ${DATABASE_HOST}
       --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}
       --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}
       --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
+  {%- endif %}
 
 .deploy:
   stage: deploy
@@ -118,9 +126,11 @@ stages:
     kustomize edit add label "app:${LABEL}" &&
     kustomize build | oc apply -f - &&
     popd
+  {%- if cookiecutter.database != '(none)' %}
   - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&
     kustomize edit set namesuffix -- "${SUFFIX}" &&
     kustomize edit add label "app:${LABEL}" &&
     kustomize build | oc apply -f - &&
     popd
+  {%- endif %}
 {%- endif %}

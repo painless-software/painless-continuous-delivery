@@ -2,8 +2,6 @@
 Tests for generating a continuous integration setup.
 """
 from helpers import (  # noqa, pylint: disable=unused-import
-    dedent,
-    indent2,
     pytest_generate_tests,
     verify_file_matches_repo_root,
 )
@@ -21,6 +19,8 @@ class TestCISetup:
             'vcs_account': 'painless-software',
             'vcs_platform': 'Bitbucket.org',
             'ci_service': 'bitbucket-pipelines.yml',
+            'framework': 'Django',
+            'database': 'Postgres',
             'checks': 'flake8,pylint,bandit,kubernetes',
             'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
@@ -62,8 +62,6 @@ class TestCISetup:
                 '      pushd deployment/application/base &&',
                 '      pushd deployment/application/overlays/'
                 '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
-                '      pushd deployment/database/overlays/'
-                '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
                 '      popd',
                 '      kustomize edit set image IMAGE="docker-registry.'
                 'default.svc:5000/${TARGET}/myproject:${IMAGE_TAG}" &&',
@@ -77,13 +75,34 @@ class TestCISetup:
                 '        SUFFIX=-production',
                 '      - IMAGE_TAG=${BITBUCKET_COMMIT}',
                 '      - IMAGE_TAG=${BITBUCKET_TAG}',
+                '      DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)',  # noqa
+                '      DATABASE_HOST=${DATABASE_HOST:-postgres${SUFFIX}}',
+                '      DATABASE_NAME=myproject',
+                '      DATABASE_USER=myproject',
+                '        --from-literal=DJANGO_DATABASE_URL=postgres://'
+                '${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}',  # noqa
+                '    - &generate-secrets-db',
+                '      oc get secret ${DATABASE_HOST} ||',
+                '      oc create secret generic ${DATABASE_HOST}',
+                '        --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}',
+                '        --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}',
+                '        --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}',  # noqa
+                '    - &cloud-apply-db',
+                '      pushd deployment/database/overlays/'
+                '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
+                '      popd',
+                '      - *generate-secrets-db',
+                '      - *cloud-apply-db',
             ],
+            'absent_content': [],
         }),
         ('bitbucket-dedicated', {
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'Bitbucket.org',
             'ci_service': 'bitbucket-pipelines.yml',
+            'framework': 'Django',
+            'database': 'Postgres',
             'checks': 'flake8,pylint,bandit,kubernetes',
             'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
@@ -125,8 +144,6 @@ class TestCISetup:
                 '      pushd deployment/application/base &&',
                 '      pushd deployment/application/overlays/'
                 '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
-                '      pushd deployment/database/overlays/'
-                '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
                 '      popd',
                 '      kustomize edit set image IMAGE="docker-registry.'
                 'default.svc:5000/${TARGET}/myproject:${IMAGE_TAG}" &&',
@@ -142,6 +159,43 @@ class TestCISetup:
                 '        SUFFIX=-review-pr${BITBUCKET_PR_ID}',
                 '      - IMAGE_TAG=${BITBUCKET_COMMIT}',
                 '      - IMAGE_TAG=${BITBUCKET_TAG}',
+                '      DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)',  # noqa
+                '      DATABASE_HOST=${DATABASE_HOST:-postgres${SUFFIX}}',
+                '      DATABASE_NAME=myproject',
+                '      DATABASE_USER=myproject',
+                '        --from-literal=DJANGO_DATABASE_URL=postgres://'
+                '${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}',  # noqa
+                '    - &generate-secrets-db',
+                '      oc get secret ${DATABASE_HOST} ||',
+                '      oc create secret generic ${DATABASE_HOST}',
+                '        --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}',
+                '        --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}',
+                '        --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}',  # noqa
+                '    - &cloud-apply-db',
+                '      pushd deployment/database/overlays/'
+                '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
+                '      - *generate-secrets-db',
+                '      - *cloud-apply-db',
+            ],
+            'absent_content': [],
+        }),
+        ('bitbucket-no-db', {
+            'project_slug': 'myproject',
+            'vcs_account': 'painless-software',
+            'vcs_platform': 'Bitbucket.org',
+            'ci_service': 'bitbucket-pipelines.yml',
+            'framework': 'Flask',
+            'database': '(none)',
+            'checks': 'kubernetes',
+            'tests': 'py38,behave',
+            'cloud_platform': 'APPUiO',
+            'environment_strategy': 'shared',
+            'required_lines': [],
+            'absent_content': [
+                'DATABASE_',
+                'generate-secrets-db',
+                'cloud-apply-db',
+                'database',
             ],
         }),
         ('codeship', {
@@ -149,6 +203,8 @@ class TestCISetup:
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitHub.com',
             'ci_service': 'codeship-steps.yml',
+            'framework': 'Django',
+            'database': 'Postgres',
             'checks': 'flake8,pylint,bandit',
             'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
@@ -156,12 +212,15 @@ class TestCISetup:
             'required_lines': [
                 '  service: app',
             ],
+            'absent_content': [],
         }),
         ('gitlab-shared', {
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitLab.com',
             'ci_service': '.gitlab-ci.yml',
+            'framework': 'Django',
+            'database': 'Postgres',
             'checks': 'flake8,pylint,bandit',
             'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
@@ -183,7 +242,6 @@ class TestCISetup:
                 '    LABEL: myproject-integration',
                 '    LABEL: myproject-production',
                 '    APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
-                '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',
                 '    IMAGE_TAG: ${CI_COMMIT_SHA}',
                 '    IMAGE_TAG: ${CI_COMMIT_TAG}',
                 '    GIT_STRATEGY: clone',
@@ -205,13 +263,29 @@ class TestCISetup:
                 'stop_review:',
                 '  - oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}',  # noqa
                 '    auto_stop_in: 18 hours',
+                '    DATABASE_HOST: postgres-${CI_ENVIRONMENT_NAME}',
+                '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',
+                '    DATABASE_NAME: myproject',
+                '    DATABASE_USER: myproject',
+                '  - export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)',  # noqa
+                '      --from-literal=DJANGO_DATABASE_URL=postgres://'
+                '${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}',  # noqa
+                '  - oc get secret ${DATABASE_HOST} ||',
+                '    oc create secret generic ${DATABASE_HOST}',
+                '      --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}',
+                '      --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}',
+                '      --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}',  # noqa
+                '  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
             ],
+            'absent_content': [],
         }),
         ('gitlab-dedicated', {
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitLab.com',
             'ci_service': '.gitlab-ci.yml',
+            'framework': 'Django',
+            'database': 'Postgres',
             'checks': 'flake8,pylint,bandit',
             'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
@@ -229,7 +303,6 @@ class TestCISetup:
                 '    LABEL: myproject',
                 '    LABEL: myproject-review-mr${CI_MERGE_REQUEST_IID}',
                 '    APPLICATION: application-review-mr${CI_MERGE_REQUEST_IID}',  # noqa
-                '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',
                 '    IMAGE_TAG: ${CI_COMMIT_SHA}',
                 '    IMAGE_TAG: ${CI_COMMIT_TAG}',
                 '    GIT_STRATEGY: clone',
@@ -243,7 +316,6 @@ class TestCISetup:
                 '  - seiso image orphans myproject --delete',
                 '  - pushd deployment/application/base &&',
                 '  - pushd deployment/application/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
-                '  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
                 '    kustomize edit set image IMAGE="docker-registry.'
                 'default.svc:5000/${TARGET}/myproject:${IMAGE_TAG}" &&',
                 '    kustomize edit set namesuffix -- "${SUFFIX}" &&',
@@ -253,6 +325,37 @@ class TestCISetup:
                 'stop_review:',
                 '  - oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}',  # noqa
                 '    auto_stop_in: 18 hours',
+                '    DATABASE_HOST: postgres',
+                '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',
+                '    DATABASE_NAME: myproject',
+                '    DATABASE_USER: myproject',
+                '  - export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)',  # noqa
+                '      --from-literal=DJANGO_DATABASE_URL=postgres://'
+                '${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}',  # noqa
+                '  - oc get secret ${DATABASE_HOST} ||',
+                '    oc create secret generic ${DATABASE_HOST}',
+                '      --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}',
+                '      --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}',
+                '      --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}',  # noqa
+                '  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
+            ],
+            'absent_content': [],
+        }),
+        ('gitlab-no-db', {
+            'project_slug': 'myproject',
+            'vcs_account': 'painless-software',
+            'vcs_platform': 'GitLab.com',
+            'ci_service': '.gitlab-ci.yml',
+            'framework': 'Flask',
+            'database': '(none)',
+            'checks': 'kubernetes',
+            'tests': 'py38,behave',
+            'cloud_platform': 'APPUiO',
+            'environment_strategy': 'shared',
+            'required_lines': [],
+            'absent_content': [
+                'DATABASE_',
+                'database',
             ],
         }),
         ('shippable', {
@@ -260,6 +363,8 @@ class TestCISetup:
             'vcs_account': 'painless-software',
             'vcs_platform': 'Bitbucket.org',
             'ci_service': 'shippable.yml',
+            'framework': 'Django',
+            'database': 'Postgres',
             'checks': 'flake8,pylint,bandit',
             'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
@@ -267,12 +372,15 @@ class TestCISetup:
             'required_lines': [
                 '  - tox',
             ],
+            'absent_content': [],
         }),
         ('travis', {
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitHub.com',
             'ci_service': '.travis.yml',
+            'framework': 'Django',
+            'database': 'Postgres',
             'checks': 'flake8,pylint,bandit',
             'tests': 'py36,py37,py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
@@ -280,13 +388,15 @@ class TestCISetup:
             'required_lines': [
                 'script: tox',
             ],
+            'absent_content': [],
         }),
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
     def test_ci_setup(self, cookies, project_slug, vcs_account, vcs_platform,
-                      ci_service, checks, tests, cloud_platform,
-                      environment_strategy, required_lines):
+                      ci_service, framework, database, checks, tests,
+                      cloud_platform, environment_strategy, required_lines,
+                      absent_content):
         """
         Generate a CI setup with specific settings and verify it is complete.
         """
@@ -295,10 +405,10 @@ class TestCISetup:
             'vcs_platform': vcs_platform,
             'vcs_account': vcs_account,
             'ci_service': ci_service,
+            'framework': framework,
+            'database': database,
             'checks': checks,
             'tests': tests,
-            'framework': 'Django',
-            'database': 'Postgres',
             'cloud_platform': cloud_platform,
             'environment_strategy': environment_strategy,
         })
@@ -311,12 +421,17 @@ class TestCISetup:
         assert result.project.join('README.rst').isfile()
 
         ci_service_conf = result.project.join(ci_service).readlines(cr=False)
-        assert '\n\n\n' not in '\n'.join(ci_service_conf), \
+        ci_service_content = '\n'.join(ci_service_conf)
+        assert '\n\n\n' not in ci_service_content, \
             "Excessive newlines in CI configuration."
 
         for line in required_lines:
-            assert line in ci_service_conf, "Not found in CI config: " \
-                "'%s'\n%s" % (line, '\n'.join(ci_service_conf))
+            assert line in ci_service_conf, \
+                "Not found in CI config: '%s'\n%s" % (line, ci_service_content)
+
+        for chunk in absent_content:
+            assert chunk not in ci_service_content, \
+                "Found in CI config: '%s'\n%s" % (chunk, ci_service_content)
 
         codeship_services = result.project.join('codeship-services.yml')
         assert (ci_service == 'codeship-steps.yml' and
