@@ -1,7 +1,7 @@
 """
 Tests for the GitOps deployment strategy.
 """
-from helpers import (  # noqa, pylint: disable=unused-import
+from helpers import (  # noqa, pylint: disable=no-name-in-module,unused-import
     dedent,
     indent2,
     pytest_generate_tests,

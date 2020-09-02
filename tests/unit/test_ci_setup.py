@@ -1,7 +1,7 @@
 """
 Tests for generating a continuous integration setup.
 """
-from helpers import (  # noqa, pylint: disable=unused-import
+from helpers import (  # noqa, pylint: disable=no-name-in-module,unused-import
     pytest_generate_tests,
     verify_file_matches_repo_root,
 )
@@ -75,7 +75,8 @@ class TestCISetup:
                 '        SUFFIX=-production',
                 '      - IMAGE_TAG=${BITBUCKET_COMMIT}',
                 '      - IMAGE_TAG=${BITBUCKET_TAG}',
-                '      DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)',  # noqa
+                '      DATABASE_PASSWORD=$(cat /dev/urandom '
+                '| tr -dc A-Za-z0-9 | head -c16)',
                 '      DATABASE_HOST=${DATABASE_HOST:-postgres${SUFFIX}}',
                 '      DATABASE_NAME=myproject',
                 '      DATABASE_USER=myproject',
@@ -159,7 +160,8 @@ class TestCISetup:
                 '        SUFFIX=-review-pr${BITBUCKET_PR_ID}',
                 '      - IMAGE_TAG=${BITBUCKET_COMMIT}',
                 '      - IMAGE_TAG=${BITBUCKET_TAG}',
-                '      DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)',  # noqa
+                '      DATABASE_PASSWORD=$(cat /dev/urandom '
+                '| tr -dc A-Za-z0-9 | head -c16)',
                 '      DATABASE_HOST=${DATABASE_HOST:-postgres${SUFFIX}}',
                 '      DATABASE_NAME=myproject',
                 '      DATABASE_USER=myproject',
@@ -267,7 +269,8 @@ class TestCISetup:
                 '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',
                 '    DATABASE_NAME: myproject',
                 '    DATABASE_USER: myproject',
-                '  - export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)',  # noqa
+                '  - export DATABASE_PASSWORD=$(cat /dev/urandom '
+                '| tr -dc A-Za-z0-9 | head -c16)',
                 '      --from-literal=DJANGO_DATABASE_URL=postgres://'
                 '${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}',  # noqa
                 '  - oc get secret ${DATABASE_HOST} ||',
@@ -329,7 +332,8 @@ class TestCISetup:
                 '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',
                 '    DATABASE_NAME: myproject',
                 '    DATABASE_USER: myproject',
-                '  - export DATABASE_PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c16)',  # noqa
+                '  - export DATABASE_PASSWORD=$(cat /dev/urandom '
+                '| tr -dc A-Za-z0-9 | head -c16)',
                 '      --from-literal=DJANGO_DATABASE_URL=postgres://'
                 '${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}',  # noqa
                 '  - oc get secret ${DATABASE_HOST} ||',
