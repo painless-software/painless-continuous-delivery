@@ -10,6 +10,7 @@ spec:
       labels:
         name: application
     spec:
+      {%- if cookiecutter.database != '(none)' %}
       initContainers:
       - name: wait-for-database
         image: IMAGE
@@ -23,6 +24,7 @@ spec:
             name: application
         - secretRef:
             name: application
+      {%- endif %}
       containers:
       - name: {{ cookiecutter.framework|lower }}
         image: IMAGE
