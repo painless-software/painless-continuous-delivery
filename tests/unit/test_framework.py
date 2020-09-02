@@ -3,7 +3,7 @@ Tests for generating a Web framework project.
 """
 from os import system
 
-from helpers import (  # noqa, pylint: disable=no-name-in-module,unused-import
+from .helpers import (  # noqa, pylint: disable=unused-import
     pytest_generate_tests,
 )
 
