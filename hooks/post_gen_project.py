@@ -102,6 +102,19 @@ def prune_cronjob_style():
         shutil.rmtree(base_path / 'cronjob')
 
 
+def prune_route_or_ingress():
+    """
+    Based on selected target cloud platform, remove the other unneeded files.
+    """
+    base_path = Path('deployment') / 'application' / 'base'
+
+    if '{{ cookiecutter.cloud_platform }}' in ['APPUiO']:
+        (base_path / 'ingress.yaml').unlink()
+    else:
+        (base_path / 'route.yaml').unlink()
+        (base_path / 'route-crd.yaml').unlink()
+
+
 def flatten_folder_structure(folder, technology):
     """
     Integrate content from subfolders with special meaning (underscore
@@ -134,6 +147,7 @@ def set_up_deployment():
 
     LOG.info('Set up deployment configuration for %s project ...', framework)
     prune_cronjob_style()
+    prune_route_or_ingress()
     flatten_folder_structure(deployment, technology)
 
 

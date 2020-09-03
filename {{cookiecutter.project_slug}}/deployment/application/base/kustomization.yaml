@@ -10,14 +10,21 @@ configMapGenerator:
 bases:
 - cronjob
 {%- endif %}
+{%- if cookiecutter.cloud_platform in ['APPUiO'] %}
 crds:
 - route-crd.yaml
+{%- endif %}
 resources:
 {%- if cookiecutter.cronjobs == 'simple' %}
 - cronjob.yaml
 {%- endif %}
 - deployment.yaml
+{%- if cookiecutter.cloud_platform not in ['APPUiO'] %}
+- ingress.yaml
+{%- endif %}
 - rolebinding.yaml
+{%- if cookiecutter.cloud_platform in ['APPUiO'] %}
 - route.yaml
+{%- endif %}
 - secret.yaml
 - service.yaml
