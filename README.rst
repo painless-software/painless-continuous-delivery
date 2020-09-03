@@ -31,7 +31,8 @@ Supported Technologies and Services
 ..                   GitLab CI  - |gitlab-ci|
 ..                   Shippable  - |shippable|
 ..                   Travis CI  - |travis-ci|
-**App Platforms**    APPUiO (OpenShift, Kubernetes)
+**App Platforms**    APPUiO (OpenShift)
+                     Rancher (Kubernetes)
 ==================== =========================================================
 
 

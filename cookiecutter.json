@@ -29,7 +29,8 @@
     ],
     "cloud_platform": [
         "(none)",
-        "APPUiO"
+        "APPUiO",
+        "Rancher"
     ],
     "cloud_account": "platform-username",
     "cloud_project": "{{ cookiecutter.project_slug }}",
