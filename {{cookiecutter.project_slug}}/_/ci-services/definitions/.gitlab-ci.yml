@@ -56,8 +56,10 @@ stages:
 
 {% if cookiecutter.deployment_strategy == 'gitops' -%}
 .tag-image:
-  extends: .build
   stage: deploy
+  extends: .build
+  environment:
+    url: "${KUBE_URL}/console/project/{{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}/browse/images"
   script:
   - docker tag "${IMAGE}:${CI_COMMIT_SHA}" "${IMAGE}:${IMAGE_TAG}"
   - docker push "${IMAGE}"
