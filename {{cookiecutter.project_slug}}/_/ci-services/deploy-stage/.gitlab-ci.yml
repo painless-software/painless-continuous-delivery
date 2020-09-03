@@ -32,7 +32,7 @@ review:
   environment:
     name: development
     on_stop: stop_review
-    auto_stop_in: 18 hours
+    auto_stop_in: 12 hours
   variables:
     SUFFIX: -review-mr${CI_MERGE_REQUEST_IID}
     LABEL: {{ cookiecutter.project_slug }}-review-mr${CI_MERGE_REQUEST_IID}

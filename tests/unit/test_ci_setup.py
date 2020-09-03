@@ -264,7 +264,7 @@ class TestCISetup:
                 '    popd',
                 'stop_review:',
                 '  - oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}',  # noqa
-                '    auto_stop_in: 18 hours',
+                '    auto_stop_in: 12 hours',
                 '    DATABASE_HOST: postgres-${CI_ENVIRONMENT_NAME}',
                 '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',
                 '    DATABASE_NAME: myproject',
@@ -327,7 +327,7 @@ class TestCISetup:
                 '    popd',
                 'stop_review:',
                 '  - oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}',  # noqa
-                '    auto_stop_in: 18 hours',
+                '    auto_stop_in: 12 hours',
                 '    DATABASE_HOST: postgres',
                 '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',
                 '    DATABASE_NAME: myproject',
