@@ -64,8 +64,8 @@ def step_impl(context):
         'ConfigMap',
         'CronJob',
         'Deployment',
+        'Ingress',
         'RoleBinding',
-        'Route',
         'Secret',
         'Service',
     ]
