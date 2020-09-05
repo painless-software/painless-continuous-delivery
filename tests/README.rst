@@ -39,7 +39,7 @@ Use the ``tox`` command in the terminal to run your tests locally:
 
     # run a specific set of tests (one or several)
     tox -e py37
-    tox -e flake8,py37
+    tox -e flake8,pylint
 
 .. code-block:: console
 
@@ -57,7 +57,8 @@ Examples:
 
 .. code-block:: console
 
-    tox -e py36 -- -vv --exitfirst
+    tox -e py38 -- -vv --exitfirst
+    tox -e behave -- --stop
     tox -e behave -- --format=pretty
     tox -e behave -- --tags=-docker
     tox -e flake8 -- --help
