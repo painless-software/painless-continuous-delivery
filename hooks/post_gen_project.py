@@ -113,6 +113,7 @@ def prune_route_or_ingress():
     else:
         (base_path / 'route.yaml').unlink()
         (base_path / 'route-crd.yaml').unlink()
+        (base_path.parent / 'overlays' / 'production' / 'route.yaml').unlink()
 
 
 def flatten_folder_structure(folder, technology):
