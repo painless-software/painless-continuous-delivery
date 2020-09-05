@@ -2,6 +2,7 @@
 Tests for generating a deployment configuration.
 """
 from .helpers import (  # noqa, pylint: disable=unused-import
+    dedent,
     pytest_generate_tests,
 )
 
@@ -13,26 +14,71 @@ class TestDeployment:
     cookiecutter, executed several times with different values (test
     scenarios).
     """
+
     scenarios = [
         ('dedicated', {
             'framework': 'Django',
             'database': 'Postgres',
             'vcs_platform': 'GitLab.com',
-            'cloud_platform': '(none)',
+            'cloud_platform': 'APPUiO',
             'strategy': 'dedicated',
             'cronjobs': '(none)',
             'production_domain': 'mydomain.com',
             'files_present': [
-                'application/base',
-                'application/overlays/development',
-                'application/overlays/integration',
-                'application/overlays/production',
+                'application/base/kustomization.yaml',
+                'application/base/route.yaml',
+                'application/overlays/development/kustomization.yaml',
+                'application/overlays/integration/kustomization.yaml',
+                'application/overlays/production/kustomization.yaml',
+                'application/overlays/production/route.yaml',
                 'database/base',
-                'database/overlays/development',
-                'database/overlays/integration',
-                'database/overlays/production',
+                'database/overlays/development/kustomization.yaml',
+                'database/overlays/integration/kustomization.yaml',
+                'database/overlays/production/kustomization.yaml',
             ],
             'files_absent': [],
+            'required_content': [
+                ('application/overlays/production/route.yaml', [
+                    dedent("""
+                    spec:
+                      host: mydomain.com
+                    """)
+                ]),
+                ('application/base/route.yaml', ['  name: myproject']),
+                ('application/base/kustomization.yaml', [
+                    'configMapGenerator:',
+                    dedent("""
+                    commonLabels:
+                      component: application
+                    """)
+                ]),
+                ('application/overlays/development/kustomization.yaml', [
+                    'configMapGenerator:',
+                    dedent("""
+                    commonAnnotations:
+                      app.gitlab.com/app: company-or-username-myproject
+                      app.gitlab.com/env: development
+                    """),
+                ]),
+                ('application/overlays/integration/kustomization.yaml', [
+                    'configMapGenerator:',
+                    dedent("""
+                    commonAnnotations:
+                      app.gitlab.com/app: company-or-username-myproject
+                      app.gitlab.com/env: integration
+                    """),
+                ]),
+                ('application/overlays/production/kustomization.yaml', [
+                    'configMapGenerator:',
+                    dedent("""
+                    commonAnnotations:
+                      app.gitlab.com/app: company-or-username-myproject
+                      app.gitlab.com/env: production
+                    """),
+                    '- route.yaml',
+                ]),
+            ],
+            'absent_content': [],
         }),
         ('shared', {
             'framework': 'Symfony',
@@ -43,12 +89,46 @@ class TestDeployment:
             'cronjobs': '(none)',
             'production_domain': '(automatic)',
             'files_present': [
-                'application/base',
-                'application/overlays',
-                'database/base',
-                'database/overlays',
+                'application/base/kustomization.yaml',
+                'application/overlays/development/kustomization.yaml',
+                'application/overlays/integration/kustomization.yaml',
+                'application/overlays/production/kustomization.yaml',
+                'database/base/kustomization.yaml',
+                'database/overlays/development/kustomization.yaml',
+                'database/overlays/integration/kustomization.yaml',
+                'database/overlays/production/kustomization.yaml',
             ],
             'files_absent': [],
+            'required_content': [
+                ('application/base/kustomization.yaml', [
+                    'configMapGenerator:',
+                    dedent("""
+                    commonLabels:
+                      component: application
+                    """)
+                ]),
+                ('application/overlays/development/kustomization.yaml', [
+                    'configMapGenerator:']),
+                ('application/overlays/integration/kustomization.yaml', [
+                    'configMapGenerator:']),
+                ('application/overlays/production/kustomization.yaml', [
+                    'configMapGenerator:']),
+            ],
+            'absent_content': [
+                ('application/overlays/development/kustomization.yaml', [
+                    'app.gitlab.com/app: company-or-username-myproject',
+                    'app.gitlab.com/env: development',
+                ]),
+                ('application/overlays/integration/kustomization.yaml', [
+                    'app.gitlab.com/app: company-or-username-myproject',
+                    'app.gitlab.com/env: integration',
+                ]),
+                ('application/overlays/production/kustomization.yaml', [
+                    'app.gitlab.com/app: company-or-username-myproject',
+                    'app.gitlab.com/env: production',
+                    '- route.yaml',
+                ]),
+            ],
         }),
         ('no_cronjobs', {
             'framework': 'Flask',
@@ -66,6 +146,22 @@ class TestDeployment:
                 'application/base/cronjob',
                 'application/base/cronjob.yaml',
             ],
+            'required_content': [
+                ('application/base/kustomization.yaml', [
+                    'configMapGenerator:',
+                    dedent("""
+                    commonLabels:
+                      component: application
+                    """)
+                ]),
+                ('application/overlays/development/kustomization.yaml', [
+                    'configMapGenerator:']),
+                ('application/overlays/integration/kustomization.yaml', [
+                    'configMapGenerator:']),
+                ('application/overlays/production/kustomization.yaml', [
+                    'configMapGenerator:']),
+            ],
+            'absent_content': [],
         }),
         ('simple_cronjob', {
             'framework': 'SpringBoot',
@@ -82,6 +178,8 @@ class TestDeployment:
             'files_absent': [
                 'application/base/cronjob',
             ],
+            'required_content': [],
+            'absent_content': [],
         }),
         ('complex_cronjobs', {
             'framework': 'Flask',
@@ -98,6 +196,8 @@ class TestDeployment:
             'files_absent': [
                 'application/base/cronjob.yaml',
             ],
+            'required_content': [],
+            'absent_content': [],
         }),
         ('no_database', {
             'framework': 'SpringBoot',
@@ -113,7 +213,14 @@ class TestDeployment:
             'files_absent': [
                 'application/base/cronjob.yaml',
                 'application/base/cronjob',
+                'application/overlays/production/route.yaml',
                 'database',
+            ],
+            'required_content': [],
+            'absent_content': [
+                ('application/overlays/production/kustomization.yaml', [
+                    '- route.yaml',
+                ]),
             ],
         }),
         ('APPUiO', {
@@ -135,6 +242,40 @@ class TestDeployment:
                 'application/base/ingress.yaml',
                 'database',
             ],
+            'required_content': [
+                ('application/base/route.yaml', [
+                    dedent("""\
+                    apiVersion: v1
+                    kind: Route
+                    metadata:
+                      name: myproject
+                    spec:
+                      port:
+                        targetPort: http
+                      tls:
+                        insecureEdgeTerminationPolicy: Redirect
+                        termination: edge
+                      to:
+                        kind: Service
+                        name: application
+                    """),
+                ]),
+                ('application/base/route-crd.yaml', [
+                    dedent("""
+                      metadata:
+                        $ref: k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta
+                      spec:
+                        $ref: github.com/appuio/route.openshift.io.v1.RouteSpec
+                github.com/appuio/route.openshift.io.v1.RouteSpec:
+                  Schema:
+                    properties:
+                      to:
+                        x-kubernetes-object-ref-api-version: v1
+                        x-kubernetes-object-ref-kind: Service
+                    """),
+                ]),
+            ],
+            'absent_content': [],
         }),
         ('Rancher', {
             'framework': 'SpringBoot',
@@ -153,16 +294,42 @@ class TestDeployment:
             'files_absent': [
                 'application/base/route.yaml',
                 'application/base/route-crd.yaml',
+                'application/overlays/production/route.yaml',
                 'database',
+            ],
+            'required_content': [
+                ('application/base/ingress.yaml', [
+                    dedent("""\
+                    apiVersion: networking.k8s.io/v1
+                    kind: Ingress
+                    metadata:
+                      name: myproject
+                    spec:
+                      port:
+                        targetPort: http
+                      tls:
+                        insecureEdgeTerminationPolicy: Redirect
+                        termination: edge
+                      to:
+                        kind: Service
+                        name: application
+                    """),
+                ]),
+                ('application/base/ingress.yaml', ['  name: myproject']),
+            ],
+            'absent_content': [
+                ('application/overlays/production/kustomization.yaml', [
+                    '- route.yaml',
+                ]),
             ],
         }),
     ]
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-locals
     def test_deploy_config(
             self, cookies, framework, database, vcs_platform, cloud_platform,
             strategy, cronjobs, production_domain, files_present,
-            files_absent):
+            files_absent, required_content, absent_content):
         """
         Generate a deployment configuration and verify it is complete.
         """
@@ -200,15 +367,27 @@ class TestDeployment:
 
         self.verify_app_folders_exist()
         self.read_app_deployment_configs()
-        self.ensure_app_configmaps()
 
         if self.database != '(none)':
             self.verify_db_folders_exist()
             self.read_db_deployment_configs()
             self.ensure_db_app_stay_aligned()
 
-        self.verify_gitlab_annotations()
-        # self.verify_route_setup()
+        for filename, chunks in required_content:
+            file_content = \
+                result.project.join('deployment').join(filename).read()
+            for chunk in chunks:
+                assert chunk in file_content, \
+                    'Not found in generated file %s:\n"%s"\n' \
+                    '-----------\n%s' % (filename, chunk, file_content)
+
+        for filename, chunks in absent_content:
+            file_content = \
+                result.project.join('deployment').join(filename).read()
+            for chunk in chunks:
+                assert chunk not in file_content, \
+                    'Found in file %s, but should not be present:\n"%s"\n' \
+                    '-----------\n%s' % (filename, chunk, file_content)
 
     def verify_app_folders_exist(self):
         """
@@ -270,15 +449,6 @@ class TestDeployment:
         self.db_production_kustomize = \
             self.db_production.join('kustomization.yaml').readlines(cr=False)
 
-    def ensure_app_configmaps(self):
-        """
-        Verify deployment configuration of application.
-        """
-        assert 'configMapGenerator:' in self.app_base_kustomize
-        assert 'configMapGenerator:' in self.app_development_kustomize
-        assert 'configMapGenerator:' in self.app_integration_kustomize
-        assert 'configMapGenerator:' in self.app_production_kustomize
-
     def ensure_db_app_stay_aligned(self):
         """
         Ensure that the top of the kustomization setups stays aligned
@@ -293,62 +463,3 @@ class TestDeployment:
             self.db_integration_kustomize[:identical_lines]
         assert self.app_production_kustomize[:identical_lines] == \
             self.db_production_kustomize[:identical_lines]
-
-    def verify_gitlab_annotations(self):
-        """
-        Make sure GitLab annotations are absent or present.
-        """
-        should_be_present = (self.vcs_platform == 'GitLab.com')
-        message = 'GitLab annotations should be %s for %s\n-------\n{}' % (
-            'present' if should_be_present else 'absent',
-            self.vcs_platform,
-        )
-
-        kustomize_dev = '\n'.join(self.app_development_kustomize)
-        kustomize_int = '\n'.join(self.app_integration_kustomize)
-        kustomize_prod = '\n'.join(self.app_production_kustomize)
-        assert (
-            'commonAnnotations:\n'
-            '  app.gitlab.com/app: company-or-username-myproject\n'
-            '  app.gitlab.com/env: development\n' in kustomize_dev
-            ) is should_be_present, \
-            message.format(kustomize_dev)
-
-        assert (
-            'commonAnnotations:\n'
-            '  app.gitlab.com/app: company-or-username-myproject\n'
-            '  app.gitlab.com/env: integration\n' in kustomize_int
-            ) is should_be_present, \
-            message.format(kustomize_int)
-
-        assert (
-            'commonAnnotations:\n'
-            '  app.gitlab.com/app: company-or-username-myproject\n'
-            '  app.gitlab.com/env: production\n' in kustomize_prod
-            ) is should_be_present, \
-            message.format(kustomize_prod)
-
-    def verify_route_setup(self):
-        """
-        Make sure certain files contain what they should
-        """
-        app_base_route = \
-            self.app_base.join('route.yaml').readlines(cr=False)
-        app_prod_route_manifest = \
-            self.app_production.join('route.yaml').read()
-        spec_pattern = '\nspec:\n  host: %s\n'
-        custom_domain = None if self.production_domain == '(automatic)' \
-            else self.production_domain
-
-        assert '  name: myproject' in app_base_route
-
-        if custom_domain:
-            assert spec_pattern % custom_domain in app_prod_route_manifest, \
-                "Host %s not found in Production route manifest:\n" \
-                "%s" % (custom_domain, app_prod_route_manifest)
-            assert '- route.yaml' in self.app_production_kustomize, \
-                "route.yaml not included in Kustomize production config:\n" \
-                "%s" % '\n'.join(self.app_production_kustomize)
-        else:
-            assert '- route.yaml' not in self.app_production_kustomize, \
-                "route.yaml is included in Kustomize production config!"
