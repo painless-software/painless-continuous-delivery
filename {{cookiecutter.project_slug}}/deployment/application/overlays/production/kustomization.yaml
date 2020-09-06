@@ -18,5 +18,9 @@ resources:
 patchesStrategicMerge:
 - deployment.yaml
 {%- if cookiecutter.production_domain != '(automatic)' %}
+  {%- if cookiecutter.cloud_platform in ['APPUiO'] %}
 - route.yaml
+  {%- elif cookiecutter.cloud_platform in ['Rancher'] %}
+- ingress.yaml
+  {%- endif %}
 {%- endif %}
