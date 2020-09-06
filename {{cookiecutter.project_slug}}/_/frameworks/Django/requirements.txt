@@ -16,7 +16,7 @@ mysql-connector==2.2.9    # via -r requirements.in{% endif %}
 {%- if cookiecutter.monitoring == 'NewRelic' %}
 newrelic==5.18.0.148      # via -r requirements.in{% endif %}
 {%- if cookiecutter.database == 'Postgres' %}
-psycopg2==2.8.5           # via -r requirements.in{% endif %}
+psycopg2==2.8.6           # via -r requirements.in{% endif %}
 pytz==2020.1              # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
 sentry-sdk==0.17.4        # via -r requirements.in{% endif %}
