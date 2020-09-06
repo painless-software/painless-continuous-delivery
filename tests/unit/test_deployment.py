@@ -230,16 +230,18 @@ class TestDeployment:
             'cloud_platform': 'APPUiO',
             'strategy': 'shared',
             'cronjobs': '(none)',
-            'production_domain': '(automatic)',
+            'production_domain': 'appuio.example.com',
             'files_present': [
                 'application/base/route.yaml',
                 'application/base/route-crd.yaml',
+                'application/overlays/production/route.yaml',
                 'application/overlays/development',
                 'application/overlays/integration',
                 'application/overlays/production',
             ],
             'files_absent': [
                 'application/base/ingress.yaml',
+                'application/overlays/production/ingress.yaml',
                 'database',
             ],
             'required_content': [
@@ -275,7 +277,11 @@ class TestDeployment:
                     """),
                 ]),
             ],
-            'absent_content': [],
+            'absent_content': [
+                ('application/overlays/production/kustomization.yaml', [
+                    '- ingress.yaml',
+                ]),
+            ],
         }),
         ('Rancher', {
             'framework': 'SpringBoot',
@@ -284,9 +290,10 @@ class TestDeployment:
             'cloud_platform': 'Rancher',
             'strategy': 'shared',
             'cronjobs': '(none)',
-            'production_domain': '(automatic)',
+            'production_domain': 'rancher.example.com',
             'files_present': [
                 'application/base/ingress.yaml',
+                'application/overlays/production/ingress.yaml',
                 'application/overlays/development',
                 'application/overlays/integration',
                 'application/overlays/production',

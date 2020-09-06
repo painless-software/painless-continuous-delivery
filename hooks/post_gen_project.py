@@ -106,14 +106,17 @@ def prune_route_or_ingress():
     """
     Based on selected target cloud platform, remove the other unneeded files.
     """
-    base_path = Path('deployment') / 'application' / 'base'
+    app_manifests = Path('deployment') / 'application'
+    base_path = app_manifests / 'base'
+    production_path = app_manifests / 'overlays' / 'production'
 
     if '{{ cookiecutter.cloud_platform }}' in ['APPUiO']:
         (base_path / 'ingress.yaml').unlink()
+        (production_path / 'ingress.yaml').unlink()
     else:
         (base_path / 'route.yaml').unlink()
         (base_path / 'route-crd.yaml').unlink()
-        (base_path.parent / 'overlays' / 'production' / 'route.yaml').unlink()
+        (production_path / 'route.yaml').unlink()
 
 
 def flatten_folder_structure(folder, technology):

@@ -1,0 +1,8 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/tls-acme: "true"
+  name: {{ cookiecutter.project_slug }}
+spec:
+  host: {{ cookiecutter.production_domain|replace('(automatic)', 'example.com') }}
