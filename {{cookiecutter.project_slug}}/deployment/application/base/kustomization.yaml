@@ -19,7 +19,7 @@ resources:
 - cronjob.yaml
 {%- endif %}
 - deployment.yaml
-{%- if cookiecutter.cloud_platform not in ['APPUiO'] %}
+{%- if cookiecutter.cloud_platform in ['Rancher'] %}
 - ingress.yaml
 {%- endif %}
 - rolebinding.yaml
