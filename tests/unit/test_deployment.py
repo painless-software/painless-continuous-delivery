@@ -213,12 +213,17 @@ class TestDeployment:
             'files_absent': [
                 'application/base/cronjob.yaml',
                 'application/base/cronjob',
+                'application/base/ingress.yaml',
+                'application/overlays/production/ingress.yaml',
+                'application/base/route.yaml',
+                'application/base/route-crd.yaml',
                 'application/overlays/production/route.yaml',
                 'database',
             ],
             'required_content': [],
             'absent_content': [
                 ('application/overlays/production/kustomization.yaml', [
+                    '- ingress.yaml',
                     '- route.yaml',
                 ]),
             ],
