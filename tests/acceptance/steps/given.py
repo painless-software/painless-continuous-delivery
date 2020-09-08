@@ -85,4 +85,5 @@ def step_impl(context):
             'project_slug': project_slug,
             'framework': 'Django',
             'cronjobs': 'complex',
+            'cloud_platform': 'Rancher',
         })
