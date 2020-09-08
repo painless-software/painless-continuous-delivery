@@ -48,7 +48,7 @@ stages:
     IMAGE: ${REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}
     TARGET: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
   before_script:
-  - docker login -u gitlab-ci -p ${KUBE_TOKEN} ${REGISTRY}
+  - docker login -u {{ cookiecutter.registry_user }} -p {% if cookiecutter.cloud_platform in ['APPUiO'] %}${KUBE_TOKEN}{% else %}${REGISTRY_PASSWORD}{% endif %} ${REGISTRY}
   - docker pull "${IMAGE}:latest" || true
   script:
   - docker build . -t "${IMAGE}:${CI_COMMIT_SHA}"

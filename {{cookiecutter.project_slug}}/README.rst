@@ -25,17 +25,21 @@ you're developing.  Log output will be displayed in the terminal, as usual.
 
 For running tests, linting, security checks, etc. see instructions in the
 `tests/ <tests/README.rst>`_ folder.
+{%- if cookiecutter.cloud_platform != '(none)' %}
 
-{% if cookiecutter.cloud_platform == 'APPUiO' -%}
 Initial Setup
 ^^^^^^^^^^^^^
 
 {% if cookiecutter.environment_strategy == 'dedicated' -%}
-#. Create a *production*, *integration* and *development* project at the
+#. Create a *production*, *integration* and *development* project
 {%- else -%}
-#. Create a project at the
+#. Create a project
 {%- endif %}
-   `VSHN Control Panel <https://control.vshn.net/openshift/projects/appuio%20public>`_.
+{%- if cookiecutter.cloud_platform in ['APPUiO'] %}
+   at the `VSHN Control Panel <https://control.vshn.net/openshift/projects/appuio%20public>`_.
+{%- elif cookiecutter.cloud_platform in ['Rancher'] %}
+   with Rancher.
+{%- endif %}
    For quota sizing consider roughly the sum of ``limits`` of all
    resources (must be strictly greater than the sum of ``requests``):
 
@@ -44,23 +48,26 @@ Initial Setup
         grep -A2 limits deployment/*/*/*yaml
         grep -A2 requests deployment/*/*/*yaml
 
+{% if cookiecutter.cloud_platform in ['APPUiO'] -%}
 #. With the commands below, create a service account from your terminal
    (logging in to your cluster first), grant permissions to push images
    and apply configurations, and get the service account's token value:
    (`APPUiO docs <https://docs.appuio.ch/en/latest/services/webserver/50_pushing_to_appuio.html>`_)
 
    .. code-block:: console
-{% set service_account = cookiecutter.ci_service|replace('.yml', '')|replace('.', '')|replace('-steps', '')|replace('travis', 'travis-ci') %}
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
-        oc -n {{ cookiecutter.cloud_project }}-production create sa {{ service_account }}
-        oc -n {{ cookiecutter.cloud_project }}-production policy add-role-to-user admin -z {{ service_account }}
-        oc -n {{ cookiecutter.cloud_project }}-production sa get-token {{ service_account }}
+{% if cookiecutter.environment_strategy == 'dedicated' %}
+        oc -n {{ cookiecutter.cloud_project }}-production create sa {{ cookiecutter.automation_user }}
+        oc -n {{ cookiecutter.cloud_project }}-production policy add-role-to-user admin -z {{ cookiecutter.automation_user }}
+        oc -n {{ cookiecutter.cloud_project }}-production sa get-token {{ cookiecutter.automation_user }}
 {%- else %}
-        oc -n {{ cookiecutter.cloud_project }} create sa {{ service_account }}
-        oc -n {{ cookiecutter.cloud_project }} policy add-role-to-user admin -z {{ service_account }}
-        oc -n {{ cookiecutter.cloud_project }} sa get-token {{ service_account }}
+        oc -n {{ cookiecutter.cloud_project }} create sa {{ cookiecutter.automation_user }}
+        oc -n {{ cookiecutter.cloud_project }} policy add-role-to-user admin -z {{ cookiecutter.automation_user }}
+        oc -n {{ cookiecutter.cloud_project }} sa get-token {{ cookiecutter.automation_user }}
 {%- endif %}
-{%- if service_account == 'bitbucket-pipelines' %}
+{% elif cookiecutter.cloud_platform in ['Rancher'] -%}
+#. Create a service account called "{{ cookiecutter.automation_user }}", determine its token.
+{%- endif %}
+{%- if cookiecutter.ci_service == 'bitbucket-pipelines.yml' %}
 
 #. Note down service account token and your cluster's URL, and
 
@@ -73,7 +80,8 @@ Initial Setup
      to integrate with your container platform:
 
      - ``KUBE_TOKEN``
-     - ``KUBE_URL``
+     - ``KUBE_URL``{% if cookiecutter.cloud_platform not in ['APPUiO'] %}
+     - ``REGISTRY_PASSWORD`` (for image registry account {{ cookiecutter.registry_user }}){% endif %}
 
 #. Rename the default deployment environments at
 
@@ -84,44 +92,52 @@ Initial Setup
 
    - *Test* ➜ *Development*
    - *Staging* ➜ *Integration*
-{%- elif service_account == 'gitlab-ci' %}
+{%- elif cookiecutter.ci_service == '.gitlab-ci.yml' %}
 
 #. Use the service account token to configure the
    `Kubernetes integration <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/clusters>`_
    of your GitLab project: (`GitLab docs <https://docs.gitlab.com/ee/user/project/clusters/>`_)
 
-   - Operations > Kubernetes > "APPUiO" > Kubernetes cluster details > Service Token
+   - Operations > Kubernetes > "{{ cookiecutter.cloud_platform }}" > Kubernetes cluster details > Service Token
 
    and ensure the following values are set in the cluster details:
 
    - RBAC-enabled cluster: *(checked)*
    - GitLab-managed cluster: *(unchecked)*
    - Project namespace: {% if cookiecutter.environment_strategy == 'shared' %}"{{ cookiecutter.cloud_project }}"{% else %}*(empty)*{% endif %}
+{%- if cookiecutter.cloud_platform not in ['APPUiO'] %}
+
+#. At `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`__
+   add the password for your "{{ cookiecutter.registry_user }}" account to allow the pipeline access your image registry with
+
+   - ``REGISTRY_PASSWORD``
+{%- endif %}
 {%- endif %}
 {%- if cookiecutter.environment_strategy == 'dedicated' %}
-
+{% if cookiecutter.cloud_platform in ['APPUiO'] %}
 #. Grant the service account permissions on the *development* and *integration*
    projects:
 
    .. code-block:: console
 
         oc -n {{ cookiecutter.cloud_project }}-integration policy add-role-to-user \
-          admin system:serviceaccount:{{ cookiecutter.cloud_project }}-production:{{ service_account }}
+          admin system:serviceaccount:{{ cookiecutter.cloud_project }}-production:{{ cookiecutter.automation_user }}
         oc -n {{ cookiecutter.cloud_project }}-development policy add-role-to-user \
-          admin system:serviceaccount:{{ cookiecutter.cloud_project }}-production:{{ service_account }}
+          admin system:serviceaccount:{{ cookiecutter.cloud_project }}-production:{{ cookiecutter.automation_user }}
 {%- endif %}
 {%- endif %}
-{%- if cookiecutter.monitoring == 'Sentry' %}
+{%- endif %}
+{%- if cookiecutter.monitoring == 'Sentry' and cookiecutter.ci_service == '.gitlab-ci.yml' %}
 
 Integrate External Tools
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 :Sentry:
   - Add environment variable ``SENTRY_DSN`` in
-    `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`_
+    `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`__
   - Delete secrets in your namespace and run a deployment (to recreate them)
-  - Configure `Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/error_tracking>`_
-    in `Settings > Operations > Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/operations>`_
+  - Configure `Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/error_tracking>`__
+    in `Settings > Operations > Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/operations>`__
 {%- endif %}
 
 Working with Docker
@@ -231,6 +247,8 @@ generated by:
         deployment_strategy="{{ cookiecutter.deployment_strategy }}" \
         gitops_project="{{ cookiecutter.gitops_project }}" \
         docker_registry="{{ cookiecutter.docker_registry }}" \
+        registry_user="{{ cookiecutter.registry_user }}" \
+        automation_user="{{ cookiecutter.automation_user }}" \
         framework="{{ cookiecutter.framework }}" \
         database="{{ cookiecutter.database }}" \
         cronjobs="{{ cookiecutter.cronjobs }}" \
