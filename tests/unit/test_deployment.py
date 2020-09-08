@@ -378,11 +378,8 @@ class TestDeployment:
                 f"File or folder {filename} in deployment should be absent."
 
         self.verify_app_folders_exist()
-        self.read_app_deployment_configs()
 
         if self.database != '(none)':
-            self.verify_db_folders_exist()
-            self.read_db_deployment_configs()
             self.ensure_db_app_stay_aligned()
 
         for filename, chunks in required_content:
@@ -439,6 +436,8 @@ class TestDeployment:
         """
         Read Kustomize configuration.
         """
+        self.verify_app_folders_exist()
+
         self.app_base_kustomize = \
             self.app_base.join('kustomization.yaml').readlines(cr=False)
         self.app_development_kustomize = \
@@ -452,6 +451,8 @@ class TestDeployment:
         """
         Read Kustomize configuration.
         """
+        self.verify_db_folders_exist()
+
         self.db_base_kustomize = \
             self.db_base.join('kustomization.yaml').readlines(cr=False)
         self.db_development_kustomize = \
@@ -466,6 +467,9 @@ class TestDeployment:
         Ensure that the top of the kustomization setups stays aligned
         across application and database deployment manifests.
         """
+        self.read_app_deployment_configs()
+        self.read_db_deployment_configs()
+
         assert self.app_base_kustomize[:3] == self.db_base_kustomize[:3]
 
         identical_lines = 8 if self.vcs_platform == 'GitLab.com' else 5
