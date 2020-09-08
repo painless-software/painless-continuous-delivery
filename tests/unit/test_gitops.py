@@ -36,7 +36,7 @@ class TestGitops:
             'files_absent': [
                 'bitbucket/gitops/',
                 'bitbucket-gitops/_/',
-                'bitbucket-gitops/deployment/database/base/kustomization.yaml',
+                'bitbucket-gitops/deployment/database/',
                 'bitbucket-gitops/docker-compose.yml',
                 'bitbucket-gitops/Dockerfile',
             ],
@@ -162,7 +162,7 @@ class TestGitops:
             'files_absent': [
                 'codeship/gitops/',
                 'codeship-gitops/_/',
-                'codeship-gitops/deployment/database/base/kustomization.yaml',
+                'codeship-gitops/deployment/database/',
                 'codeship-gitops/docker-compose.yml',
                 'codeship-gitops/Dockerfile',
             ],
@@ -201,7 +201,7 @@ class TestGitops:
             'files_absent': [
                 'gitlab/gitops/',
                 'gitlab-gitops/_/',
-                'gitlab-gitops/deployment/database/base/kustomization.yaml',
+                'gitlab-gitops/deployment/database/',
                 'gitlab-gitops/docker-compose.yml',
                 'gitlab-gitops/Dockerfile',
             ],
