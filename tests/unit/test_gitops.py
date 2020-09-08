@@ -18,6 +18,7 @@ class TestGitops:
             'project_slug': 'bitbucket',
             'framework': 'SpringBoot',
             'ci_service': 'bitbucket-pipelines.yml',
+            'cloud_platform': 'APPUiO',
             'files_present': [
                 'bitbucket/.git/config',
                 'bitbucket/.gitignore',
@@ -48,7 +49,7 @@ class TestGitops:
                         caches:
                         - docker
                         script:
-                        - REGISTRY=registry.gitlab.com/company-or-username
+                        - REGISTRY=registry.appuio.ch
                           TARGET=bitbucket
                           IMAGE="${REGISTRY}/${TARGET}/bitbucket"
                         - *docker-login
@@ -141,6 +142,7 @@ class TestGitops:
             'project_slug': 'codeship',
             'framework': 'SpringBoot',
             'ci_service': 'codeship-steps.yml',
+            'cloud_platform': 'Rancher',
             'files_present': [
                 'codeship/.git/config',
                 'codeship/.gitignore',
@@ -181,6 +183,7 @@ class TestGitops:
             'project_slug': 'gitlab',
             'framework': 'SpringBoot',
             'ci_service': '.gitlab-ci.yml',
+            'cloud_platform': 'Rancher',
             'files_present': [
                 'gitlab/.git/config',
                 'gitlab/.gitignore',
@@ -264,7 +267,8 @@ class TestGitops:
 
     # pylint: disable=no-self-use,too-many-arguments,too-many-locals
     def test_gitops(self, cookies, project_slug, framework, ci_service,
-                    files_present, files_absent, required_content):
+                    cloud_platform, files_present, files_absent,
+                    required_content):
         """
         Generate a project with a specific deployment strategy and verify
         it is complete and working.
@@ -274,13 +278,14 @@ class TestGitops:
             'project_slug': project_slug,
             'framework': framework,
             'ci_service': ci_service,
+            'cloud_platform': cloud_platform,
         })
 
         assert result.exit_code == 0
         assert result.exception is None
 
         for filename in files_present:
-            thefile = result.project.join('..').join(filename)
+            thefile = result.project.join("..", filename)
             assert thefile.exists(), \
                 'File %s missing in generated project.' % filename
 
@@ -289,17 +294,28 @@ class TestGitops:
             assert not thefile.exists(), \
                 'File %s found in generated project.' % filename
 
+        app_readme_file = result.project.join("README.rst")
+        gitops_readme_file = result.project.join(
+            "..", f"{project_slug}-gitops", "README.rst")
+
+        for readme_file in [app_readme_file, gitops_readme_file]:
+            assert readme_file.isfile()
+            readme_content = '\n'.join(gitops_readme_file.readlines(cr=False))
+            assert '\n\n\n' not in readme_content, \
+                f"Excessive newlines in README: {readme_file}\n" \
+                f"-------------\n{readme_content}"
+
         ci_service_conf = result.project.join(ci_service).readlines(cr=False)
         assert '\n\n\n' not in '\n'.join(ci_service_conf), \
             "Excessive newlines in micro-service CI config."
 
-        gitops_ci_conf = result.project.join('..').join(
-            f"{project_slug}-gitops").join(ci_service).readlines(cr=False)
+        gitops_ci_conf = result.project.join(
+            "..", f"{project_slug}-gitops", ci_service).readlines(cr=False)
         assert '\n\n\n' not in '\n'.join(gitops_ci_conf), \
             "Excessive newlines in GitOps CI config."
 
         for filename, chunks in required_content:
-            file_content = result.project.join('..').join(filename).read()
+            file_content = result.project.join("..", filename).read()
             for chunk in chunks:
                 assert chunk in file_content, \
                     'Not found in generated file %s:\n"%s"\n' \

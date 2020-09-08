@@ -47,8 +47,7 @@ Initial Setup
 
         grep -A2 limits deployment/*/*/*yaml
         grep -A2 requests deployment/*/*/*yaml
-
-{% if cookiecutter.cloud_platform in ['APPUiO'] -%}
+{% if cookiecutter.cloud_platform in ['APPUiO'] %}
 #. With the commands below, create a service account from your terminal
    (logging in to your cluster first), grant permissions to push images
    and apply configurations, and get the service account's token value:
@@ -63,10 +62,10 @@ Initial Setup
         oc -n {{ cookiecutter.cloud_project }} create sa {{ cookiecutter.automation_user }}
         oc -n {{ cookiecutter.cloud_project }} policy add-role-to-user admin -z {{ cookiecutter.automation_user }}
         oc -n {{ cookiecutter.cloud_project }} sa get-token {{ cookiecutter.automation_user }}
-{%- endif %}
-{% elif cookiecutter.cloud_platform in ['Rancher'] -%}
+{%- endif -%}
+{%- elif cookiecutter.cloud_platform in ['Rancher'] %}
 #. Create a service account called "{{ cookiecutter.automation_user }}", determine its token.
-{%- endif %}
+{%- endif -%}
 {%- if cookiecutter.ci_service == 'bitbucket-pipelines.yml' %}
 
 #. Note down service account token and your cluster's URL, and

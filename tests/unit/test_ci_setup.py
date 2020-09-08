@@ -422,7 +422,13 @@ class TestCISetup:
 
         assert result.project.basename == project_slug
         assert result.project.isdir()
-        assert result.project.join('README.rst').isfile()
+        readme_file = result.project.join('README.rst')
+        assert readme_file.isfile()
+
+        readme_content = '\n'.join(readme_file.readlines(cr=False))
+        assert '\n\n\n' not in readme_content, \
+            f"Excessive newlines in README: {readme_file}\n" \
+            f"-------------\n{readme_content}"
 
         ci_service_conf = result.project.join(ci_service).readlines(cr=False)
         ci_service_content = '\n'.join(ci_service_conf)
