@@ -109,10 +109,13 @@ def prune_route_or_ingress():
     app_manifests = Path('deployment') / 'application'
     base_path = app_manifests / 'base'
     production_path = app_manifests / 'overlays' / 'production'
+    development_path = app_manifests / 'overlays' / 'development'
+    integration_path = app_manifests / 'overlays' / 'integration'
 
     if '{{ cookiecutter.cloud_platform }}' not in ['Rancher']:
         (base_path / 'ingress.yaml').unlink()
-        (production_path / 'ingress.yaml').unlink()
+        (development_path / 'ingress-patch.yaml').unlink()
+        (integration_path / 'ingress-patch.yaml').unlink()
 
     if '{{ cookiecutter.cloud_platform }}' not in ['APPUiO']:
         (base_path / 'route.yaml').unlink()

@@ -16,7 +16,7 @@ spec:
       {%- if cookiecutter.database != '(none)' %}
       initContainers:
       - name: wait-for-database
-        image: python:latest
+        image: IMAGE
         command: {% if cookiecutter.framework == 'Django' -%}
             ["python", "manage.py", "wait_for_database"]
           {%- else -%}
@@ -30,7 +30,7 @@ spec:
       {%- endif %}
       containers:
       - name: {{ cookiecutter.framework|lower }}
-        image: {{ cookiecutter.docker_registry }}/{{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}/{{ cookiecutter.docker_image}}:latest
+        image: IMAGE
         ports:
         - name: uwsgi
           containerPort: {%- if cookiecutter.framework == 'SpringBoot' %} 8080 {%- else  %} 8000 {%- endif %}
@@ -72,7 +72,7 @@ spec:
               command: ["sleep", "20"]
       {%- if cookiecutter.framework != 'SpringBoot' %}
       - name: nginx
-        image: nginx:latest
+        image: IMAGE
         command: ["nginx"]
         ports:
         - name: http

@@ -17,3 +17,17 @@ resources:
 - ../../base
 patchesStrategicMerge:
 - deployment.yaml
+{%- if cookiecutter.cloud_platform == 'Rancher' %}
+patches:
+- path: ingress-patch.yaml
+  target:
+    group: networking.k8s.io
+    version: v1beta1
+    kind: Ingress
+    name: {{ cookiecutter.project_slug }}
+{%- endif %}
+{%- if cookiecutter.deployment_strategy == 'gitops' %}
+images:
+- name: IMAGE
+  newName: {{ cookiecutter.docker_registry }}/{{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}/{{ cookiecutter.docker_image}}:latest
+{%- endif %}

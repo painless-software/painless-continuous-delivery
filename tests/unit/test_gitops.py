@@ -40,6 +40,7 @@ class TestGitops:
                 'bitbucket-gitops/docker-compose.yml',
                 'bitbucket-gitops/Dockerfile',
             ],
+            'docker_registry': 'registry.appuio.example',
             'required_content': [
                 ('bitbucket/bitbucket-pipelines.yml', [
                     indent2("""
@@ -136,6 +137,13 @@ class TestGitops:
                       - parallel: *checks
                     """),
                 ]),
+                ('bitbucket-gitops/deployment/application/overlays/development/kustomization.yaml', [
+                    dedent("""
+                    images:
+                    - name: IMAGE
+                      newName: registry.appuio.ch/bitbucket/bitbucket:latest
+                    """),
+                ])
             ],
         }),
         ('Codeship', {
@@ -143,6 +151,7 @@ class TestGitops:
             'framework': 'SpringBoot',
             'ci_service': 'codeship-steps.yml',
             'cloud_platform': 'Rancher',
+            'docker_registry': "registry.rancher.example",
             'files_present': [
                 'codeship/.git/config',
                 'codeship/.gitignore',
@@ -177,6 +186,13 @@ class TestGitops:
                 command: /kubeval --strict --ignore-missing-schemas **/*.yaml
                     """),
                 ]),
+                ('codeship-gitops/deployment/application/overlays/development/kustomization.yaml', [
+                    dedent("""
+                    images:
+                    - name: IMAGE
+                      newName: registry.rancher.example/codeship/codeship:latest
+                    """),
+                ])
             ],
         }),
         ('GitLab', {
@@ -184,6 +200,7 @@ class TestGitops:
             'framework': 'SpringBoot',
             'ci_service': '.gitlab-ci.yml',
             'cloud_platform': 'Rancher',
+            'docker_registry': "registry.rancher.example",
             'files_present': [
                 'gitlab/.git/config',
                 'gitlab/.gitignore',
@@ -261,14 +278,21 @@ class TestGitops:
                       - /kubeval --strict --ignore-missing-schemas **/*.yaml
                     """),
                 ]),
+                ('gitlab-gitops/deployment/application/overlays/development/kustomization.yaml', [
+                    dedent("""
+                    images:
+                    - name: IMAGE
+                      newName: registry.rancher.example/gitlab/gitlab:latest
+                    """),
+                ])
             ],
         }),
     ]
 
     # pylint: disable=no-self-use,too-many-arguments,too-many-locals
     def test_gitops(self, cookies, project_slug, framework, ci_service,
-                    cloud_platform, files_present, files_absent,
-                    required_content):
+                    cloud_platform, docker_registry, files_present,
+                    files_absent, required_content):
         """
         Generate a project with a specific deployment strategy and verify
         it is complete and working.
@@ -279,6 +303,7 @@ class TestGitops:
             'framework': framework,
             'ci_service': ci_service,
             'cloud_platform': cloud_platform,
+            'docker_registry': docker_registry,
         })
 
         assert result.exit_code == 0
