@@ -1,3 +1,19 @@
 ---
 apiVersion: apps/v1
 kind: Deployment
+metadata:
+  annotations:
+    flux.weave.works/automated: "true"
+  name: application
+  namespace: springbootdemo-development
+spec:
+  selector:
+    matchLabels:
+      component: application
+  template:
+    spec:
+      $setElementOrder/containers:
+      - name: springboot
+      containers:
+        - name: springboot
+          image: docker-push.crb.ch/springbootdemo:v1.0.0
