@@ -13,5 +13,14 @@ configMapGenerator:
   behavior: merge
   envs:
   - application.env
+{%- if cookiecutter.cloud_platform == 'Rancher' %}
+patches:
+- path: ingress-patch.yaml
+  target:
+    group: networking.k8s.io
+    version: v1beta1
+    kind: Ingress
+    name: {{ cookiecutter.project_slug }}
+{%- endif %}
 resources:
 - ../../base

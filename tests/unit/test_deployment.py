@@ -214,7 +214,8 @@ class TestDeployment:
                 'application/base/cronjob.yaml',
                 'application/base/cronjob',
                 'application/base/ingress.yaml',
-                'application/overlays/production/ingress.yaml',
+                'application/overlays/development/ingress-patch.yaml',
+                'application/overlays/integration/ingress-patch.yaml',
                 'application/base/route.yaml',
                 'application/base/route-crd.yaml',
                 'application/overlays/production/route.yaml',
@@ -246,7 +247,8 @@ class TestDeployment:
             ],
             'files_absent': [
                 'application/base/ingress.yaml',
-                'application/overlays/production/ingress.yaml',
+                'application/overlays/development/ingress-patch.yaml',
+                'application/overlays/integration/ingress-patch.yaml',
                 'database',
             ],
             'required_content': [
@@ -283,8 +285,11 @@ class TestDeployment:
                 ]),
             ],
             'absent_content': [
-                ('application/overlays/production/kustomization.yaml', [
-                    '- ingress.yaml',
+                ('application/overlays/development/kustomization.yaml', [
+                    '- path: ingress-patch.yaml',
+                ]),
+                ('application/overlays/integration/kustomization.yaml', [
+                    '- path: ingress-patch.yaml',
                 ]),
             ],
         }),
@@ -298,7 +303,8 @@ class TestDeployment:
             'production_domain': 'rancher.example.com',
             'files_present': [
                 'application/base/ingress.yaml',
-                'application/overlays/production/ingress.yaml',
+                'application/overlays/development/ingress-patch.yaml',
+                'application/overlays/integration/ingress-patch.yaml',
                 'application/overlays/development',
                 'application/overlays/integration',
                 'application/overlays/production',
@@ -312,19 +318,23 @@ class TestDeployment:
             'required_content': [
                 ('application/base/ingress.yaml', [
                     dedent("""\
-                    apiVersion: networking.k8s.io/v1
+                    apiVersion: networking.k8s.io/v1beta1
                     kind: Ingress
                     metadata:
                       name: myproject
                     spec:
-                      port:
-                        targetPort: http
                       tls:
-                        insecureEdgeTerminationPolicy: Redirect
-                        termination: edge
-                      to:
-                        kind: Service
-                        name: application
+                        - hosts:
+                            - rancher.example.com
+                          secretName: application-tls-secret
+                      rules:
+                        - host: rancher.example.com
+                          http:
+                            paths:
+                              - backend:
+                                  serviceName: application
+                                  servicePort: http
+                                path: /
                     """),
                 ]),
                 ('application/base/ingress.yaml', ['  name: myproject']),
