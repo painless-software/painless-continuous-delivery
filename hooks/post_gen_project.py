@@ -214,6 +214,7 @@ def move_appconfigs_to_gitops():
     for app_config in directories:
         target = Path('gitops') / 'deployment' / app_config.name
         merge_folder_into(app_config, target)
+    shutil.rmtree(Path('deployment'))
 
 
 def move_gitops_repo():

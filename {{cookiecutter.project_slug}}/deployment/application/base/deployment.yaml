@@ -5,6 +5,9 @@ metadata:
 spec:
   replicas: 1
   revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      component: application
   template:
     metadata:
       labels:
@@ -13,7 +16,7 @@ spec:
       {%- if cookiecutter.database != '(none)' %}
       initContainers:
       - name: wait-for-database
-        image: IMAGE
+        image: python:latest
         command: {% if cookiecutter.framework == 'Django' -%}
             ["python", "manage.py", "wait_for_database"]
           {%- else -%}
@@ -27,22 +30,34 @@ spec:
       {%- endif %}
       containers:
       - name: {{ cookiecutter.framework|lower }}
-        image: IMAGE
+        image: {{ cookiecutter.docker_registry }}/{{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}/{{ cookiecutter.docker_image}}:latest
         ports:
         - name: uwsgi
-          containerPort: 8000
+          containerPort: {%- if cookiecutter.framework == 'SpringBoot' %} 8080 {%- else  %} 8000 {%- endif %}
         envFrom:
         - configMapRef:
             name: application
         - secretRef:
             name: application
         livenessProbe:
+          {%- if cookiecutter.framework == 'SpringBoot' %}
+          httpGet:
+            path: /actuator/health/liveness
+            port: uwsgi
+          {%- else %}
           tcpSocket:
             port: uwsgi
+          {%- endif %}
           initialDelaySeconds: 13
         readinessProbe:
+          {%- if cookiecutter.framework == 'SpringBoot' %}
+          httpGet:
+            path: /actuator/health/readiness
+            port: uwsgi
+          {%- else %}
           tcpSocket:
             port: uwsgi
+          {%- endif %}
           initialDelaySeconds: 9
         resources:
           requests:
@@ -55,8 +70,9 @@ spec:
           preStop:
             exec:
               command: ["sleep", "20"]
+      {%- if cookiecutter.framework != 'SpringBoot' %}
       - name: nginx
-        image: IMAGE
+        image: nginx:latest
         command: ["nginx"]
         ports:
         - name: http
@@ -82,6 +98,7 @@ spec:
           preStop:
             exec:
               command: ["sleep", "20"]
+      {%- endif %}
       restartPolicy: Always
       affinity:
         podAntiAffinity:

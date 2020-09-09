@@ -1,5 +1,7 @@
 version: 1
 patchUpdated:
   generators:
+    - command: sops -d --output secrets.dec.yaml secrets.yaml
     - command: kustomize build .
+    - command: rm secret.dec.yaml
   patchFile: flux-patch.yaml

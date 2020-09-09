@@ -1,13 +1,17 @@
-apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ cookiecutter.project_slug }}
 spec:
-  port:
-    targetPort: http
   tls:
-    insecureEdgeTerminationPolicy: Redirect
-    termination: edge
-  to:
-    kind: Service
-    name: application
+    - hosts:
+        - {{ cookiecutter.application_hostname }}
+      secretName: application-tls-secret
+  rules:
+    - host: {{ cookiecutter.application_hostname }}
+      http:
+        paths:
+          - backend:
+              serviceName: application
+              servicePort: http
+            path: /
