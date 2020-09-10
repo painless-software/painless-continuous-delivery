@@ -47,7 +47,6 @@
     "docker_image": "{{ cookiecutter.project_slug }}",
     "registry_user": "{{ cookiecutter.ci_service.replace('.yml', '').replace('.', '').replace('-steps', '').replace('travis', 'travis-ci') }}",
     "automation_user": "{{ cookiecutter.ci_service.replace('.yml', '').replace('.', '').replace('-steps', '').replace('travis', 'travis-ci') }}",
-    "flux_ssh_known_hosts": "",
     "framework": [
         "(none)",
         "Django",
