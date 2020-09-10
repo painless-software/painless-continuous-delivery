@@ -32,7 +32,7 @@ Supported Technologies and Services
 ..                   Shippable  - |shippable|
 ..                   Travis CI  - |travis-ci|
 **App Platforms**    APPUiO (OpenShift)
-                     Rancher (Kubernetes)
+..                   Rancher (Kubernetes)
 ==================== =========================================================
 
 
