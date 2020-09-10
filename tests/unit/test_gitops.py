@@ -19,6 +19,7 @@ class TestGitops:
             'framework': 'SpringBoot',
             'ci_service': 'bitbucket-pipelines.yml',
             'cloud_platform': 'APPUiO',
+            'docker_registry': "registry.appuio.ch",
             'files_present': [
                 'bitbucket/.git/config',
                 'bitbucket/.gitignore',
@@ -40,7 +41,6 @@ class TestGitops:
                 'bitbucket-gitops/docker-compose.yml',
                 'bitbucket-gitops/Dockerfile',
             ],
-            'docker_registry': 'registry.appuio.example',
             'required_content': [
                 ('bitbucket/bitbucket-pipelines.yml', [
                     indent2("""
@@ -137,13 +137,14 @@ class TestGitops:
                       - parallel: *checks
                     """),
                 ]),
-                ('bitbucket-gitops/deployment/application/overlays/development/kustomization.yaml', [
-                    dedent("""
+                ('bitbucket-gitops/deployment/application/overlays/' \
+                    'development/kustomization.yaml', [
+                        dedent("""
                     images:
                     - name: IMAGE
                       newName: registry.appuio.ch/bitbucket/bitbucket:latest
                     """),
-                ])
+                ]),  # noqa
             ],
         }),
         ('Codeship', {
@@ -186,13 +187,14 @@ class TestGitops:
                 command: /kubeval --strict --ignore-missing-schemas **/*.yaml
                     """),
                 ]),
-                ('codeship-gitops/deployment/application/overlays/development/kustomization.yaml', [
-                    dedent("""
-                    images:
-                    - name: IMAGE
-                      newName: registry.rancher.example/codeship/codeship:latest
-                    """),
-                ])
+                ('codeship-gitops/deployment/application/overlays/'
+                    'development/kustomization.yaml', [
+                        dedent("""
+                images:
+                - name: IMAGE
+                  newName: registry.rancher.example/codeship/codeship:latest
+                """),
+                ]),  # noqa
             ],
         }),
         ('GitLab', {
@@ -278,13 +280,14 @@ class TestGitops:
                       - /kubeval --strict --ignore-missing-schemas **/*.yaml
                     """),
                 ]),
-                ('gitlab-gitops/deployment/application/overlays/development/kustomization.yaml', [
-                    dedent("""
+                ('gitlab-gitops/deployment/application/overlays/'
+                    'development/kustomization.yaml', [
+                        dedent("""
                     images:
                     - name: IMAGE
                       newName: registry.rancher.example/gitlab/gitlab:latest
                     """),
-                ])
+                ]),  # noqa
             ],
         }),
     ]
