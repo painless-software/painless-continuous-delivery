@@ -33,7 +33,7 @@ spec:
         image: IMAGE
         ports:
         - name: uwsgi
-          containerPort: {%- if cookiecutter.framework == 'SpringBoot' %} 8080 {%- else  %} 8000 {%- endif %}
+          containerPort: {% if cookiecutter.framework == 'SpringBoot' %}8080{% else %}8000{% endif %}
         envFrom:
         - configMapRef:
             name: application
@@ -70,7 +70,7 @@ spec:
           preStop:
             exec:
               command: ["sleep", "20"]
-      {%- if cookiecutter.framework != 'SpringBoot' %}
+      {%- if cookiecutter.framework not in ['SpringBoot'] %}
       - name: nginx
         image: IMAGE
         command: ["nginx"]
