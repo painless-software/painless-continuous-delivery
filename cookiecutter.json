@@ -43,7 +43,7 @@
         "gitops"
     ],
     "gitops_project": "{% if cookiecutter.deployment_strategy == 'gitops' %}{{ cookiecutter.project_slug }}-gitops{% else %}(none){% endif %}",
-    "docker_registry": "{{ cookiecutter.cloud_platform.replace('APPUiO', 'registry.appuio.ch').replace('(none)', cookiecutter.vcs_platform.replace('Bitbucket.org', 'hub.docker.com').replace('GitHub.com', 'quay.io').replace('GitLab.com', 'registry.gitlab.com') + '/' + cookiecutter.vcs_account) }}",
+    "docker_registry": "{{ cookiecutter.cloud_platform.replace('APPUiO', 'registry.appuio.ch').replace('Rancher', '(none)').replace('(none)', cookiecutter.vcs_platform.replace('Bitbucket.org', 'hub.docker.com').replace('GitHub.com', 'quay.io').replace('GitLab.com', 'registry.gitlab.com') + '/' + cookiecutter.vcs_account) }}",
     "docker_image": "{{ cookiecutter.project_slug }}",
     "registry_user": "{{ cookiecutter.ci_service.replace('.yml', '').replace('.', '').replace('-steps', '').replace('travis', 'travis-ci') }}",
     "automation_user": "{{ cookiecutter.ci_service.replace('.yml', '').replace('.', '').replace('-steps', '').replace('travis', 'travis-ci') }}",
