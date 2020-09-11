@@ -32,6 +32,7 @@ class TestGitops:
                 'bitbucket-gitops/.gitignore',
                 'bitbucket-gitops/bitbucket-pipelines.yml',
                 'bitbucket-gitops/application/base/kustomization.yaml',
+                'bitbucket-gitops/bootstrap.sh',
                 'bitbucket-gitops/README.rst',
             ],
             'files_absent': [
@@ -167,6 +168,7 @@ class TestGitops:
                 'codeship-gitops/codeship-services.yml',
                 'codeship-gitops/codeship-steps.yml',
                 'codeship-gitops/application/base/kustomization.yaml',
+                'codeship-gitops/bootstrap.sh',
                 'codeship-gitops/README.rst',
             ],
             'files_absent': [
@@ -215,6 +217,7 @@ class TestGitops:
                 'gitlab-gitops/.gitignore',
                 'gitlab-gitops/.gitlab-ci.yml',
                 'gitlab-gitops/application/base/kustomization.yaml',
+                'gitlab-gitops/bootstrap.sh',
                 'gitlab-gitops/README.rst',
             ],
             'files_absent': [
