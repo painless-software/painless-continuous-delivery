@@ -4,14 +4,14 @@ metadata:
   name: {{ cookiecutter.project_slug }}
 spec:
   tls:
-    - hosts:
-        - {{ cookiecutter.production_domain }}
-      secretName: application-tls-secret
+  - hosts:
+    - {{ cookiecutter.production_domain }}
+    secretName: application-tls-secret
   rules:
-    - host: {{ cookiecutter.production_domain }}
-      http:
-        paths:
-          - backend:
-              serviceName: application
-              servicePort: http
-            path: /
+  - host: {{ cookiecutter.production_domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: application
+          servicePort: http
+        path: /

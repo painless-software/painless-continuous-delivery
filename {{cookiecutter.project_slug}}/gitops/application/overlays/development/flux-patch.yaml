@@ -5,7 +5,7 @@ metadata:
   annotations:
     flux.weave.works/automated: "true"
   name: application
-  namespace: springbootdemo-development
+  namespace: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
 spec:
   selector:
     matchLabels:
@@ -13,7 +13,7 @@ spec:
   template:
     spec:
       $setElementOrder/containers:
-      - name: springboot
+      - name: {{ cookiecutter.framework|lower }}
       containers:
-        - name: springboot
-          image: docker-push.crb.ch/springbootdemo:v1.0.0
+      - name: {{ cookiecutter.framework|lower }}
+        image: {{ cookiecutter.docker_registry }}/{{ cookiecutter.docker_image }}:latest
