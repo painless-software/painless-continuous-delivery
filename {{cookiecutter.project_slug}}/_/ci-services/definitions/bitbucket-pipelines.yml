@@ -12,7 +12,7 @@ definitions:
     - &define-vars
       REGISTRY={{ cookiecutter.docker_registry }}
       TARGET={{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
-      IMAGE="${REGISTRY}/${TARGET}/{{ cookiecutter.project_slug }}"
+      IMAGE="${REGISTRY}/${TARGET}/{{ cookiecutter.docker_image }}"
     - &docker-login
       docker login -u {{ cookiecutter.registry_user }} -p {% if cookiecutter.cloud_platform in ['APPUiO'] %}${KUBE_TOKEN}{% else %}${REGISTRY_PASSWORD}{% endif %} ${REGISTRY}
     - &build-image
@@ -70,16 +70,16 @@ definitions:
     - &cleanup-resources
       seiso configmaps -l app=${LABEL} --delete &&
       seiso secrets -l app=${LABEL} --delete &&
-      seiso image history {{ cookiecutter.project_slug }} --delete &&
-      seiso image orphans {{ cookiecutter.project_slug }} --delete
+      seiso image history {{ cookiecutter.docker_image }} --delete &&
+      seiso image orphans {{ cookiecutter.docker_image }} --delete
     - &cloud-login
       oc login ${KUBE_URL} --token="${KUBE_TOKEN}" -n ${TARGET}
     - &cloud-tag-image
-      oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${BITBUCKET_COMMIT}"
-             "${TARGET}/{{ cookiecutter.project_slug }}:${IMAGE_TAG}"
+      oc tag "${SOURCE}/{{ cookiecutter.docker_image }}:${BITBUCKET_COMMIT}"
+             "${TARGET}/{{ cookiecutter.docker_image }}:${IMAGE_TAG}"
     - &cloud-set-image
       pushd deployment/application/base &&
-      kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${IMAGE_TAG}" &&
+      kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.docker_image }}:${IMAGE_TAG}" &&
       popd
     - &cloud-apply-app
       pushd deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&

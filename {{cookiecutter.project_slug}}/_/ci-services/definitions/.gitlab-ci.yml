@@ -114,12 +114,12 @@ stages:
   - echo "REVISION=${CI_COMMIT_SHORT_SHA}" >> deployment/application/base/application.env
   - seiso configmaps -l app=${LABEL} --delete
   - seiso secrets -l app=${LABEL} --delete
-  - seiso image history {{ cookiecutter.project_slug }} --delete
-  - seiso image orphans {{ cookiecutter.project_slug }} --delete
-  - oc tag "${SOURCE}/{{ cookiecutter.project_slug }}:${CI_COMMIT_SHA}"
-           "${TARGET}/{{ cookiecutter.project_slug }}:${IMAGE_TAG}"
+  - seiso image history {{ cookiecutter.docker_image }} --delete
+  - seiso image orphans {{ cookiecutter.docker_image }} --delete
+  - oc tag "${SOURCE}/{{ cookiecutter.docker_image }}:${CI_COMMIT_SHA}"
+           "${TARGET}/{{ cookiecutter.docker_image }}:${IMAGE_TAG}"
   - pushd deployment/application/base &&
-    kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.project_slug }}:${IMAGE_TAG}" &&
+    kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.docker_image }}:${IMAGE_TAG}" &&
     popd
   - pushd deployment/application/overlays/${CI_ENVIRONMENT_NAME} &&
     kustomize edit set namesuffix -- "${SUFFIX}" &&
