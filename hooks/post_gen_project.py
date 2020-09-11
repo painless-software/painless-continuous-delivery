@@ -186,7 +186,7 @@ def remove_temporary_files():
 
     if '{{ cookiecutter.database }}' == '(none)':
         shutil.rmtree('deployment/database')
-        shutil.rmtree('gitops/deployment/database')
+        shutil.rmtree('gitops/database')
 
 
 def merge_folder_into(src_dir, dest_dir):
@@ -215,7 +215,7 @@ def move_appconfigs_to_gitops():
     directories = [_ for _ in Path('deployment').iterdir() if _.is_dir()]
 
     for app_config in directories:
-        target = Path('gitops') / 'deployment' / app_config.name
+        target = Path('gitops') / app_config.name
         merge_folder_into(app_config, target)
     shutil.rmtree(Path('deployment'))
 

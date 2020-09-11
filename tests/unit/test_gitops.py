@@ -31,13 +31,13 @@ class TestGitops:
                 'bitbucket-gitops/.git/config',
                 'bitbucket-gitops/.gitignore',
                 'bitbucket-gitops/bitbucket-pipelines.yml',
-                'bitbucket-gitops/deployment/application/base/kustomization.yaml',  # noqa
+                'bitbucket-gitops/application/base/kustomization.yaml',
                 'bitbucket-gitops/README.rst',
             ],
             'files_absent': [
                 'bitbucket/gitops/',
                 'bitbucket-gitops/_/',
-                'bitbucket-gitops/deployment/database/',
+                'bitbucket-gitops/database/',
                 'bitbucket-gitops/docker-compose.yml',
                 'bitbucket-gitops/Dockerfile',
             ],
@@ -137,8 +137,8 @@ class TestGitops:
                       - parallel: *checks
                     """),
                 ]),
-                ('bitbucket-gitops/deployment/application/overlays/' \
-                    'development/kustomization.yaml', [
+                ('bitbucket-gitops/application/overlays/development/'
+                    'kustomization.yaml', [
                         dedent("""
                     images:
                     - name: IMAGE
@@ -166,13 +166,13 @@ class TestGitops:
                 'codeship-gitops/.gitignore',
                 'codeship-gitops/codeship-services.yml',
                 'codeship-gitops/codeship-steps.yml',
-                'codeship-gitops/deployment/application/base/kustomization.yaml',  # noqa
+                'codeship-gitops/application/base/kustomization.yaml',
                 'codeship-gitops/README.rst',
             ],
             'files_absent': [
                 'codeship/gitops/',
                 'codeship-gitops/_/',
-                'codeship-gitops/deployment/database/',
+                'codeship-gitops/database/',
                 'codeship-gitops/docker-compose.yml',
                 'codeship-gitops/Dockerfile',
             ],
@@ -187,8 +187,8 @@ class TestGitops:
                 command: /kubeval --strict --ignore-missing-schemas **/*.yaml
                     """),
                 ]),
-                ('codeship-gitops/deployment/application/overlays/'
-                    'development/kustomization.yaml', [
+                ('codeship-gitops/application/overlays/development/'
+                    'kustomization.yaml', [
                         dedent("""
                 images:
                 - name: IMAGE
@@ -214,13 +214,13 @@ class TestGitops:
                 'gitlab-gitops/.git/config',
                 'gitlab-gitops/.gitignore',
                 'gitlab-gitops/.gitlab-ci.yml',
-                'gitlab-gitops/deployment/application/base/kustomization.yaml',  # noqa
+                'gitlab-gitops/application/base/kustomization.yaml',
                 'gitlab-gitops/README.rst',
             ],
             'files_absent': [
                 'gitlab/gitops/',
                 'gitlab-gitops/_/',
-                'gitlab-gitops/deployment/database/',
+                'gitlab-gitops/database/',
                 'gitlab-gitops/docker-compose.yml',
                 'gitlab-gitops/Dockerfile',
             ],
@@ -280,8 +280,8 @@ class TestGitops:
                       - /kubeval --strict --ignore-missing-schemas **/*.yaml
                     """),
                 ]),
-                ('gitlab-gitops/deployment/application/overlays/'
-                    'development/kustomization.yaml', [
+                ('gitlab-gitops/application/overlays/development/'
+                    'kustomization.yaml', [
                         dedent("""
                     images:
                     - name: IMAGE
