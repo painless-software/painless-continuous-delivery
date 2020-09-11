@@ -324,17 +324,17 @@ class TestDeployment:
                       name: myproject
                     spec:
                       tls:
-                        - hosts:
-                            - rancher.example.com
-                          secretName: application-tls-secret
+                      - hosts:
+                        - rancher.example.com
+                        secretName: application-tls-secret
                       rules:
-                        - host: rancher.example.com
-                          http:
-                            paths:
-                              - backend:
-                                  serviceName: application
-                                  servicePort: http
-                                path: /
+                      - host: rancher.example.com
+                        http:
+                          paths:
+                          - backend:
+                              serviceName: application
+                              servicePort: http
+                            path: /
                     """),
                 ]),
                 ('application/base/ingress.yaml', ['  name: myproject']),
