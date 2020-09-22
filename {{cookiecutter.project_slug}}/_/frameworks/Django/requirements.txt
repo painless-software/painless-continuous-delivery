@@ -19,7 +19,7 @@ newrelic==5.18.0.148      # via -r requirements.in{% endif %}
 psycopg2==2.8.6           # via -r requirements.in{% endif %}
 pytz==2020.1              # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
-sentry-sdk==0.17.6        # via -r requirements.in{% endif %}
+sentry-sdk==0.17.7        # via -r requirements.in{% endif %}
 sqlparse==0.3.1           # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
 urllib3==1.25.10          # via sentry-sdk{% endif %}
