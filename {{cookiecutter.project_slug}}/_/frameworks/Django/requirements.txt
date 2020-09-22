@@ -14,7 +14,7 @@ django==2.2.16            # via -r requirements.in
 {%- if cookiecutter.database == 'MySQL' %}
 mysql-connector==2.2.9    # via -r requirements.in{% endif %}
 {%- if cookiecutter.monitoring == 'NewRelic' %}
-newrelic==5.18.0.148      # via -r requirements.in{% endif %}
+newrelic==5.20.0.149      # via -r requirements.in{% endif %}
 {%- if cookiecutter.database == 'Postgres' %}
 psycopg2==2.8.6           # via -r requirements.in{% endif %}
 pytz==2020.1              # via django
