@@ -108,7 +108,7 @@ infrastructure.  In `behave`_ tests the related scenarios are tagged with
 .. _Tox: https://tox.readthedocs.io/en/latest/
 .. _pull request: https://github.com/painless-software/painless-continuous-delivery/pulls
 .. _bug tracker: https://github.com/painless-software/painless-continuous-delivery/issues
-.. _flake8: http://flake8.readthedocs.io/en/latest/
+.. _flake8: https://flake8.readthedocs.io/en/latest/
 .. _Pylint: https://pylint.org/
 .. _pyenv: https://github.com/yyuu/pyenv#basic-github-checkout
 .. _behave: https://behave.readthedocs.io/en/latest/

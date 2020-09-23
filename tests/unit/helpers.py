@@ -13,7 +13,7 @@ REPO_ROOT_PATH = LocalPath(Path(__file__).parent.parent.parent)
 def pytest_generate_tests(metafunc):
     """
     A test scenarios implementation for py.test, as found at
-    http://docs.pytest.org/en/latest/example/parametrize.html
+    https://docs.pytest.org/en/latest/example/parametrize.html
     #a-quick-port-of-testscenarios.  Picks up a ``scenarios`` class variable
     to parametrize all test function calls.
     """

@@ -1,7 +1,7 @@
 """
 The Flask application.
 
-Taken from http://flask.pocoo.org/docs/0.12/patterns/packages/
+Taken from https://flask.palletsprojects.com/en/1.1.x/patterns/packages/
 """
 from flask import Flask
 
