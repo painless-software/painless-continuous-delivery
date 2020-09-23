@@ -51,7 +51,7 @@ stages:
   - docker login -u {{ cookiecutter.registry_user }} -p {% if cookiecutter.cloud_platform in ['APPUiO'] %}${KUBE_TOKEN}{% else %}${REGISTRY_PASSWORD}{% endif %} ${REGISTRY}
   - docker pull "${IMAGE}:latest" || true
   script:
-  - docker build . -t "${IMAGE}:${CI_COMMIT_SHA}"
+  - docker build --cache-from ${IMAGE}:latest --tag "${IMAGE}:${CI_COMMIT_SHA}" .
   - docker push "${IMAGE}"
 
 {% if cookiecutter.deployment_strategy == 'gitops' -%}
@@ -64,6 +64,7 @@ stages:
     SOURCE: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-development{% endif %}
     TARGET: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}
   script:
+  - docker pull "${REGISTRY}/${SOURCE}/{{ cookiecutter.docker_image }}:${CI_COMMIT_SHA}"
   - docker tag "${REGISTRY}/${SOURCE}/{{ cookiecutter.docker_image }}:${CI_COMMIT_SHA}"
                "${REGISTRY}/${TARGET}/{{ cookiecutter.docker_image }}:${IMAGE_TAG}"
   - docker push "${REGISTRY}/${TARGET}/{{ cookiecutter.docker_image }}:${IMAGE_TAG}"
