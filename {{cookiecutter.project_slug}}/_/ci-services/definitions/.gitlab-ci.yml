@@ -46,8 +46,8 @@ stages:
   variables:
     GIT_DEPTH: 7
     TARGET: {{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}
-    IMAGE: ${REGISTRY}/${TARGET}/{{ cookiecutter.docker_image }}
   before_script:
+  - IMAGE=${REGISTRY}/${TARGET}/{{ cookiecutter.docker_image }}
   - docker login -u {{ cookiecutter.registry_user }} -p {% if cookiecutter.cloud_platform in ['APPUiO'] %}${KUBE_TOKEN}{% else %}${REGISTRY_PASSWORD}{% endif %} ${REGISTRY}
   - docker pull "${IMAGE}:latest" || true
   script:
