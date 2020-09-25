@@ -25,6 +25,8 @@ stages:
   stage: test
 {%- if cookiecutter.framework in ['Django', 'Flask'] %}
   image: docker.io/painless/tox
+{%- elif cookiecutter.framework in ['SpringBoot'] %}
+  image: docker.io/library/maven
 {%- else %}
   image: docker.io/painless/tox
 {%- endif %}

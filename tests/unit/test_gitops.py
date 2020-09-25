@@ -19,7 +19,8 @@ class TestGitops:
             'framework': 'SpringBoot',
             'ci_service': 'bitbucket-pipelines.yml',
             'cloud_platform': 'APPUiO',
-            'docker_registry': "registry.appuio.ch",
+            'docker_registry': 'registry.appuio.ch',
+            'monitoring': '(none)',
             'files_present': [
                 'bitbucket/.git/config',
                 'bitbucket/.gitignore',
@@ -43,7 +44,30 @@ class TestGitops:
                 'bitbucket-gitops/Dockerfile',
             ],
             'required_content': [
+                ('bitbucket/README.rst', [
+                    dedent("""
+                    Integrate External Tools
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+                    Nothing to do here.
+
+                    """),
+                ]),
                 ('bitbucket/bitbucket-pipelines.yml', [
+                    indent2("""
+                    - parallel: &checks
+                      - step:
+                          name: Kubernetes
+                          script:
+                          - echo "This should run kubernetes"
+                    """),
+                    indent2("""
+                    - parallel: &tests
+                      - step:
+                          name: test
+                          script:
+                          - mvn test
+                    """),
                     indent2("""
                     - step: &build
                         name: Build image
@@ -153,7 +177,8 @@ class TestGitops:
             'framework': 'SpringBoot',
             'ci_service': 'codeship-steps.yml',
             'cloud_platform': 'Rancher',
-            'docker_registry': "registry.rancher.example",
+            'docker_registry': 'registry.rancher.example',
+            'monitoring': '(none)',
             'files_present': [
                 'codeship/.git/config',
                 'codeship/.gitignore',
@@ -179,6 +204,15 @@ class TestGitops:
                 'codeship-gitops/Dockerfile',
             ],
             'required_content': [
+                ('codeship/README.rst', [
+                    dedent("""
+                    Integrate External Tools
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+                    Nothing to do here.
+
+                    """),
+                ]),
                 ('codeship-gitops/codeship-steps.yml', [
                     dedent("""
             - name: Checks
@@ -204,7 +238,8 @@ class TestGitops:
             'framework': 'SpringBoot',
             'ci_service': '.gitlab-ci.yml',
             'cloud_platform': 'Rancher',
-            'docker_registry': "registry.rancher.example",
+            'docker_registry': 'registry.rancher.example',
+            'monitoring': 'Sentry',
             'files_present': [
                 'gitlab/.git/config',
                 'gitlab/.gitignore',
@@ -228,7 +263,39 @@ class TestGitops:
                 'gitlab-gitops/Dockerfile',
             ],
             'required_content': [
+                ('gitlab/README.rst', [
+                    dedent("""
+                    Integrate External Tools
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+                    :Sentry:
+                      - Add environment variable ``SENTRY_DSN`` in
+                        `Settings > CI/CD > Variables \
+<https://gitlab.com/company-or-username/gitlab/-/settings/ci_cd>`__
+                      - Delete secrets in your namespace and run a deployment \
+(to recreate them)
+                      - Configure `Error Tracking \
+<https://gitlab.com/company-or-username/gitlab/-/error_tracking>`__
+                        in `Settings > Operations > Error Tracking \
+<https://gitlab.com/company-or-username/gitlab/-/settings/operations>`__
+                    :Image Registry:
+                      - Add environment variable ``REGISTRY_PASSWORD`` in
+                        `Settings > CI/CD > Variables \
+<https://gitlab.com/company-or-username/gitlab/-/settings/ci_cd>`__
+
+                    """),
+                ]),
                 ('gitlab/.gitlab-ci.yml', [
+                    dedent("""
+                    kubernetes:
+                      extends: .check
+                      script: echo "This should run kubernetes"
+                    """),
+                    dedent("""
+                    test:
+                      extends: .test
+                      script: mvn test
+                    """),
                     dedent("""
                     app-image:
                       extends: .build
@@ -297,8 +364,8 @@ class TestGitops:
 
     # pylint: disable=no-self-use,too-many-arguments,too-many-locals
     def test_gitops(self, cookies, project_slug, framework, ci_service,
-                    cloud_platform, docker_registry, files_present,
-                    files_absent, required_content):
+                    cloud_platform, docker_registry, monitoring,
+                    files_present, files_absent, required_content):
         """
         Generate a project with a specific deployment strategy and verify
         it is complete and working.
@@ -310,6 +377,9 @@ class TestGitops:
             'ci_service': ci_service,
             'cloud_platform': cloud_platform,
             'docker_registry': docker_registry,
+            'monitoring': monitoring,
+            'checks': 'kubernetes',
+            'tests': 'test',
         })
 
         assert result.exit_code == 0
