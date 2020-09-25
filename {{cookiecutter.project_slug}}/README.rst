@@ -20,12 +20,13 @@ To start developing on this project simply bring up the Docker setup:
 Migrations will run automatically at startup (via the container entrypoint).
 If they fail the very first time simply restart the application.{% endif %}
 
-Open your web browser at http://localhost:8000 to see the application
+{% set port = '8080' if cookiecutter.framework == 'SpringBoot' else '5000' if cookiecutter.framework == 'Flask' else '8000' -%}
+Open your web browser at http://localhost:{{ port }} to see the application
 you're developing.  Log output will be displayed in the terminal, as usual.
 
 For running tests, linting, security checks, etc. see instructions in the
 `tests/ <tests/README.rst>`_ folder.
-{%- if cookiecutter.cloud_platform != '(none)' %}
+{%- if cookiecutter.cloud_platform != '(none)' and cookiecutter.deployment_strategy == 'pipeline' %}
 
 Initial Setup
 ^^^^^^^^^^^^^
@@ -126,18 +127,40 @@ Initial Setup
 {%- endif %}
 {%- endif %}
 {%- endif %}
-{%- if cookiecutter.monitoring == 'Sentry' and cookiecutter.ci_service == '.gitlab-ci.yml' %}
 
 Integrate External Tools
 ^^^^^^^^^^^^^^^^^^^^^^^^
-
+{% set no_external_tools = 'Nothing to do here.' %}
+{% if cookiecutter.monitoring == 'Datadog' and cookiecutter.ci_service == '.gitlab-ci.yml' -%}
+{% set no_external_tools = '' -%}
+:Datadog:
+  - Add environment variables ``DATADOG_API_KEY``, ``DATADOG_APP_KEY``, ``DATADOG_APP_NAME`` in
+    `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`__
+  - Delete secrets in your namespace and run a deployment (to recreate them)
+{%- endif -%}
+{% if cookiecutter.monitoring == 'NewRelic' and cookiecutter.ci_service == '.gitlab-ci.yml' -%}
+{% set no_external_tools = '' -%}
+:New Relic:
+  - Add environment variable ``NEWRELIC_LICENSE_KEY`` in
+    `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`__
+  - Delete secrets in your namespace and run a deployment (to recreate them)
+{%- endif -%}
+{% if cookiecutter.monitoring == 'Sentry' and cookiecutter.ci_service == '.gitlab-ci.yml' -%}
+{% set no_external_tools = '' -%}
 :Sentry:
   - Add environment variable ``SENTRY_DSN`` in
     `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`__
   - Delete secrets in your namespace and run a deployment (to recreate them)
   - Configure `Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/error_tracking>`__
     in `Settings > Operations > Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/operations>`__
-{%- endif %}
+{%- endif -%}
+{% if cookiecutter.docker_registry not in ['(none)', 'registry.appuio.ch', 'registry.gitlab.com'] and cookiecutter.ci_service == '.gitlab-ci.yml' -%}
+{% set no_external_tools = '' %}
+:Image Registry:
+  - Add environment variable ``REGISTRY_PASSWORD`` in
+    `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`__
+{%- endif -%}
+{{ no_external_tools }}
 
 Working with Docker
 ^^^^^^^^^^^^^^^^^^^
@@ -203,6 +226,22 @@ Alternatively, you can run those commands the classic way, i.e.
 CI/CD Process
 ^^^^^^^^^^^^^
 
+{% if cookiecutter.deployment_strategy == 'gitops' -%}
+This project only builds and pushes an application image to the image registry.
+A separate `GitOps repository`_ handles the deployment of our application,
+which will typically roll out our updated image immediately.
+
+.. _GitOps repository: https://{{ cookiecutter.vcs_platform|lower }}/{{ cookiecutter.vcs_account }}/{{ cookiecutter.gitops_project }}
+
+{% set review_tag = 'review-mr<id>' if cookiecutter.ci_service == '.gitlab-ci.yml' else 'review-pr<id>' -%}
+- Any merge request automatically builds and pushes a review app image tagged
+  ``{{ review_tag }}`` to the image registry.
+- Any change on the main branch, e.g. when a merge request is merged into
+  ``master``, builds and pushes an image tagged ``latest`` to the image
+  registry, which is targeted for use on *integration*.
+- To mark an image "ready" for use on *production* push a Git tag on
+  the ``master`` branch, e.g.
+{%- else -%}
 {% if cookiecutter.environment_strategy == 'dedicated' -%}
 We have 3 environments corresponding to 3 namespaces on our container
 platform: *development*, *integration*, *production*
@@ -217,6 +256,7 @@ on our container platform: *development*, *integration*, *production*
 - Any change on the main branch, e.g. when a merge request is merged into
   ``master``, triggers a deployment on *integration*.
 - To trigger a deployment on *production* push a Git tag, e.g.
+{%- endif %}
 
   .. code-block:: console
 

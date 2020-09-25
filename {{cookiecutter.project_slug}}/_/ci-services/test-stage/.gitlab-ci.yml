@@ -6,6 +6,6 @@
       {%- elif cookiecutter.framework in ['Symfony', 'TYPO3'] -%}
     echo "This should run {{ env }}"
       {%- elif cookiecutter.framework in ['SpringBoot'] -%}
-    echo "This should run {{ env }}"
+    mvn {{ env }}
       {%- endif %}
 {% endfor %}{% endif -%}
