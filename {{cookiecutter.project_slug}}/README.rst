@@ -38,8 +38,7 @@ Initial Setup
 {%- endif %}
 {%- if cookiecutter.cloud_platform in ['APPUiO'] %}
    at the `VSHN Control Panel <https://control.vshn.net/openshift/projects/appuio%20public>`_.
-{%- elif cookiecutter.cloud_platform in ['Rancher'] %}
-   with Rancher.
+{%- elif cookiecutter.cloud_platform in ['Rancher'] %} with Rancher.
 {%- endif %}
    For quota sizing consider roughly the sum of ``limits`` of all
    resources (must be strictly greater than the sum of ``requests``):
@@ -130,37 +129,39 @@ Initial Setup
 
 Integrate External Tools
 ^^^^^^^^^^^^^^^^^^^^^^^^
-{% set no_external_tools = 'Nothing to do here.' %}
-{% if cookiecutter.monitoring == 'Datadog' and cookiecutter.ci_service == '.gitlab-ci.yml' -%}
-{% set no_external_tools = '' -%}
+{% set ns = namespace(external_tools=false) %}
+{%- if cookiecutter.monitoring == 'Datadog' and cookiecutter.ci_service == '.gitlab-ci.yml' %}
+{%- set ns.external_tools = true %}
 :Datadog:
   - Add environment variables ``DATADOG_API_KEY``, ``DATADOG_APP_KEY``, ``DATADOG_APP_NAME`` in
     `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`__
   - Delete secrets in your namespace and run a deployment (to recreate them)
-{%- endif -%}
-{% if cookiecutter.monitoring == 'NewRelic' and cookiecutter.ci_service == '.gitlab-ci.yml' -%}
-{% set no_external_tools = '' -%}
+{%- endif %}
+{%- if cookiecutter.monitoring == 'NewRelic' and cookiecutter.ci_service == '.gitlab-ci.yml' %}
+{%- set ns.external_tools = true %}
 :New Relic:
   - Add environment variable ``NEWRELIC_LICENSE_KEY`` in
     `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`__
   - Delete secrets in your namespace and run a deployment (to recreate them)
-{%- endif -%}
-{% if cookiecutter.monitoring == 'Sentry' and cookiecutter.ci_service == '.gitlab-ci.yml' -%}
-{% set no_external_tools = '' -%}
+{%- endif %}
+{%- if cookiecutter.monitoring == 'Sentry' and cookiecutter.ci_service == '.gitlab-ci.yml' %}
+{%- set ns.external_tools = true %}
 :Sentry:
   - Add environment variable ``SENTRY_DSN`` in
     `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`__
   - Delete secrets in your namespace and run a deployment (to recreate them)
   - Configure `Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/error_tracking>`__
     in `Settings > Operations > Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/operations>`__
-{%- endif -%}
-{% if cookiecutter.docker_registry not in ['(none)', 'registry.appuio.ch', 'registry.gitlab.com'] and cookiecutter.ci_service == '.gitlab-ci.yml' -%}
-{% set no_external_tools = '' %}
+{%- endif %}
+{%- if cookiecutter.docker_registry not in ['(none)', 'registry.appuio.ch', 'registry.gitlab.com'] and cookiecutter.ci_service == '.gitlab-ci.yml' %}
+{%- set ns.external_tools = true %}
 :Image Registry:
   - Add environment variable ``REGISTRY_PASSWORD`` in
     `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`__
-{%- endif -%}
-{{ no_external_tools }}
+{%- endif %}
+{%- if not ns.external_tools %}
+Nothing to do here.
+{%- endif %}
 
 Working with Docker
 ^^^^^^^^^^^^^^^^^^^

@@ -4,10 +4,18 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
+{%- if cookiecutter.monitoring == 'Sentry' %}
+blinker==1.4              # via sentry-sdk
+certifi==2020.6.20        # via sentry-sdk
+{%- endif %}
 click==7.1.2              # via flask
-flask==1.1.2              # via -r requirements.in
+flask==1.1.2              # via -r requirements.in{% if cookiecutter.monitoring == 'Sentry' %}, sentry-sdk{% endif %}
 itsdangerous==1.1.0       # via flask
 jinja2==2.11.2            # via flask
 markupsafe==1.1.1         # via jinja2
+{%- if cookiecutter.monitoring == 'Sentry' %}
+sentry-sdk[flask]==0.17.8  # via -r requirements.in
+urllib3==1.25.10          # via sentry-sdk
+{%- endif %}
 uwsgi==2.0.19.1           # via -r requirements.in
 werkzeug==1.0.1           # via flask
