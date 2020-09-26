@@ -39,8 +39,6 @@ tox -e cookiecutter -- \
     environment_strategy=dedicated \
     deployment_strategy=gitops \
     framework=SpringBoot \
-    checks=kubernetes \
-    tests=junit \
     license=GPL-3 \
     push=force \
     ${*} \
