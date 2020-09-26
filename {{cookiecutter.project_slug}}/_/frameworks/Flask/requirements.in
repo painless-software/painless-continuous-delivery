@@ -1,2 +1,5 @@
 Flask
+{%- if cookiecutter.monitoring == 'Sentry' %}
+sentry-sdk[flask]
+{%- endif %}
 uwsgi

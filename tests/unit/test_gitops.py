@@ -20,7 +20,6 @@ class TestGitops:
             'ci_service': 'bitbucket-pipelines.yml',
             'cloud_platform': 'APPUiO',
             'docker_registry': 'registry.appuio.ch',
-            'monitoring': '(none)',
             'files_present': [
                 'bitbucket/.git/config',
                 'bitbucket/.gitignore',
@@ -178,7 +177,6 @@ class TestGitops:
             'ci_service': 'codeship-steps.yml',
             'cloud_platform': 'Rancher',
             'docker_registry': 'registry.rancher.example',
-            'monitoring': '(none)',
             'files_present': [
                 'codeship/.git/config',
                 'codeship/.gitignore',
@@ -239,7 +237,6 @@ class TestGitops:
             'ci_service': '.gitlab-ci.yml',
             'cloud_platform': 'Rancher',
             'docker_registry': 'registry.rancher.example',
-            'monitoring': 'Sentry',
             'files_present': [
                 'gitlab/.git/config',
                 'gitlab/.gitignore',
@@ -268,16 +265,6 @@ class TestGitops:
                     Integrate External Tools
                     ^^^^^^^^^^^^^^^^^^^^^^^^
 
-                    :Sentry:
-                      - Add environment variable ``SENTRY_DSN`` in
-                        `Settings > CI/CD > Variables \
-<https://gitlab.com/company-or-username/gitlab/-/settings/ci_cd>`__
-                      - Delete secrets in your namespace and run a deployment \
-(to recreate them)
-                      - Configure `Error Tracking \
-<https://gitlab.com/company-or-username/gitlab/-/error_tracking>`__
-                        in `Settings > Operations > Error Tracking \
-<https://gitlab.com/company-or-username/gitlab/-/settings/operations>`__
                     :Image Registry:
                       - Add environment variable ``REGISTRY_PASSWORD`` in
                         `Settings > CI/CD > Variables \
@@ -364,8 +351,8 @@ class TestGitops:
 
     # pylint: disable=no-self-use,too-many-arguments,too-many-locals
     def test_gitops(self, cookies, project_slug, framework, ci_service,
-                    cloud_platform, docker_registry, monitoring,
-                    files_present, files_absent, required_content):
+                    cloud_platform, docker_registry, files_present,
+                    files_absent, required_content):
         """
         Generate a project with a specific deployment strategy and verify
         it is complete and working.
@@ -377,7 +364,6 @@ class TestGitops:
             'ci_service': ci_service,
             'cloud_platform': cloud_platform,
             'docker_registry': docker_registry,
-            'monitoring': monitoring,
             'checks': 'kubernetes',
             'tests': 'test',
         })

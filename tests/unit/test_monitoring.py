@@ -20,6 +20,8 @@ class TestMonitoring:
             'project_slug': 'django-project',
             'framework': 'Django',
             'monitoring': 'Datadog',
+            'cloud_platform': 'APPUiO',
+            'docker_registry': 'registry.appuio.ch',
             'required_settings': {
                 'MIDDLEWARE': [
                     "'django_datadog.middleware.DatadogMiddleware',",
@@ -53,6 +55,8 @@ class TestMonitoring:
             'project_slug': 'django-project',
             'framework': 'Django',
             'monitoring': 'NewRelic',
+            'cloud_platform': 'APPUiO',
+            'docker_registry': 'registry.appuio.ch',
             'required_settings': {
                 'NEWRELIC_LICENSE_KEY':
                 "env('NEWRELIC_LICENSE_KEY', default=None)",
@@ -81,6 +85,8 @@ class TestMonitoring:
             'project_slug': 'django-project',
             'framework': 'Django',
             'monitoring': 'Sentry',
+            'cloud_platform': 'APPUiO',
+            'docker_registry': 'registry.gitlab.com',
             'required_settings': {
                 'SENTRY_DSN': "env('SENTRY_DSN', default=None)",
             },
@@ -108,25 +114,59 @@ class TestMonitoring:
                 ]),
             ],
         }),
-        # ('Sentry(flask)', {
-        #     'project_slug': 'flask-project',
-        #     'framework': 'Flask',
-        #     'monitoring': 'Sentry',
-        #     'required_settings': {
-        #         'SENTRY_DSN': "env('SENTRY_DSN', default=None)",
-        #     },
-        #     'required_packages': [
-        #         'sentry-sdk',
-        #     ],
-        #     'required_content': [
-        #     ],
-        # }),
+        ('Sentry(flask)', {
+            'project_slug': 'flask-project',
+            'framework': 'Flask',
+            'monitoring': 'Sentry',
+            'cloud_platform': 'Rancher',
+            'docker_registry': 'nexus.example.com',
+            'required_settings': None,
+            'required_packages': [
+                'sentry-sdk[flask]',
+            ],
+            'required_content': [
+                ('application/__init__.py', [
+                    dedent("""
+                    import os
+                    import sentry_sdk
+                    from sentry_sdk.integrations.flask import FlaskIntegration
+
+                    sentry_sdk.init(
+                        dsn=os.environ.get('SENTRY_DSN'),
+                        integrations=[FlaskIntegration()]
+                    )
+                    """),
+                ]),
+                ('README.rst', [
+                    dedent("""
+                    Integrate External Tools
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+                    :Sentry:
+                      - Add environment variable ``SENTRY_DSN`` in
+                        `Settings > CI/CD > Variables \
+<https://gitlab.com/company-or-username/flask-project/-/settings/ci_cd>`__
+                      - Delete secrets in your namespace and run a deployment \
+(to recreate them)
+                      - Configure `Error Tracking \
+<https://gitlab.com/company-or-username/flask-project/-/error_tracking>`__
+                        in `Settings > Operations > Error Tracking \
+<https://gitlab.com/company-or-username/flask-project/-/settings/operations>`__
+                    :Image Registry:
+                      - Add environment variable ``REGISTRY_PASSWORD`` in
+                        `Settings > CI/CD > Variables \
+<https://gitlab.com/company-or-username/flask-project/-/settings/ci_cd>`__
+
+                    """),
+                ]),
+            ],
+        }),
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use
     def test_monitoring(self, cookies, project_slug, framework, monitoring,
-                        required_settings, required_packages,
-                        required_content):
+                        cloud_platform, docker_registry, required_settings,
+                        required_packages, required_content):
         """
         Generate a project and verify its monitoring configuration everywhere.
         """
@@ -134,6 +174,8 @@ class TestMonitoring:
             'project_slug': project_slug,
             'framework': framework,
             'monitoring': monitoring,
+            'cloud_platform': cloud_platform,
+            'docker_registry': docker_registry,
         })
 
         assert result.exit_code == 0
@@ -146,9 +188,10 @@ class TestMonitoring:
             f"Excessive newlines in README: {readme_file}\n" \
             f"-------------\n{readme_content}"
 
-        settings = result.project.join(
-            'application', 'settings.py').readlines(cr=False)
-        verify_required_settings(required_settings, settings)
+        if required_settings:
+            settings = result.project.join(
+                'application', 'settings.py').readlines(cr=False)
+            verify_required_settings(required_settings, settings)
 
         requirements_txt = result.project.join(
             'requirements.in').readlines(cr=False)
