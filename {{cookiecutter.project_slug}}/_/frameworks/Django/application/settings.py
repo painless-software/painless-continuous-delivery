@@ -28,7 +28,14 @@ DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
 SECRET_KEY = 'dummy-secret' if DEBUG else env('DJANGO_SECRET_KEY')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*'] if DEBUG else [
+{%- if cookiecutter.production_domain != '(automatic)' %}
+    '.{{ cookiecutter.production_domain }}',
+{%- endif%}
+{%- if cookiecutter.cloud_platform == 'APPUiO' %}
+    '.appuioapp.ch',
+{%- endif %}
+]
 
 LOGGING = {
     'version': 1,
