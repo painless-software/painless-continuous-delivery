@@ -1,207 +1,23 @@
-{{ cookiecutter.project_name }}
-{{ '=' * cookiecutter.project_name|length }}
+{{ cookiecutter.project_name }} GitOps
+{{ '=' * (cookiecutter.project_name|length + 7) }}
 
-{{ cookiecutter.project_description }}
+{{ cookiecutter.project_description }} (GitOps part)
 
-Getting Started
----------------
+Overview
+--------
 
-To start developing on this project simply bring up the Docker setup:
+This project handles the deployment of our application landscape, totally in
+a GitOps fashion.  This means, the deployment configuration is applied by an
+automation component *from inside* the target environment, continuously.
 
-.. code-block:: console
-{% if cookiecutter.framework in ['Symfony', 'TYPO3'] %}
-    composer install
-    docker-compose up
-{%- else %}
-    docker-compose up
-{%- endif %}
-{%- if cookiecutter.framework == 'Django' %}
+The applications we deploy have their own repositories, which only deal with
+building and pushing their application images to the image registry:
+*(HINT: Keep this list up-to-date!)*
 
-Migrations will run automatically at startup (via the container entrypoint).
-If they fail the very first time simply restart the application.{% endif %}
+- `{{ cookiecutter.project_name }} <https://{{ cookiecutter.vcs_platform|lower }}/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}>`__
 
-Open your web browser at http://localhost:8000 to see the application
-you're developing.  Log output will be displayed in the terminal, as usual.
-
-For running tests, linting, security checks, etc. see instructions in the
-`tests/ <tests/README.rst>`_ folder.
-{%- if cookiecutter.cloud_platform != '(none)' %}
-
-Initial Setup
-^^^^^^^^^^^^^
-
-{% if cookiecutter.environment_strategy == 'dedicated' -%}
-#. Create a *production*, *integration* and *development* project
-{%- else -%}
-#. Create a project
-{%- endif %}
-{%- if cookiecutter.cloud_platform in ['APPUiO'] %}
-   at the `VSHN Control Panel <https://control.vshn.net/openshift/projects/appuio%20public>`_.
-{%- elif cookiecutter.cloud_platform in ['Rancher'] %}
-   with Rancher.
-{%- endif %}
-   For quota sizing consider roughly the sum of ``limits`` of all
-   resources (must be strictly greater than the sum of ``requests``):
-
-   .. code-block:: console
-
-        grep -A2 limits deployment/*/*/*yaml
-        grep -A2 requests deployment/*/*/*yaml
-{% if cookiecutter.cloud_platform in ['APPUiO'] %}
-#. With the commands below, create a service account from your terminal
-   (logging in to your cluster first), grant permissions to push images
-   and apply configurations, and get the service account's token value:
-   (`APPUiO docs <https://docs.appuio.ch/en/latest/services/webserver/50_pushing_to_appuio.html>`_)
-
-   .. code-block:: console
-{% if cookiecutter.environment_strategy == 'dedicated' %}
-        oc -n {{ cookiecutter.cloud_project }}-production create sa {{ cookiecutter.automation_user }}
-        oc -n {{ cookiecutter.cloud_project }}-production policy add-role-to-user admin -z {{ cookiecutter.automation_user }}
-        oc -n {{ cookiecutter.cloud_project }}-production sa get-token {{ cookiecutter.automation_user }}
-{%- else %}
-        oc -n {{ cookiecutter.cloud_project }} create sa {{ cookiecutter.automation_user }}
-        oc -n {{ cookiecutter.cloud_project }} policy add-role-to-user admin -z {{ cookiecutter.automation_user }}
-        oc -n {{ cookiecutter.cloud_project }} sa get-token {{ cookiecutter.automation_user }}
-{%- endif -%}
-{%- elif cookiecutter.cloud_platform in ['Rancher'] %}
-#. Create a service account called "{{ cookiecutter.automation_user }}", determine its token.
-{%- endif -%}
-{%- if cookiecutter.ci_service == 'bitbucket-pipelines.yml' %}
-
-#. Note down service account token and your cluster's URL, and
-
-   - at `Settings > Pipelines > Settings
-     <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/admin/addon/admin/pipelines/settings>`_,
-     check "Enable Pipelines",
-   - at `Settings > Pipelines > Repository variables
-     <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/admin/addon/admin/pipelines/repository-variables>`_
-     configure the following environment variables, which allow the pipeline
-     to integrate with your container platform:
-
-     - ``KUBE_TOKEN``
-     - ``KUBE_URL``{% if cookiecutter.cloud_platform not in ['APPUiO'] %}
-     - ``REGISTRY_PASSWORD`` (for image registry account {{ cookiecutter.registry_user }}){% endif %}
-
-#. Rename the default deployment environments at
-
-   - `Settings > Deployments
-     <https://bitbucket.org/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/admin/addon/admin/pipelines/deployment-settings>`_
-
-   as follows:
-
-   - *Test* ➜ *Development*
-   - *Staging* ➜ *Integration*
-{%- elif cookiecutter.ci_service == '.gitlab-ci.yml' %}
-
-#. Use the service account token to configure the
-   `Kubernetes integration <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/clusters>`_
-   of your GitLab project: (`GitLab docs <https://docs.gitlab.com/ee/user/project/clusters/>`_)
-
-   - Operations > Kubernetes > "{{ cookiecutter.cloud_platform }}" > Kubernetes cluster details > Service Token
-
-   and ensure the following values are set in the cluster details:
-
-   - RBAC-enabled cluster: *(checked)*
-   - GitLab-managed cluster: *(unchecked)*
-   - Project namespace: {% if cookiecutter.environment_strategy == 'shared' %}"{{ cookiecutter.cloud_project }}"{% else %}*(empty)*{% endif %}
-{%- if cookiecutter.cloud_platform not in ['APPUiO'] %}
-
-#. At `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`__
-   add the password for your "{{ cookiecutter.registry_user }}" account to allow the pipeline access your image registry with
-
-   - ``REGISTRY_PASSWORD``
-{%- endif %}
-{%- endif %}
-{%- if cookiecutter.environment_strategy == 'dedicated' %}
-{% if cookiecutter.cloud_platform in ['APPUiO'] %}
-#. Grant the service account permissions on the *development* and *integration*
-   projects:
-
-   .. code-block:: console
-
-        oc -n {{ cookiecutter.cloud_project }}-integration policy add-role-to-user \
-          admin system:serviceaccount:{{ cookiecutter.cloud_project }}-production:{{ cookiecutter.automation_user }}
-        oc -n {{ cookiecutter.cloud_project }}-development policy add-role-to-user \
-          admin system:serviceaccount:{{ cookiecutter.cloud_project }}-production:{{ cookiecutter.automation_user }}
-{%- endif %}
-{%- endif %}
-{%- endif %}
-{%- if cookiecutter.monitoring == 'Sentry' and cookiecutter.ci_service == '.gitlab-ci.yml' %}
-
-Integrate External Tools
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-:Sentry:
-  - Add environment variable ``SENTRY_DSN`` in
-    `Settings > CI/CD > Variables <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/ci_cd>`__
-  - Delete secrets in your namespace and run a deployment (to recreate them)
-  - Configure `Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/error_tracking>`__
-    in `Settings > Operations > Error Tracking <https://gitlab.com/{{ cookiecutter.vcs_account }}/{{ cookiecutter.vcs_project }}/-/settings/operations>`__
-{%- endif %}
-
-Working with Docker
-^^^^^^^^^^^^^^^^^^^
-
-Create/destroy development environment:
-
-.. code-block:: console
-
-    docker-compose up       # --build to build containers; -d to daemonize
-    docker-compose down     # docker-compose kill && docker-compose rm -af
-
-Start/stop development environment:
-
-.. code-block:: console
-
-    docker-compose start    # resume after 'stop'
-    docker-compose stop     # stop containers, but keep them intact
-
-Other useful commands:
-
-.. code-block:: console
-
-    docker-compose ps       # list running containers
-    docker-compose logs -f  # view (and follow) container logs
-
-See the `docker-compose CLI reference`_ for other commands.
-
-.. _docker-compose CLI reference: https://docs.docker.com/compose/reference/overview/
-
-{% if cookiecutter.framework in ['Symfony', 'TYPO3'] -%}
-Docker Run Commands
-^^^^^^^^^^^^^^^^^^^
-
-Development tools supported out-of-the-box: (see `docker-compose.override.yml`_)
-
-- composer
-- npm
-
-Source `.envrc`_ to activate natural aliases for those commands:
-
-.. code-block:: console
-
-    . .envrc  # or `source .envrc` in bash
-
-.. note::
-
-    **Optional but recommended:**
-
-    Install and configure `direnv`_ to make this automatic for all projects
-    you work on.  See `.envrc`_ for setup instructions.
-
-Alternatively, you can run those commands the classic way, i.e.
-
-.. code-block:: console
-
-    docker-compose run <toolname>
-
-.. _docker-compose.override.yml: docker-compose.override.yml
-.. _direnv: https://direnv.net/
-.. _.envrc: .envrc
-
-{% endif -%}
-CI/CD Process
-^^^^^^^^^^^^^
+Automation Mechanics
+^^^^^^^^^^^^^^^^^^^^
 
 {% if cookiecutter.environment_strategy == 'dedicated' -%}
 We have 3 environments corresponding to 3 namespaces on our container
@@ -211,18 +27,33 @@ We have 3 environments corresponding to 3 deployments in a single namespace
 on our container platform: *development*, *integration*, *production*
 {%- endif %}
 
-- Any merge request triggers a deployment of a review app on *development*.
-  When a merge request is merged or closed the review app will automatically
-  be removed.
-- Any change on the main branch, e.g. when a merge request is merged into
-  ``master``, triggers a deployment on *integration*.
-- To trigger a deployment on *production* push a Git tag, e.g.
+{% set review_tag = 'review-mr<id>' if cookiecutter.ci_service == '.gitlab-ci.yml' else 'review-pr<id>' -%}
+- Any image tagged ``{{ review_tag }}`` that is pushed to the image registry
+  can be deployed in *development*.
+- Any updated image tagged ``latest`` in the image registry triggers a
+  deployment of the related resources on *integration*.
+- An image with a `semver`_ version tag triggers a deployment of all
+  related resources on *production*.
 
-  .. code-block:: console
+.. _semver: https://semver.org/
 
-    git checkout master
-    git tag 1.0.0
-    git push --tags
+Initial Setup
+^^^^^^^^^^^^^
+
+The Kubernetes manifests in this repository are managed using `Flux`_ and the
+`Flux Helm Operator`_.  Make sure you have cloned this repository from its
+original location, then run the included bootstrap script to install and
+configure both components on your Kubernetes cluster:
+
+.. code-block:: console
+
+    ./bootstrap.sh
+
+Flux and its Helm Operator are then installed in their own namespace in the
+cluster.
+
+.. _Flux: https://github.com/fluxcd/flux
+.. _Flux Helm Operator: https://github.com/fluxcd/helm-operator
 
 Credits
 ^^^^^^^

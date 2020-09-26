@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [[ $(helm version --short 2> /dev/null | head -c 3) != 'v3.' ]]; then
+    echo 'Error: Helm v3 is required to run this script. Aborting.'
+    exit 1
+fi
+
 set -o errexit
 set -o pipefail
 set -o nounset

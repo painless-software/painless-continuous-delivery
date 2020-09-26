@@ -59,6 +59,7 @@ Sample projects generated automatically on a daily basis: (`field tests`_)
 
 - `Django ➜ GitLab CI ➜ APPUiO <https://gitlab.com/appuio/example-django>`__
 - `Spring Boot ➜ GitLab CI ➜ APPUiO <https://gitlab.com/appuio/example-springboot>`__
+  (`GitOps <https://gitlab.com/appuio/example-springboot-gitops>`__)
 - `Flask ➜ Bitbucket Pipelines ➜ APPUiO <https://bitbucket.org/appuio/example-flask>`__
 
 Usage
