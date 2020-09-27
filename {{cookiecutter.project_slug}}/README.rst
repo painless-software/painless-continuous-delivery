@@ -20,8 +20,8 @@ To start developing on this project simply bring up the Docker setup:
 Migrations will run automatically at startup (via the container entrypoint).
 If they fail the very first time simply restart the application.{% endif %}
 
-{% set port = '8080' if cookiecutter.framework == 'SpringBoot' else '5000' if cookiecutter.framework == 'Flask' else '8000' -%}
-Open your web browser at http://localhost:{{ port }} to see the application
+{% set port = ':8080' if cookiecutter.framework == 'SpringBoot' else ':8000' if cookiecutter.framework == 'Django' else ':5000' if cookiecutter.framework == 'Flask' else '' -%}
+Open your web browser at http://localhost{{ port }} to see the application
 you're developing.  Log output will be displayed in the terminal, as usual.
 
 For running tests, linting, security checks, etc. see instructions in the

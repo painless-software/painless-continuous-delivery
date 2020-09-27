@@ -31,7 +31,9 @@ SECRET_KEY = 'dummy-secret' if DEBUG else env('DJANGO_SECRET_KEY')
 ALLOWED_HOSTS = ['*'] if DEBUG else [
 {%- if cookiecutter.production_domain != '(automatic)' %}
     '.{{ cookiecutter.production_domain }}',
-{%- endif%}
+{%- else %}
+    # '.your.example.com',
+{%- endif %}
 {%- if cookiecutter.cloud_platform == 'APPUiO' %}
     '.appuioapp.ch',
 {%- endif %}

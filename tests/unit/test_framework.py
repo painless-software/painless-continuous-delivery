@@ -4,6 +4,8 @@ Tests for generating a Web framework project.
 from os import system
 
 from .helpers import (  # noqa, pylint: disable=unused-import
+    dedent,
+    indent2,
     pytest_generate_tests,
 )
 
@@ -40,16 +42,35 @@ class TestFramework:
                     'COPY requirements* ./',
                     'ENTRYPOINT ["./entrypoint.sh"]',
                     'CMD ["uwsgi", "deployment/uwsgi.ini"]',
+                    dedent("""
+                    RUN DJANGO_SECRET_KEY=collectstatic \\
+                        python manage.py collectstatic --noinput --link
+                    """),
                 ]),
                 ('docker-compose.yml', [
-                    '    build:',
-                    '      context: .',
-                    '    environment:',
-                    '      - DJANGO_DEBUG=True',
-                    '    command: '
-                    '["python", "manage.py", "runserver", "0.0.0.0:8000"]',
-                    '    ports:',
-                    '      - "8000:8000"',
+                    indent2("""
+                      application:
+                        build:
+                          args:
+                            REQUIREMENTS: requirements-dev.txt
+                          context: .
+                        environment:
+                          - DJANGO_DEBUG=True
+                        command: \
+["python", "manage.py", "runserver", "0.0.0.0:8000"]
+                        ports:
+                          - "8000:8000"
+                    """),
+                ]),
+                ('README.rst', [
+                    'Open your web browser at http://localhost:8000 to see',
+                ]),
+                ('application/settings.py', [
+                    dedent("""
+                    ALLOWED_HOSTS = ['*'] if DEBUG else [
+                        # '.your.example.com',
+                    ]
+                    """),
                 ]),
             ],
             'install_commands': [
@@ -83,14 +104,22 @@ class TestFramework:
                     'CMD ["uwsgi", "deployment/uwsgi.ini"]',
                 ]),
                 ('docker-compose.yml', [
-                    '    build:',
-                    '      context: .',
-                    '    environment:',
-                    '      - FLASK_APP=application',
-                    '      - FLASK_ENV=development',
-                    '    command: ["flask", "run", "--host", "0.0.0.0"]',
-                    '    ports:',
-                    '      - "5000:5000"',
+                    indent2("""
+                      application:
+                        build:
+                          args:
+                            REQUIREMENTS: requirements-dev.txt
+                          context: .
+                        environment:
+                          - FLASK_APP=application
+                          - FLASK_ENV=development
+                        command: ["flask", "run", "--host", "0.0.0.0"]
+                        ports:
+                          - "5000:5000"
+                    """),
+                ]),
+                ('README.rst', [
+                    'Open your web browser at http://localhost:5000 to see',
                 ]),
             ],
             'install_commands': [
@@ -129,9 +158,15 @@ class TestFramework:
                     'COPY . .',
                 ]),
                 ('docker-compose.yml', [
-                    '    build: .',
-                    '    ports:',
-                    '      - "8080:8080"',
+                    indent2("""
+                      application:
+                        build: .
+                        ports:
+                          - "8080:8080"
+                    """)
+                ]),
+                ('README.rst', [
+                    'Open your web browser at http://localhost:8080 to see',
                 ]),
             ],
             'install_commands': [
@@ -166,6 +201,9 @@ class TestFramework:
                 ('docker-compose.override.yml', [
                     '    build: .',
                 ]),
+                ('README.rst', [
+                    'Open your web browser at http://localhost to see',
+                ]),
             ],
             'install_commands': [
             ],
@@ -194,6 +232,9 @@ class TestFramework:
                     'FROM php:7.0-apache',
                     ' && mv deployment/php.ini /usr/local/etc/php/ \\',
                 ]),
+                ('README.rst', [
+                    'Open your web browser at http://localhost to see',
+                ]),
             ],
             'install_commands': [
             ],
@@ -221,12 +262,12 @@ class TestFramework:
             assert thefile.isfile(), \
                 'File %s missing in generated project.' % filename
 
-        for filename, required_lines in required_content:
-            file_content = result.project.join(filename).readlines(cr=False)
-            for line in required_lines:
-                assert line in file_content, \
-                    'Line not found in generated file %s: "%s"' % \
-                    (filename, line)
+        for filename, chunks in required_content:
+            file_content = result.project.join(filename).read()
+            for chunk in chunks:
+                assert chunk in file_content, \
+                    'Not found in generated file %s:\n"%s"\n' \
+                    '-----------\n%s' % (filename, chunk, file_content)
 
         for cmd_pattern, project_file in install_commands:
             input_file = result.project.join(project_file)
