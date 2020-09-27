@@ -406,5 +406,4 @@ class TestGitops:
             for chunk in chunks:
                 assert chunk in file_content, \
                     'Not found in generated file %s:\n"%s"\n' \
-                    '-----------\n%s' % \
-                    (filename, chunk, file_content)
+                    '-----------\n%s' % (filename, chunk, file_content)
