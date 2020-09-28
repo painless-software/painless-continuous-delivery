@@ -11,7 +11,7 @@ stages:
 .check:
   stage: check
 {%- if cookiecutter.framework in ['Django', 'Flask'] %}
-  image: docker.io/painless/tox
+  image: docker.io/painless/tox:kubernetes
 {%- else %}
   image: docker.io/appuio/oc:v3.11
 {%- endif %}
