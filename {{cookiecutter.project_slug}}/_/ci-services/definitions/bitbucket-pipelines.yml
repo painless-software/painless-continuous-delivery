@@ -2,7 +2,7 @@ options:
   docker: true
 
 {% if cookiecutter.framework in ['Django', 'Flask'] -%}
-image: docker.io/painless/tox
+image: docker.io/painless/tox:kubernetes
 
 {% endif -%}
 definitions:
