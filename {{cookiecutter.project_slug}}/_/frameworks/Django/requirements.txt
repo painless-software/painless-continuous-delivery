@@ -22,7 +22,7 @@ newrelic==5.20.0.149      # via -r requirements.in
 {%- if cookiecutter.database == 'Postgres' %}
 psycopg2==2.8.6           # via -r requirements.in
 {%- endif %}
-pytz==2020.1              # via django
+pytz==2020.4              # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
 sentry-sdk==0.17.8        # via -r requirements.in
 {%- endif %}
