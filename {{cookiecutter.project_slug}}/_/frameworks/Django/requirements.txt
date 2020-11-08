@@ -5,7 +5,7 @@
 #    pip-compile --output-file=requirements.txt requirements.in
 #
 {%- if cookiecutter.monitoring == 'Sentry' %}
-certifi==2020.6.20        # via sentry-sdk
+certifi==2020.11.8        # via sentry-sdk
 {%- endif %}
 {%- if cookiecutter.monitoring == 'Datadog' %}
 django-datadog==1.0.1     # via -r requirements.in
