@@ -68,7 +68,7 @@
                 "- https://${LABEL}-${TARGET}.appuioapp.ch/\n"
                 "\n"
                 "Remove all related resources with >   ++ USE WITH CAUTION ++\n"
-                "  oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}"
+                "  oc delete all,configmap,pvc,rolebinding,secret -n ${TARGET} -l app=${LABEL}"
 
   - step: &deploy-integration
       name: Deploy to Integration

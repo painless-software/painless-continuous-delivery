@@ -29,8 +29,8 @@ class TestCISetup:
                 '        - tox -e py37',
                 '                "Remove all related resources with > '
                 '  ++ USE WITH CAUTION ++\\n"',
-                '                "  oc delete all,configmap,pvc,secret'
-                ' -n ${TARGET} -l app=${LABEL}"',
+                '                "  oc delete all,configmap,pvc,rolebinding,'
+                'secret -n ${TARGET} -l app=${LABEL}"',
                 '    - &cleanup-resources',
                 '      seiso configmaps -l app=${LABEL} --delete &&',
                 '      seiso secrets -l app=${LABEL} --delete &&',
@@ -112,8 +112,8 @@ class TestCISetup:
                 '        - tox -e py37',
                 '                "Remove all related resources with > '
                 '  ++ USE WITH CAUTION ++\\n"',
-                '                "  oc delete all,configmap,pvc,secret'
-                ' -n ${TARGET} -l app=${LABEL}"',
+                '                "  oc delete all,configmap,pvc,rolebinding,'
+                'secret -n ${TARGET} -l app=${LABEL}"',
                 '    - &cleanup-resources',
                 '      seiso configmaps -l app=${LABEL} --delete &&',
                 '      seiso secrets -l app=${LABEL} --delete &&',
@@ -263,7 +263,8 @@ class TestCISetup:
                 '    kustomize build | oc apply -f - &&',
                 '    popd',
                 'stop_review:',
-                '  - oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}',  # noqa
+                '  - oc delete all,configmap,pvc,rolebinding,secret -n '
+                '${TARGET} -l app=${LABEL}',
                 '    auto_stop_in: 12 hours',
                 '    DATABASE_HOST: postgres-${CI_ENVIRONMENT_NAME}',
                 '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',
@@ -326,7 +327,8 @@ class TestCISetup:
                 '    kustomize build | oc apply -f - &&',
                 '    popd',
                 'stop_review:',
-                '  - oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}',  # noqa
+                '  - oc delete all,configmap,pvc,rolebinding,secret -n '
+                '${TARGET} -l app=${LABEL}',
                 '    auto_stop_in: 12 hours',
                 '    DATABASE_HOST: postgres',
                 '    DATABASE_HOST: postgres-review-mr${CI_MERGE_REQUEST_IID}',
