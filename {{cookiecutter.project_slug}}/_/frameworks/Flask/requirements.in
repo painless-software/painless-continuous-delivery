@@ -1,5 +1,7 @@
 Flask
-{%- if cookiecutter.monitoring == 'Sentry' %}
+{%- if cookiecutter.monitoring == 'NewRelic' %}
+newrelic
+{%- elif cookiecutter.monitoring == 'Sentry' %}
 sentry-sdk[flask]
 {%- endif %}
 uwsgi

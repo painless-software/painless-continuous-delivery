@@ -81,6 +81,32 @@ class TestMonitoring:
                 ]),
             ],
         }),
+        ('NewRelic(flask)', {
+            'project_slug': 'flask-project',
+            'framework': 'Flask',
+            'monitoring': 'NewRelic',
+            'cloud_platform': 'Rancher',
+            'docker_registry': 'nexus.example.com',
+            'required_settings': None,
+            'required_packages': [
+                'newrelic',
+            ],
+            'required_content': [
+                ('README.rst', [
+                    dedent("""
+                    Integrate External Tools
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+                    :New Relic:
+                      - Add environment variable ``NEWRELIC_LICENSE_KEY`` in
+                        `Settings > CI/CD > Variables \
+<https://gitlab.com/company-or-username/flask-project/-/settings/ci_cd>`__
+                      - Delete secrets in your namespace and run a deployment \
+(to recreate them)
+                    """),
+                ]),
+            ],
+        }),
         ('Sentry(django)', {
             'project_slug': 'django-project',
             'framework': 'Django',
