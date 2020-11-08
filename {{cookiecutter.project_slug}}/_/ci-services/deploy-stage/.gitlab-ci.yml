@@ -53,7 +53,7 @@ stop_review:
   when: manual
   before_script:
   script:
-  - oc delete all,configmap,pvc,secret -n ${TARGET} -l app=${LABEL}
+  - oc delete all,configmap,pvc,rolebinding,secret -n ${TARGET} -l app=${LABEL}
 
 integration:
   extends: .deploy
