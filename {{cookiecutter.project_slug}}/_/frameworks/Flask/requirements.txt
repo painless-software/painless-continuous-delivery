@@ -13,7 +13,9 @@ flask==1.1.2              # via -r requirements.in{% if cookiecutter.monitoring 
 itsdangerous==1.1.0       # via flask
 jinja2==2.11.2            # via flask
 markupsafe==1.1.1         # via jinja2
-{%- if cookiecutter.monitoring == 'Sentry' %}
+{%- if cookiecutter.monitoring == 'NewRelic' %}
+newrelic==5.22.1.152      # via -r requirements.in
+{%- elif cookiecutter.monitoring == 'Sentry' %}
 sentry-sdk[flask]==0.19.2  # via -r requirements.in
 urllib3==1.25.11          # via sentry-sdk
 {%- endif %}
