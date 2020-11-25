@@ -38,7 +38,7 @@ services:
 
 {%- if cookiecutter.database == 'Postgres' %}
   database:
-    image: docker.io/bitnami/postgresql:12
+    image: quay.io/bitnami/postgresql:12
     environment:
       POSTGRESQL_PASSWORD: postgres
     ports:
