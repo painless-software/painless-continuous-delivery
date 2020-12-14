@@ -53,10 +53,12 @@ stages:
   before_script:
   - IMAGE=${REGISTRY}/${TARGET}/{{ cookiecutter.docker_image }}
   - docker login -u {{ cookiecutter.registry_user }} -p {% if cookiecutter.cloud_platform in ['APPUiO'] %}${KUBE_TOKEN}{% else %}${REGISTRY_PASSWORD}{% endif %} ${REGISTRY}
-  - docker pull "${IMAGE}:latest" || true
+  - docker pull ${IMAGE}:latest || true
   script:
-  - docker build --cache-from ${IMAGE}:latest --tag "${IMAGE}:${CI_COMMIT_SHA}" .
-  - docker push "${IMAGE}"
+  - docker build --cache-from ${IMAGE}:latest
+                 --tag ${IMAGE}:${CI_COMMIT_SHA}
+                 --tag ${IMAGE}:latest .
+  - docker push ${IMAGE} --all-tags
 
 {% if cookiecutter.deployment_strategy == 'gitops' -%}
 .tag-image:

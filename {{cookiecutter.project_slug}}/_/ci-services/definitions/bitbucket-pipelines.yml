@@ -16,11 +16,13 @@ definitions:
     - &docker-login
       docker login -u {{ cookiecutter.registry_user }} -p {% if cookiecutter.cloud_platform in ['APPUiO'] %}${KUBE_TOKEN}{% else %}${REGISTRY_PASSWORD}{% endif %} ${REGISTRY}
     - &build-image
-      docker build . -t "${IMAGE}:${BITBUCKET_COMMIT}"
+      docker build --cache-from ${IMAGE}:latest
+                   --tag ${IMAGE}:${BITBUCKET_COMMIT}
+                   --tag ${IMAGE}:latest .
     - &tag-image
       docker tag "${IMAGE}:${BITBUCKET_COMMIT}" "${IMAGE}:${IMAGE_TAG}"
     - &push-image
-      docker push "${IMAGE}"
+      docker push ${IMAGE} --all-tags
 {%- else %}
     - &define-vars
       DJANGO_SECRET_KEY=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c50)
@@ -45,10 +47,11 @@ definitions:
     - &docker-login
       docker login -u {{ cookiecutter.registry_user }} -p {% if cookiecutter.cloud_platform in ['APPUiO'] %}${KUBE_TOKEN}{% else %}${REGISTRY_PASSWORD}{% endif %} ${REGISTRY}
     - &build-image
-      docker build . -t "${IMAGE}:${BITBUCKET_COMMIT}"
-                     -t "${IMAGE}:latest"
+      docker build --cache-from ${IMAGE}:latest
+                   --tag ${IMAGE}:${BITBUCKET_COMMIT}
+                   --tag ${IMAGE}:latest .
     - &push-image
-      docker push "${IMAGE}"
+      docker push ${IMAGE} --all-tags
     - &generate-secrets-app
       oc get secret ${APPLICATION} ||
       oc create secret generic ${APPLICATION}
