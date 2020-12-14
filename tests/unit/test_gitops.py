@@ -70,7 +70,7 @@ class TestGitops:
                     indent2("""
                     - step: &build
                         name: Build image
-                        image: docker.io/library/docker:19.03.8
+                        image: docker.io/library/docker:latest
                         caches:
                         - docker
                         script:
@@ -85,7 +85,7 @@ class TestGitops:
                     - step: &tag-review-app-image
                         name: Tag review app image
                         deployment: development
-                        image: docker.io/library/docker:19.03.8
+                        image: docker.io/library/docker:latest
                         caches:
                         - docker
                         script:
@@ -99,7 +99,7 @@ class TestGitops:
                     - step: &tag-integration-image
                         name: Tag integration image
                         deployment: integration
-                        image: docker.io/library/docker:19.03.8
+                        image: docker.io/library/docker:latest
                         caches:
                         - docker
                         script:
@@ -113,7 +113,7 @@ class TestGitops:
                     - step: &tag-production-image
                         name: Tag production image
                         deployment: production
-                        image: docker.io/library/docker:19.03.8
+                        image: docker.io/library/docker:latest
                         script:
                         - IMAGE_TAG=${BITBUCKET_TAG}
                         - *define-vars

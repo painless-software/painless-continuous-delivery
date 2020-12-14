@@ -1,7 +1,7 @@
 {% if cookiecutter.deployment_strategy == 'gitops' %}
   - step: &build
       name: Build image
-      image: docker.io/library/docker:19.03.8
+      image: docker.io/library/docker:latest
       caches:
       - docker
       script:
@@ -15,7 +15,7 @@
 {%- else %}
   - step: &build
       name: Build image
-      image: docker.io/library/docker:19.03.8
+      image: docker.io/library/docker:latest
       caches:
       - docker
       script:
