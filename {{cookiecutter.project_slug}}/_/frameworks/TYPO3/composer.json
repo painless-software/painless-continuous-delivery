@@ -6,7 +6,7 @@
 	"description" : "TYPO3 CMS Base Distribution",
 	"license": "GPL-2.0+",
 	"require": {
-		"typo3/cms": "^8.7",
+		"typo3/cms": "^11.0",
 		"helhum/typo3-console": "^4.4"
 	},
 	"extra": {
