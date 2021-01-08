@@ -20,7 +20,7 @@ Philosophy
     skeletons in isolated virtual environments. The only thing you need to
     install on your cookiecutter development machine should be Tox itself:
 
-    .. code-block:: bash
+    .. code-block:: console
 
         pip install tox
 
@@ -30,14 +30,14 @@ Philosophy
 General Usage
 -------------
 
-.. code-block:: bash
+.. code-block:: console
 
     # list all available skeleton targets (= Tox targets)
     tox -l
     # list all skeleton targets for Django
     tox -l -c tox-django.ini
 
-.. code-block:: bash
+.. code-block:: console
 
     # generate all skeletons in the ./.tox/<target>/_/ folder
     tox
@@ -46,12 +46,12 @@ General Usage
     # generate only the skeleton for Django 1.11
     tox -e django111 -c tox-django.ini
 
-.. code-block:: bash
+.. code-block:: console
 
     # list all generated, sanitized skeletons
     ls -l .tox/*/_/
 
-.. code-block:: bash
+.. code-block:: console
 
     # remove skeletons, build files and folders
     tox -e clean
