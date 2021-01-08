@@ -67,13 +67,13 @@ Usage
 
 Install `cookiecutter`_:
 
-.. code-block:: bash
+.. code-block:: console
 
     pip install cookiecutter
 
 Generate a new Cookiecutter template layout:
 
-.. code-block:: bash
+.. code-block:: console
 
     cookiecutter gh:painless-software/painless-continuous-delivery
 
