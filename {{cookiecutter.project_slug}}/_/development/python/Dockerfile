@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.7-slim
+FROM docker.io/library/python:3.8-alpine
 
 ARG REQUIREMENTS=requirements.txt
 
@@ -10,25 +10,29 @@ WORKDIR /app
 
 COPY requirements* ./
 
-RUN apt-get update \
- && apt-get install -y \
-    gcc \
+RUN apk update \
+ && apk add --no-cache \
     gettext \
-    libpq5 \
-    libpq-dev \
+    libjpeg \
+    libpq \
     nginx \
-    python3-dev \
+ && apk add --no-cache --virtual .build-deps \
+    build-base \
+    git \
+    jpeg-dev \
+    libffi-dev \
+    libxml2-dev \
+    libxslt-dev \
+    linux-headers \
+    postgresql-dev \
+    zlib-dev \
  && pip --no-cache-dir install --upgrade pip \
  && pip --no-cache-dir install -r ${REQUIREMENTS} \
- && apt-get purge -y \
-    gcc \
-    libpq-dev \
-    python3-dev \
- && apt-get autoremove -y --purge \
- && apt-get clean \
+ && apk del .build-deps \
  && ln -sfv /app/deployment/nginx.conf /etc/nginx/nginx.conf \
  && ln -sfv /dev/stdout /var/log/nginx/access.log \
- && ln -sfv /dev/stderr /var/log/nginx/error.log
+ && ln -sfv /dev/stderr /var/log/nginx/error.log \
+ && mkdir -v /run/nginx
 
 COPY . .
 
