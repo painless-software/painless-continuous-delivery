@@ -15,4 +15,4 @@ jobs:
     - tar xf kubeval-linux-amd64.tar.gz
     - sudo cp kubeval /usr/local/bin
     script:
-    - /kubeval --strict --ignore-missing-schemas **/*.yaml
+    - /kubeval --strict --ignore-missing-schemas application/base/*.yaml application/overlays/*/*.yaml

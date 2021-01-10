@@ -6,4 +6,4 @@
   service: app
   steps:
   - name: Lint manifests
-    command: /kubeval --strict --ignore-missing-schemas **/*.yaml
+    command: /kubeval --strict --ignore-missing-schemas application/base/*.yaml application/overlays/*/*.yaml

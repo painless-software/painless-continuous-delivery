@@ -153,7 +153,8 @@ class TestGitops:
                         name: Lint manifests
                         image: docker.io/garethr/kubeval:latest
                         script:
-                        - /kubeval --strict --ignore-missing-schemas **/*.yaml
+                        - /kubeval --strict --ignore-missing-schemas \
+application/base/*.yaml application/overlays/*/*.yaml
                     """),
                     dedent("""
                     pipelines:
@@ -218,7 +219,8 @@ class TestGitops:
               service: app
               steps:
               - name: Lint manifests
-                command: /kubeval --strict --ignore-missing-schemas **/*.yaml
+                command: /kubeval --strict --ignore-missing-schemas \
+application/base/*.yaml application/overlays/*/*.yaml
                     """),
                 ]),
                 ('codeship-gitops/application/overlays/development/'
@@ -334,7 +336,8 @@ class TestGitops:
                         name: docker.io/garethr/kubeval:latest
                         entrypoint: [""]
                       script:
-                      - /kubeval --strict --ignore-missing-schemas **/*.yaml
+                      - /kubeval --strict --ignore-missing-schemas \
+application/base/*.yaml application/overlays/*/*.yaml
                     """),
                 ]),
                 ('gitlab-gitops/application/overlays/development/'

@@ -10,4 +10,4 @@ lint:
     name: docker.io/garethr/kubeval:latest
     entrypoint: [""]
   script:
-  - /kubeval --strict --ignore-missing-schemas **/*.yaml
+  - /kubeval --strict --ignore-missing-schemas application/base/*.yaml application/overlays/*/*.yaml
