@@ -10,19 +10,19 @@
     "require": {
         "php": ">=5.3.9",
         "symfony/symfony": "2.8.*",
-        "doctrine/orm": "^2.4.8",
-        "doctrine/doctrine-bundle": "~1.4",
+        "doctrine/orm": "2.5.6",
+        "doctrine/doctrine-bundle": "1.6.8",
         "symfony/swiftmailer-bundle": "~2.3",
         "symfony/monolog-bundle": "~2.4",
-        "sensio/distribution-bundle": "~5.0",
-        "sensio/framework-extra-bundle": "^3.0.2",
-        "incenteev/composer-parameter-handler": "~2.0"
+        "sensio/distribution-bundle": "5.0.20",
+        "sensio/framework-extra-bundle": "3.0.26",
+        "incenteev/composer-parameter-handler": "2.1.2"
     },
     "require-dev": {
-        "sensio/generator-bundle": "~3.0",
+        "sensio/generator-bundle": "3.1.4",
         "symfony/phpunit-bridge": "~2.7",
-        "phpunit/phpunit": "^6",
-        "friendsofphp/php-cs-fixer": "^2"
+        "phpunit/phpunit": "6.2.2",
+        "friendsofphp/php-cs-fixer": "2.2.4"
     },
     "scripts": {
         "check": [
