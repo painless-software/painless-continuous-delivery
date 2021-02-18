@@ -24,7 +24,7 @@ psycopg2==2.8.6           # via -r requirements.in
 {%- endif %}
 pytz==2020.5              # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
-sentry-sdk==0.19.5        # via -r requirements.in
+sentry-sdk==0.20.3        # via -r requirements.in
 {%- endif %}
 sqlparse==0.4.1           # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
