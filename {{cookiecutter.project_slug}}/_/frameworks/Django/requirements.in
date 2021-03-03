@@ -1,4 +1,4 @@
-Django>=2.2.10,<3.0
+Django>=2.2.19,<3.0
 {%- if cookiecutter.monitoring == 'Datadog' %}
 django-datadog
 {%- endif %}
