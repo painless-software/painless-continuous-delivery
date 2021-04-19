@@ -7,7 +7,7 @@
 	"license": "GPL-2.0+",
 	"require": {
 		"typo3/cms": "^8.7",
-		"helhum/typo3-console": "^4.4"
+		"helhum/typo3-console": "^4.9"
 	},
 	"extra": {
 		"typo3/cms": {
