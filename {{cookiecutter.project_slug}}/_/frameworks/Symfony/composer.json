@@ -21,7 +21,7 @@
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
         "symfony/phpunit-bridge": "~2.7",
-        "phpunit/phpunit": "^6",
+        "phpunit/phpunit": "6.5.14",
         "friendsofphp/php-cs-fixer": "^2"
     },
     "scripts": {
