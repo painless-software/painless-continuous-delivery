@@ -1,7 +1,8 @@
 """
 Django settings for application project.
 """
-from os.path import abspath, dirname, join
+from pathlib import Path
+
 from environ import Env
 
 env = Env()  # pylint: disable=invalid-name
@@ -22,7 +23,7 @@ if SENTRY_DSN:
         release=REVISION)
 {%- endif %}
 
-BASE_DIR = dirname(dirname(abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
@@ -182,3 +183,7 @@ if NEWRELIC_LICENSE_KEY:
 
     newrelic.agent.initialize(join(BASE_DIR, 'newrelic.ini'))
 {%- endif %}
+
+# Default primary key field type
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
