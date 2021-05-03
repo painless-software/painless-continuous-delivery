@@ -22,7 +22,7 @@
         "sensio/generator-bundle": "~3.0",
         "symfony/phpunit-bridge": "~2.7",
         "phpunit/phpunit": "^6",
-        "friendsofphp/php-cs-fixer": "^2"
+        "friendsofphp/php-cs-fixer": "2.19.0"
     },
     "scripts": {
         "check": [
