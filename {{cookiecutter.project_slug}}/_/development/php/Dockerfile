@@ -1,4 +1,4 @@
-FROM php:7.0-apache
+FROM php:7.4-apache
 WORKDIR /var/www/html
 COPY . .
 RUN bash -c "source .envrc && inside_docker-moduser www-data && rm .envrc"
