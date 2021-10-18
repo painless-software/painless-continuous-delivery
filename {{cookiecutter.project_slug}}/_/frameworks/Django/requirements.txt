@@ -36,7 +36,7 @@ pytz==2021.1
 sentry-sdk==1.0.0
     # via -r requirements.in
 {%- endif %}
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
 urllib3==1.26.4
