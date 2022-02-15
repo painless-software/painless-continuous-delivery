@@ -1,6 +1,7 @@
 """
 Django settings for application project.
 """
+
 from pathlib import Path
 
 from environ import Env
@@ -114,7 +115,7 @@ DATABASES = {
     'default': env.db(
         'DJANGO_DATABASE_URL',
         {%- if cookiecutter.database == '(none)' %}
-        default='sqlite://%s' % join(BASE_DIR, 'db.sqlite3')
+        default=f"sqlite://{BASE_DIR / 'db.sqlite3'}"
         {%- elif cookiecutter.database == 'Postgres' %}
         default='postgres://postgres:postgres@database/postgres'
         {%- elif cookiecutter.database == 'MySQL' %}
@@ -154,10 +155,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 
-STATIC_ROOT = join(BASE_DIR, 'static')
+STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = '/static/'
-MEDIA_ROOT = join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
+
+# Default primary key field type
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
@@ -181,9 +186,5 @@ NEWRELIC_LICENSE_KEY = env('NEWRELIC_LICENSE_KEY', default=None)
 if NEWRELIC_LICENSE_KEY:
     import newrelic.agent
 
-    newrelic.agent.initialize(join(BASE_DIR, 'newrelic.ini'))
+    newrelic.agent.initialize(BASE_DIR / 'newrelic.ini')
 {%- endif %}
-
-# Default primary key field type
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
