@@ -4,7 +4,7 @@
   service: app
   steps:
   {%- for env in cookiecutter.tests.split(',') %}
-  - name: {{ env|replace('py36','Python 3.6')|replace('py37','Python 3.7')|replace('py38','Python 3.8')|replace('pypy3','PyPy 3')|replace('behave','Behave') }}
+  - name: {{ env|replace('py38','Python 3.8')|replace('py39','Python 3.9')|replace('pypy3','PyPy 3')|replace('behave','Behave') }}
     command: {% if cookiecutter.framework in ['Django', 'Flask'] -%}
       tox -e {{ env }}
         {%- elif cookiecutter.framework in ['Symfony', 'TYPO3'] -%}

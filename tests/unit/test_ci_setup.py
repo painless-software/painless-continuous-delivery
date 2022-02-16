@@ -22,11 +22,11 @@ class TestCISetup:
             'framework': 'Django',
             'database': 'Postgres',
             'checks': 'flake8,pylint,bandit,kubernetes',
-            'tests': 'py36,py37,py38,pypy3,behave',
+            'tests': 'py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'required_lines': [
-                '        - tox -e py37',
+                '        - tox -e py38',
                 '                "Remove all related resources with > '
                 '  ++ USE WITH CAUTION ++\\n"',
                 '                "  oc delete all,configmap,pvc,rolebinding,'
@@ -105,11 +105,11 @@ class TestCISetup:
             'framework': 'Django',
             'database': 'Postgres',
             'checks': 'flake8,pylint,bandit,kubernetes',
-            'tests': 'py36,py37,py38,pypy3,behave',
+            'tests': 'py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'dedicated',
             'required_lines': [
-                '        - tox -e py37',
+                '        - tox -e py38',
                 '                "Remove all related resources with > '
                 '  ++ USE WITH CAUTION ++\\n"',
                 '                "  oc delete all,configmap,pvc,rolebinding,'
@@ -208,7 +208,7 @@ class TestCISetup:
             'framework': 'Django',
             'database': 'Postgres',
             'checks': 'flake8,pylint,bandit',
-            'tests': 'py36,py37,py38,pypy3,behave',
+            'tests': 'py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'required_lines': [
@@ -224,12 +224,12 @@ class TestCISetup:
             'framework': 'Django',
             'database': 'Postgres',
             'checks': 'flake8,pylint,bandit',
-            'tests': 'py36,py37,py38,pypy3,behave',
+            'tests': 'py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'required_lines': [
                 '    TARGET: myproject',
-                '  script: tox -e py37',
+                '  script: tox -e py38',
                 '.deploy-vars:',
                 '.generate-secrets:',
                 '.deploy:',
@@ -291,12 +291,12 @@ class TestCISetup:
             'framework': 'Django',
             'database': 'Postgres',
             'checks': 'flake8,pylint,bandit',
-            'tests': 'py36,py37,py38,pypy3,behave',
+            'tests': 'py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'dedicated',
             'required_lines': [
                 '    TARGET: myproject-production',
-                '  script: tox -e py37',
+                '  script: tox -e py38',
                 '.deploy-vars:',
                 '.generate-secrets:',
                 '.deploy:',
@@ -372,7 +372,7 @@ class TestCISetup:
             'framework': 'Django',
             'database': 'Postgres',
             'checks': 'flake8,pylint,bandit',
-            'tests': 'py36,py37,py38,pypy3,behave',
+            'tests': 'py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'required_lines': [
@@ -388,7 +388,7 @@ class TestCISetup:
             'framework': 'Django',
             'database': 'Postgres',
             'checks': 'flake8,pylint,bandit',
-            'tests': 'py36,py37,py38,pypy3,behave',
+            'tests': 'py38,pypy3,behave',
             'cloud_platform': 'APPUiO',
             'environment_strategy': 'shared',
             'required_lines': [

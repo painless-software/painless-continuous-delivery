@@ -9,4 +9,4 @@ build:
   {%- elif cookiecutter.framework in ['SpringBoot'] -%}
   - echo "This should run ???"
   {%- endif %}
-  - mv -v tests/reports/* shippable/testresults/ || true
+  - mv -v tests/*-report.* tests/TESTS-*xml shippable/testresults/ || true

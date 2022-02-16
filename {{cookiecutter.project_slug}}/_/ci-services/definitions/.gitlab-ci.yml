@@ -32,7 +32,7 @@ stages:
 {%- endif %}
   artifacts:
     reports:
-      junit: tests/reports/*.xml
+      junit: tests/*-report.xml
   coverage: /^TOTAL.+ (\d+)%$/
   variables:
     GIT_DEPTH: 7

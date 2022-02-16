@@ -20,7 +20,7 @@ class TestFramework:
             'project_slug': 'django-project',
             'framework': 'Django',
             'checks': 'flake8,pylint',
-            'tests': 'py36,py37,py38,pypy3,behave',
+            'tests': 'py38,pypy3,behave',
             'required_files': [
                 '.envrc',
                 '.gitignore',
@@ -81,7 +81,7 @@ class TestFramework:
             'project_slug': 'flask-project',
             'framework': 'Flask',
             'checks': 'flake8,pylint',
-            'tests': 'py36,py37,py38,pypy3,behave',
+            'tests': 'py38,pypy3,behave',
             'required_files': [
                 '.envrc',
                 '.gitignore',

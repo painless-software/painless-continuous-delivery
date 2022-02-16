@@ -10,5 +10,5 @@ Feature: Painless Continuous Delivery project setup powered by Cookiecutter
 
     Examples: Python frameworks
       | framework | database | checks                   | tests       | commands |
-      | Django    | Postgres | flake8,pylint,kubernetes | py37,behave | tox      |
-      | Flask     | (none)   | flake8,pylint,kubernetes | py37,behave | tox      |
+      | Django    | Postgres | flake8,pylint,kubernetes | py38,behave | tox      |
+      | Flask     | (none)   | flake8,pylint,kubernetes | py38,behave | tox      |

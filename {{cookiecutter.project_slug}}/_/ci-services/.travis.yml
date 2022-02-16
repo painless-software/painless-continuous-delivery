@@ -6,8 +6,8 @@ dist: bionic
 {%- if cookiecutter.framework in ['Django', 'Flask'] %}
 language: python
 python:
-{%- for env in cookiecutter.tests.split(",")|select("in",["py36","py37","py38"]) %}
-- {{ env|replace('py36','3.6')|replace('py37','3.7')|replace('py38','3.8') }}
+{%- for env in cookiecutter.tests.split(",")|select("in",["py38","py39"]) %}
+- {{ env|replace('py38','3.8')|replace('py39','3.9') }}
 {%- endfor %}
 {%- elif cookiecutter.framework in ['Symfony', 'TYPO3'] %}
 language: php

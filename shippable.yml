@@ -10,8 +10,6 @@ env:
   - TOXENV=flake8
   - TOXENV=pylint
   - TOXENV=bandit
-  - TOXENV=py36
-  - TOXENV=py37
   - TOXENV=py38
   - TOXENV=pypy3
   - TOXENV=behave
@@ -24,4 +22,4 @@ build:
   ci:
   - pip install tox
   - tox
-  - mv -v tests/reports/* shippable/testresults/ || true
+  - mv -v tests/*-report.* tests/TESTS-*.xml shippable/testresults/ || true

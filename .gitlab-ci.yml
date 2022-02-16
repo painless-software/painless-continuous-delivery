@@ -18,7 +18,7 @@ image: painless/tox:multi
   stage: test
   artifacts:
     reports:
-      junit: tests/reports/*.xml
+      junit: tests/*-report.xml
 
 stages:
 - check
@@ -37,10 +37,6 @@ bandit:
   stage: check
   script: tox -e bandit
   allow_failure: true
-
-py37:
-  extends: .test
-  script: tox -e py37
 
 py38:
   extends: .test
