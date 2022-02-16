@@ -439,11 +439,13 @@ class TestCISetup:
 
         for line in required_lines:
             assert line in ci_service_conf, \
-                "Not found in CI config: '%s'\n%s" % (line, ci_service_content)
+                f"Not found in CI config: '{line}'\n" \
+                f"{ci_service_content}"
 
         for chunk in absent_content:
             assert chunk not in ci_service_content, \
-                "Found in CI config: '%s'\n%s" % (chunk, ci_service_content)
+                f"Found in CI config: '{chunk}'\n" \
+                f"{ci_service_content}"
 
         codeship_services = result.project.join('codeship-services.yml')
         assert (ci_service == 'codeship-steps.yml' and
@@ -453,7 +455,7 @@ class TestCISetup:
         for filename in files_absent:
             thefile = result.project.join(filename)
             assert not thefile.exists(), \
-                'File %s found in generated project.' % filename
+                f'File {filename} found in generated project.'
 
         # ensure this project itself stays up-to-date with the template
         verify_file_matches_repo_root(result, ci_service,

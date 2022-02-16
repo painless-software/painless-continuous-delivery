@@ -228,9 +228,10 @@ class TestMonitoring:
             file_content = result.project.join(filename).read()
             for chunk in chunks:
                 assert chunk in file_content, \
-                    'Not found in generated file %s:\n"%s"\n' \
-                    '-----------\n%s' % \
-                    (filename, chunk, file_content)
+                    f'Not found in generated file {filename}:\n' \
+                    f'"{chunk}"\n' \
+                    '-----------\n' \
+                    f'{file_content}'
 
         assert result.project.join('tox.ini').isfile()
         with result.project.as_cwd():

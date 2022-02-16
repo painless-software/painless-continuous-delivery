@@ -397,16 +397,20 @@ class TestDeployment:
                 result.project.join('deployment').join(filename).read()
             for chunk in chunks:
                 assert chunk in file_content, \
-                    'Not found in generated file %s:\n"%s"\n' \
-                    '-----------\n%s' % (filename, chunk, file_content)
+                    f'Not found in generated file {filename}:\n' \
+                    f'"{chunk}"\n' \
+                    '-----------\n' \
+                    f'{file_content}'
 
         for filename, chunks in absent_content:
             file_content = \
                 result.project.join('deployment').join(filename).read()
             for chunk in chunks:
                 assert chunk not in file_content, \
-                    'Found in file %s, but should not be present:\n"%s"\n' \
-                    '-----------\n%s' % (filename, chunk, file_content)
+                    f'Found in file {filename}, but should not be present:\n' \
+                    f'"{chunk}"\n' \
+                    '-----------\n' \
+                    f'{file_content}'
 
     def verify_app_folders_exist(self):
         """

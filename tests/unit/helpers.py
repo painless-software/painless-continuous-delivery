@@ -47,7 +47,7 @@ def get_lines_for(identifier, module_lines, block_type):
     start_symbol, stop_symbol = delimiters_for[block_type]
 
     try:
-        start = module_lines.index('%s = %s' % (identifier, start_symbol))
+        start = module_lines.index(f'{identifier} = {start_symbol}')
         stop = module_lines.index(stop_symbol, start)
         value_lines = module_lines[start:stop + 1]
         return [line.strip() for line in value_lines]
@@ -79,7 +79,7 @@ class FunctionCall:
 
         new.body = '\n'
         for line in body_text:
-            new.body += '%s\n' % line
+            new.body += f'{line}\n'
         return new
 
     def __str__(self):
@@ -92,14 +92,14 @@ def verify_required_settings(required_settings, settings):
     """
     for key, value in required_settings.items():
         if isinstance(value, (str, FunctionCall)):
-            key_value_pair = '%s = %s' % (key, value)
+            key_value_pair = f'{key} = {value}'
             assert key_value_pair in settings, \
                 not_found_pretty(key_value_pair, settings)
         else:
             lines = get_lines_for(key, settings, block_type=type(value))
             if isinstance(value, dict):
                 for dict_key, dict_value in value.items():
-                    key_value_pair = "'%s': %s," % (dict_key, dict_value)
+                    key_value_pair = f"'{dict_key}': {dict_value},"
                     key_val_lines = key_value_pair.splitlines()
                     intersection = [_ for _ in key_val_lines if _ in lines]
                     assert intersection == key_val_lines, \
@@ -117,11 +117,12 @@ def verify_file_matches_repo_root(result, *file, max_compare_bytes=-1):
     """
     mother_file = REPO_ROOT_PATH.join(*file).strpath
     generated_file = result.project.join(*file).strpath
-    with open(mother_file) as mother, open(generated_file) as generated:
+    with open(mother_file, encoding='utf-8') as mother, \
+            open(generated_file, encoding='utf-8') as generated:
         diff = ''.join(context_diff(mother.readlines(max_compare_bytes),
                                     generated.readlines(max_compare_bytes),
                                     fromfile=mother_file,
                                     tofile=generated_file))
     assert not diff, \
-        "Mother project '{}' not matching template.\n{}".format(
-            Path(*file), diff)
+        f"Mother project '{Path(*file)}' not matching template.\n" \
+        f"{diff}"

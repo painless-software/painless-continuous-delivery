@@ -377,12 +377,12 @@ application/base/*.yaml application/overlays/*/*.yaml
         for filename in files_present:
             thefile = result.project.join("..", filename)
             assert thefile.exists(), \
-                'File %s missing in generated project.' % filename
+                f'File {filename} missing in generated project.'
 
         for filename in files_absent:
             thefile = result.project.join('..').join(filename)
             assert not thefile.exists(), \
-                'File %s found in generated project.' % filename
+                f'File {filename} found in generated project.'
 
         app_readme_file = result.project.join("README.rst")
         gitops_readme_file = result.project.join(
@@ -408,5 +408,7 @@ application/base/*.yaml application/overlays/*/*.yaml
             file_content = result.project.join("..", filename).read()
             for chunk in chunks:
                 assert chunk in file_content, \
-                    'Not found in generated file %s:\n"%s"\n' \
-                    '-----------\n%s' % (filename, chunk, file_content)
+                    f'Not found in generated file {filename}:\n' \
+                    f'"{chunk}"\n' \
+                    '-----------\n' \
+                    f'{file_content}'

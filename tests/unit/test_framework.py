@@ -260,18 +260,20 @@ class TestFramework:
         for filename in required_files:
             thefile = result.project.join(filename)
             assert thefile.isfile(), \
-                'File %s missing in generated project.' % filename
+                f'File {filename} missing in generated project.'
 
         for filename, chunks in required_content:
             file_content = result.project.join(filename).read()
             for chunk in chunks:
                 assert chunk in file_content, \
-                    'Not found in generated file %s:\n"%s"\n' \
-                    '-----------\n%s' % (filename, chunk, file_content)
+                    f'Not found in generated file {filename}:\n' \
+                    f'"{chunk}"\n' \
+                    '-----------\n' \
+                    f'{file_content}'
 
         for cmd_pattern, project_file in install_commands:
             input_file = result.project.join(project_file)
             command = cmd_pattern % input_file
             assert input_file.isfile()
             exit_code = system(command)
-            assert exit_code == 0, 'Command fails: %s' % command
+            assert exit_code == 0, f'Command fails: {command}'

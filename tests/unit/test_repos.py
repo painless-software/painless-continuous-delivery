@@ -68,32 +68,28 @@ class TestRepos:
         assert result.project.join('.git').isdir()
         git_config = result.project.join('.git', 'config').readlines(cr=False)
         remote_section = '[remote "origin"]'
-        remote_url = '\turl = {}'.format(vcs_remote)
-        assert remote_section in git_config, \
-            'Remote declaration not found in .git/config: {needle}\n' \
-            '{haystack}'.format(
-                needle=remote_section,
-                haystack='\n'.join(git_config),
-            )
-        assert remote_url in git_config, \
-            'Remote URL not found in .git/config: {needle}\n' \
-            '{haystack}'.format(
-                needle=remote_url,
-                haystack='\n'.join(git_config),
-            )
+        remote_url = f'\turl = {vcs_remote}'
 
-        docker_image = 'image: {registry}/{image}'.format(
-            registry=docker_registry,
-            image=project_slug,
-        )
+        needle = remote_section
+        haystack = '\n'.join(git_config)
+        assert remote_section in git_config, \
+            f'Remote declaration not found in .git/config: {needle}\n' \
+            f'{haystack}'
+
+        needle = remote_url
+        haystack = '\n'.join(git_config)
+        assert remote_url in git_config, \
+            f'Remote URL not found in .git/config: {needle}\n' \
+            f'{haystack}'
+
+        image = f'image: {docker_registry}/{project_slug}'
         deploy_conf = [
             line.strip() for line in result.project.join(
                 'docker-compose.final.yml').readlines(cr=False)
             if line.strip()
         ]
-        assert docker_image in deploy_conf, \
-            'Container image missing in deployment configuration: {image}\n' \
-            '{config}'.format(
-                image=docker_image,
-                config='\n'.join(deploy_conf),
-            )
+
+        config = '\n'.join(deploy_conf)
+        assert image in deploy_conf, \
+            f'Container image missing in deployment configuration: {image}\n' \
+            f'{config}'

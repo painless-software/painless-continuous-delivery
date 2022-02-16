@@ -129,13 +129,9 @@ class TestTestingSetup:
             config_file = result.project.join(filename).read()
             for config_value in expected_content:
                 assert config_value in config_file, \
-                    'Configuration value missing in {filename}: {value}\n' \
+                    f'Config value missing in {filename}: {config_value}\n' \
                     '--------------- (content follows)\n' \
-                    '{content}'.format(
-                        filename=filename,
-                        content=config_file,
-                        value=config_value,
-                    )
+                    f'{config_file}'
 
         # ensure this project itself stays up-to-date with the template
         for filename in match_project_root:
