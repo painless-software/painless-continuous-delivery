@@ -40,7 +40,7 @@
   - step: &deploy-review-app
       name: Deploy Review App
       deployment: development
-      image: docker.io/appuio/oc:v3.11
+      image: docker.io/appuio/oc:v4.9
       script:
       - IMAGE_TAG=${BITBUCKET_COMMIT}
         {%- if cookiecutter.environment_strategy == 'dedicated' %}
@@ -73,7 +73,7 @@
   - step: &deploy-integration
       name: Deploy to Integration
       deployment: integration
-      image: docker.io/appuio/oc:v3.11
+      image: docker.io/appuio/oc:v4.9
       script:
       - IMAGE_TAG=${BITBUCKET_COMMIT}
         {%- if cookiecutter.environment_strategy == 'dedicated' %}
@@ -105,7 +105,7 @@
   - step: &deploy-production
       name: Deploy to Production
       deployment: production
-      image: docker.io/appuio/oc:v3.11
+      image: docker.io/appuio/oc:v4.9
       script:
       - IMAGE_TAG=${BITBUCKET_TAG}
         {%- if cookiecutter.environment_strategy == 'dedicated' %}

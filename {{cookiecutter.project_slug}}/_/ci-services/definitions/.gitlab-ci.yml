@@ -13,7 +13,7 @@ stages:
 {%- if cookiecutter.framework in ['Django', 'Flask'] %}
   image: docker.io/painless/tox:kubernetes
 {%- else %}
-  image: docker.io/appuio/oc:v3.11
+  image: docker.io/appuio/oc:v4.9
 {%- endif %}
   variables:
     GIT_DEPTH: 7
@@ -119,7 +119,7 @@ stages:
   extends: .generate-secrets
   environment:
     url: "${KUBE_URL}/console/project/{{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}/overview"
-  image: docker.io/appuio/oc:v3.11
+  image: docker.io/appuio/oc:v4.9
   script:
   - echo "ENVIRONMENT=${CI_ENVIRONMENT_NAME}" >> manifests/application/base/application.env
   - echo "REVISION=${CI_COMMIT_SHORT_SHA}" >> manifests/application/base/application.env
