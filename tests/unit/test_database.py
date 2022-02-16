@@ -27,7 +27,7 @@ class TestDatabase:
                 'DATABASES': {
                     'default': env_db(
                         "'DJANGO_DATABASE_URL',",
-                        "default='sqlite://%s' % join(BASE_DIR, 'db.sqlite3')",
+                        'default=f"sqlite://{BASE_DIR / \'db.sqlite3\'}"',
                     ),
                 },
             },
