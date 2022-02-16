@@ -172,7 +172,7 @@ if DEBUG:
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
     INSTALLED_APPS += ['debug_toolbar']
 
-if SECRET_KEY == 'testing':
+if SECRET_KEY == 'behave':
     INSTALLED_APPS += ['behave_django']
 {%- if cookiecutter.monitoring == 'Datadog' %}
 

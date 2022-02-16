@@ -50,7 +50,7 @@ class TestDatabase:
             },
             'required_packages': [
                 'django-environ',
-                'psycopg',
+                'psycopg2',
             ],
         }),
         ('MySQL', {
