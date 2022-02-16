@@ -1,0 +1,23 @@
+[tool.bandit]
+exclude = [".cache",".git",".idea",".tox",".vscode","build","dist","docs","tests"]
+
+[tool.black]
+color = true
+
+[tool.isort]
+color_output = true
+profile = "black"
+
+[tool.pylint.master]
+output-format = "colorized"
+
+[tool.pylint.messages_control]
+disable = [
+    # "duplicate-code",
+]
+
+[tool.pylint.similarities]
+min-similarity-lines = 6
+
+[tool.pytest.ini_options]
+addopts = "--color=yes --doctest-modules --ignore=tests/acceptance/steps --junitxml=tests/unittests-report.xml --verbose tests"

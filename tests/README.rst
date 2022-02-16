@@ -38,7 +38,7 @@ Use the ``tox`` command in the terminal to run your tests locally:
 .. code-block:: console
 
     # run a specific set of tests (one or several)
-    tox -e py37
+    tox -e py38
     tox -e flake8,pylint
 
 .. code-block:: console
@@ -74,7 +74,7 @@ missing ones, and fix identified issues (if any) with additional commits:
 
 .. code-block:: console
 
-    tox -e flake8,pylint,py36,py37
+    tox -e flake8,pylint,py38
 
 Field Tests
 -----------

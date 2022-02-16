@@ -46,7 +46,9 @@ coverage.xml
 nosetests.xml
 unittests.xml
 .pytest_cache/
-tests/reports/
+tests/*-report.json
+tests/*-report.xml
+tests/TESTS-*.xml
 
 # Translations
 *.mo

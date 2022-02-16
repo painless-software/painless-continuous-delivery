@@ -20,11 +20,11 @@ class TestTestingSetup:
             'ci_service': '.travis.yml',
             'framework': 'Django',
             'checks': 'flake8,pylint,isort',
-            'tests': 'py37,py38,pypy3,behave',
+            'tests': 'py38,pypy3,behave',
             'test_configuration': [
                 ('tox.ini', [
                     '[tox]',
-                    'envlist = flake8,pylint,isort,py37,py38,pypy3,behave',
+                    'envlist = flake8,pylint,isort,py38,pypy3,behave',
                     '[testenv]',
                     '[testenv:flake8]',
                     '[testenv:isort]',
@@ -35,7 +35,7 @@ class TestTestingSetup:
                 ('pyproject.toml', [
                     '[tool.pylint.master]',
                     'load-plugins = "pylint_django"',
-                    '[tool.pytest]',
+                    '[tool.pytest.ini_options]',
                 ]),
             ],
             'match_project_root': [
@@ -49,11 +49,11 @@ class TestTestingSetup:
             'ci_service': '.travis.yml',
             'framework': 'Flask',
             'checks': 'isort',
-            'tests': 'py37,py38,behave',
+            'tests': 'py38,behave',
             'test_configuration': [
                 ('tox.ini', [
                     '[tox]',
-                    'envlist = isort,py37,py38,behave',
+                    'envlist = isort,py38,behave',
                     '[testenv]',
                     '[testenv:flake8]',
                     '[testenv:isort]',
@@ -63,7 +63,7 @@ class TestTestingSetup:
                 ]),
                 ('pyproject.toml', [
                     '[tool.pylint.master]',
-                    '[tool.pytest]',
+                    '[tool.pytest.ini_options]',
                 ]),
             ],
             'match_project_root': [
