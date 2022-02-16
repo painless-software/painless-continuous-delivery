@@ -1,0 +1,11 @@
+[tool.isort]
+profile = "black"
+
+[tool.pylint.master]
+{%- if cookiecutter.framework == 'Django' %}
+load-plugins = "pylint_django"
+{%- endif %}
+output-format = "colorized"
+
+[tool.pytest]
+addopts = "--color=yes --doctest-modules {% if cookiecutter.framework == 'Django' %}--ignore=application/urls.py --ignore=application/wsgi.py {% endif %}--ignore=tests/acceptance/steps --junitxml=tests/reports/unittests.xml --verbose"
