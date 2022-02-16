@@ -5,4 +5,4 @@ app-image:
     name: development
   only:
   - merge_requests
-  - master
+  - main

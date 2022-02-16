@@ -132,7 +132,7 @@ class TestGitops:
                     """),
                     indent2("""
                       branches:
-                        master:
+                        main:
                         - parallel: *checks
                         - parallel: *tests
                         - step: *build
@@ -292,7 +292,7 @@ application/base/*.yaml application/overlays/*/*.yaml
                         name: development
                       only:
                       - merge_requests
-                      - master
+                      - main
                     """),
                     dedent("""
                     review:
@@ -312,7 +312,7 @@ application/base/*.yaml application/overlays/*/*.yaml
                       variables:
                         IMAGE_TAG: latest
                       only:
-                      - master
+                      - main
                     """),
                     dedent("""
                     production:

@@ -1,7 +1,7 @@
 
 - name: Deploy staging
   type: serial
-  tag: master
+  tag: main
   service: app
   steps:
   - name: Staging

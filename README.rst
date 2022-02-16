@@ -10,7 +10,7 @@ A cookiecutter for projects with continuous delivery baked in.
 .. |about| image:: https://img.shields.io/badge/About-Painless_Continuous_Delivery-44a0dd.svg
    :target: https://slides.com/bittner/djangocon2017-painless-continuous-delivery/
    :alt: Elevator pitch
-.. |health| image:: https://img.shields.io/codacy/grade/7aade15697ed4ad39758553efcd31c77/master.svg
+.. |health| image:: https://img.shields.io/codacy/grade/7aade15697ed4ad39758553efcd31c77/main.svg
    :target: https://www.codacy.com/app/painless/painless-continuous-delivery
    :alt: Code health
 
@@ -36,19 +36,19 @@ Supported Technologies and Services
 ==================== =========================================================
 
 
-.. |bitbucket| image:: https://img.shields.io/bitbucket/pipelines/painless-software/painless-continuous-delivery/master.svg
+.. |bitbucket| image:: https://img.shields.io/bitbucket/pipelines/painless-software/painless-continuous-delivery/main.svg
    :target: https://bitbucket.org/painless-software/painless-continuous-delivery/addon/pipelines/home
    :alt: Bitbucket Pipelines
-.. |codeship| image:: https://img.shields.io/codeship/5543c1f0-706e-0137-4541-72c064fff696/master.svg
+.. |codeship| image:: https://img.shields.io/codeship/5543c1f0-706e-0137-4541-72c064fff696/main.svg
    :target: https://app.codeship.com/projects/5543c1f0-706e-0137-4541-72c064fff696
    :alt: Codeship
-.. |gitlab-ci| image:: https://img.shields.io/gitlab/pipeline/painless-software/painless-continuous-delivery/master.svg
+.. |gitlab-ci| image:: https://img.shields.io/gitlab/pipeline/painless-software/painless-continuous-delivery/main.svg
    :target: https://gitlab.com/painless-software/painless-continuous-delivery/pipelines
    :alt: GitLab CI
-.. |shippable| image:: https://img.shields.io/shippable/5b3e90d82e388a070068d4bf/master.svg
+.. |shippable| image:: https://img.shields.io/shippable/5b3e90d82e388a070068d4bf/main.svg
    :target: https://app.shippable.com/projects/5b3e90d82e388a070068d4bf/
    :alt: Shippable
-.. |travis-ci| image:: https://img.shields.io/travis/painless-software/painless-continuous-delivery/master.svg
+.. |travis-ci| image:: https://img.shields.io/travis/painless-software/painless-continuous-delivery/main.svg
    :target: https://travis-ci.org/painless-software/painless-continuous-delivery
    :alt: Travis CI
 
