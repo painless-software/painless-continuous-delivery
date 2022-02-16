@@ -5,5 +5,5 @@ Feature: Painless Continuous Delivery project setup powered by Cookiecutter
 
   Scenario: Default tests pass after project generation
     Given I have just created a Django project
-    When I generate the deployment configuration
+    When I generate the deployment manifests
     Then it contains the expected Kubernetes objects

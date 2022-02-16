@@ -31,8 +31,8 @@ class TestFramework:
                 'application/wsgi.py',
                 'Dockerfile',
                 'entrypoint.sh',
-                'deployment/nginx.conf',
-                'deployment/uwsgi.ini',
+                'manifests/nginx.conf',
+                'manifests/uwsgi.ini',
                 'tox.ini',
                 'tests/README.rst',
             ],
@@ -41,7 +41,7 @@ class TestFramework:
                     'ARG REQUIREMENTS=requirements.txt',
                     'COPY requirements* ./',
                     'ENTRYPOINT ["./entrypoint.sh"]',
-                    'CMD ["uwsgi", "deployment/uwsgi.ini"]',
+                    'CMD ["uwsgi", "manifests/uwsgi.ini"]',
                     dedent("""
                     RUN DJANGO_SECRET_KEY=collectstatic \\
                         python manage.py collectstatic --noinput --link
@@ -91,8 +91,8 @@ class TestFramework:
                 'application/wsgi.py',
                 'Dockerfile',
                 'entrypoint.sh',
-                'deployment/nginx.conf',
-                'deployment/uwsgi.ini',
+                'manifests/nginx.conf',
+                'manifests/uwsgi.ini',
                 'tox.ini',
                 'tests/README.rst',
             ],
@@ -101,7 +101,7 @@ class TestFramework:
                     'ARG REQUIREMENTS=requirements.txt',
                     'COPY requirements* ./',
                     'ENTRYPOINT ["./entrypoint.sh"]',
-                    'CMD ["uwsgi", "deployment/uwsgi.ini"]',
+                    'CMD ["uwsgi", "manifests/uwsgi.ini"]',
                 ]),
                 ('docker-compose.yml', [
                     indent2("""
@@ -183,8 +183,8 @@ class TestFramework:
                 'composer.json',
                 'composer.lock',
                 'Dockerfile',
-                'deployment/000-default.conf',
-                'deployment/php.ini',
+                'manifests/000-default.conf',
+                'manifests/php.ini',
                 'docker-compose.yml',
                 'docker-compose.override.yml',
                 'docker-compose.final.yml',
@@ -196,7 +196,7 @@ class TestFramework:
             'required_content': [
                 ('Dockerfile', [
                     'FROM php:7.0-apache',
-                    ' && mv deployment/php.ini /usr/local/etc/php/ \\',
+                    ' && mv manifests/php.ini /usr/local/etc/php/ \\',
                 ]),
                 ('docker-compose.override.yml', [
                     '    build: .',
@@ -219,8 +219,8 @@ class TestFramework:
                 'composer.json',
                 'composer.lock',
                 'Dockerfile',
-                'deployment/000-default.conf',
-                'deployment/php.ini',
+                'manifests/000-default.conf',
+                'manifests/php.ini',
                 'docker-compose.yml',
                 'docker-compose.override.yml',
                 'docker-compose.final.yml',
@@ -230,7 +230,7 @@ class TestFramework:
             'required_content': [
                 ('Dockerfile', [
                     'FROM php:7.0-apache',
-                    ' && mv deployment/php.ini /usr/local/etc/php/ \\',
+                    ' && mv manifests/php.ini /usr/local/etc/php/ \\',
                 ]),
                 ('README.rst', [
                     'Open your web browser at http://localhost to see',

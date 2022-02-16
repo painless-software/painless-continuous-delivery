@@ -94,7 +94,7 @@ def prune_cronjob_style():
     Based on selected cronjob setup style, remove the other unneeded files.
     """
     cron_type = '{{ cookiecutter.cronjobs }}'
-    base_path = Path('deployment') / 'application' / 'base'
+    base_path = Path('manifests') / 'application' / 'base'
 
     if cron_type != 'simple':
         (base_path / 'cronjob.yaml').unlink()
@@ -106,7 +106,7 @@ def prune_route_or_ingress():
     """
     Based on selected target cloud platform, remove the other unneeded files.
     """
-    app_manifests = Path('deployment') / 'application'
+    app_manifests = Path('manifests') / 'application'
     base_path = app_manifests / 'base'
     development_path = app_manifests / 'overlays' / 'development'
     integration_path = app_manifests / 'overlays' / 'integration'
@@ -139,24 +139,24 @@ def flatten_folder_structure(folder, technology):
             shutil.rmtree(technology_folder.parent)
 
 
-def set_up_deployment():
+def set_up_manifests():
     """
-    If a framework project was created also move deployment configuration
+    If a framework project was created also move deployment manifests
     to project root.
     """
-    deployment = Path('deployment')
+    manifests = Path('manifests')
     try:
         framework, technology = get_framework_and_technology()
     except KeyError:
-        LOG.warning('Removing deployment configuration: '
+        LOG.warning('Removing deployment manifests: '
                     'No framework specified.')
-        shutil.rmtree(deployment)
+        shutil.rmtree(manifests)
         return
 
-    LOG.info('Set up deployment configuration for %s project ...', framework)
+    LOG.info('Set up deployment manifests for %s project ...', framework)
     prune_cronjob_style()
     prune_route_or_ingress()
-    flatten_folder_structure(deployment, technology)
+    flatten_folder_structure(manifests, technology)
 
 
 def set_up_dev_tooling():
@@ -185,7 +185,7 @@ def remove_temporary_files():
     shutil.rmtree('gitops/_')
 
     if '{{ cookiecutter.database }}' == '(none)':
-        shutil.rmtree('deployment/database')
+        shutil.rmtree('manifests/database')
         shutil.rmtree('gitops/database')
 
 
@@ -212,12 +212,12 @@ def move_appconfigs_to_gitops():
     """
     Add manifests for all deployed components to the GitOps setup.
     """
-    directories = [_ for _ in Path('deployment').iterdir() if _.is_dir()]
+    directories = [_ for _ in Path('manifests').iterdir() if _.is_dir()]
 
     for app_config in directories:
         target = Path('gitops') / app_config.name
         merge_folder_into(app_config, target)
-    shutil.rmtree(Path('deployment'))
+    shutil.rmtree(Path('manifests'))
 
 
 def move_gitops_repo():
@@ -316,7 +316,7 @@ if __name__ == "__main__":
 
     set_up_ci_service()
     set_up_framework_and_tests()
-    set_up_deployment()
+    set_up_manifests()
     set_up_dev_tooling()
     remove_temporary_files()
     move_gitops_repo()

@@ -1,5 +1,5 @@
 """
-Tests for generating a deployment configuration.
+Tests for generating the deployment manifests.
 """
 from .helpers import (  # noqa, pylint: disable=unused-import
     dedent,
@@ -8,7 +8,7 @@ from .helpers import (  # noqa, pylint: disable=unused-import
 
 
 # pylint: disable=attribute-defined-outside-init,too-many-instance-attributes
-class TestDeployment:
+class TestManifests:
     """
     Tests for verifying generated deployment configuration of this
     cookiecutter, executed several times with different values (test
@@ -376,16 +376,16 @@ class TestDeployment:
 
         assert result.project.basename == 'myproject'
         assert result.project.isdir()
-        self.deployment = result.project.join('deployment')
-        assert self.deployment.isdir()
+        self.manifests = result.project.join('manifests')
+        assert self.manifests.isdir()
 
         for filename in files_present:
-            assert self.deployment.join(filename).exists(), \
-                f"File or folder {filename} not found in deployment."
+            assert self.manifests.join(filename).exists(), \
+                f"File or folder {filename} not found in manifests."
 
         for filename in files_absent:
-            assert not self.deployment.join(filename).exists(), \
-                f"File or folder {filename} in deployment should be absent."
+            assert not self.manifests.join(filename).exists(), \
+                f"File or folder {filename} in manifests should be absent."
 
         self.verify_app_folders_exist()
 
@@ -394,7 +394,7 @@ class TestDeployment:
 
         for filename, chunks in required_content:
             file_content = \
-                result.project.join('deployment').join(filename).read()
+                result.project.join('manifests').join(filename).read()
             for chunk in chunks:
                 assert chunk in file_content, \
                     f'Not found in generated file {filename}:\n' \
@@ -404,7 +404,7 @@ class TestDeployment:
 
         for filename, chunks in absent_content:
             file_content = \
-                result.project.join('deployment').join(filename).read()
+                result.project.join('manifests').join(filename).read()
             for chunk in chunks:
                 assert chunk not in file_content, \
                     f'Found in file {filename}, but should not be present:\n' \
@@ -416,7 +416,7 @@ class TestDeployment:
         """
         Set instance variables while checking on directories.
         """
-        self.app_config = self.deployment.join('application')
+        self.app_config = self.manifests.join('application')
         self.app_base = self.app_config.join('base')
         self.app_overlays = self.app_config.join('overlays')
         self.app_development = self.app_overlays.join('development')
@@ -433,7 +433,7 @@ class TestDeployment:
         """
         Set instance variables while checking on directories.
         """
-        self.db_config = self.deployment.join('database')
+        self.db_config = self.manifests.join('database')
         self.db_base = self.db_config.join('base')
         self.db_overlays = self.db_config.join('overlays')
         self.db_development = self.db_overlays.join('development')
@@ -446,7 +446,7 @@ class TestDeployment:
         assert self.db_integration.isdir()
         assert self.db_production.isdir()
 
-    def read_app_deployment_configs(self):
+    def read_app_deployment_manifests(self):
         """
         Read Kustomize configuration.
         """
@@ -461,7 +461,7 @@ class TestDeployment:
         self.app_production_kustomize = \
             self.app_production.join('kustomization.yaml').readlines(cr=False)
 
-    def read_db_deployment_configs(self):
+    def read_db_deployment_manifests(self):
         """
         Read Kustomize configuration.
         """
@@ -481,8 +481,8 @@ class TestDeployment:
         Ensure that the top of the kustomization setups stays aligned
         across application and database deployment manifests.
         """
-        self.read_app_deployment_configs()
-        self.read_db_deployment_configs()
+        self.read_app_deployment_manifests()
+        self.read_db_deployment_manifests()
 
         assert self.app_base_kustomize[:3] == self.db_base_kustomize[:3]
 

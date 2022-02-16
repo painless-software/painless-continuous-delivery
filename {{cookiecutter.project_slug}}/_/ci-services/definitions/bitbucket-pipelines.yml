@@ -81,18 +81,18 @@ definitions:
       oc tag "${SOURCE}/{{ cookiecutter.docker_image }}:${BITBUCKET_COMMIT}"
              "${TARGET}/{{ cookiecutter.docker_image }}:${IMAGE_TAG}"
     - &cloud-set-image
-      pushd deployment/application/base &&
+      pushd manifests/application/base &&
       kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.docker_image }}:${IMAGE_TAG}" &&
       popd
     - &cloud-apply-app
-      pushd deployment/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
+      pushd manifests/application/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
       kustomize edit set namesuffix -- "${SUFFIX}" &&
       kustomize edit add label "app:${LABEL}" &&
       kustomize build | oc apply -f - &&
       popd
     {%- if cookiecutter.database != '(none)' %}
     - &cloud-apply-db
-      pushd deployment/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
+      pushd manifests/database/overlays/${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&
       kustomize edit set namesuffix -- "${SUFFIX}" &&
       kustomize edit add label "app:${LABEL}" &&
       kustomize build | oc apply -f - &&

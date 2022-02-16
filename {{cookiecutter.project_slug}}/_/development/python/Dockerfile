@@ -29,7 +29,7 @@ RUN apk update \
  && pip --no-cache-dir install --upgrade pip \
  && pip --no-cache-dir install -r ${REQUIREMENTS} \
  && apk del .build-deps \
- && ln -sfv /app/deployment/nginx.conf /etc/nginx/nginx.conf \
+ && ln -sfv /app/manifests/nginx.conf /etc/nginx/nginx.conf \
  && ln -sfv /dev/stdout /var/log/nginx/access.log \
  && ln -sfv /dev/stderr /var/log/nginx/error.log \
  && mkdir -v /run/nginx
@@ -47,4 +47,4 @@ RUN DJANGO_SECRET_KEY=collectstatic \
 {% endif %}
 ENTRYPOINT ["./entrypoint.sh"]
 
-CMD ["uwsgi", "deployment/uwsgi.ini"]
+CMD ["uwsgi", "manifests/uwsgi.ini"]

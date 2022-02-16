@@ -13,7 +13,7 @@ def step_impl(context, commands):
             context.log_run(command)
 
             assert context.exit_code == 0, \
-                "Command failed with error:\n%s" % context.log
+                f"Command failed with error:\n{context.log}"
 
 
 @when('I run {command}')  # noqa
@@ -22,14 +22,14 @@ def step_impl(context, command):
         context.log_run(command)
 
     assert context.exit_code == 0, \
-        "Command failed with error:\n%s" % context.log
+        f"Command failed with error:\n{context.log}"
 
 
-@when('I generate the deployment configuration')  # noqa
+@when('I generate the deployment manifests')  # noqa
 def step_impl(context):
     with context.safe_chdir(context.generated_dir):
-        deploy_dir = Path('.') / 'deployment' / 'application' / 'overlays' / 'production'  # noqa
-        context.log_run('kustomize build %s' % deploy_dir)
+        deploy_dir = Path('.') / 'manifests' / 'application' / 'overlays' / 'production'  # noqa
+        context.log_run(f'kustomize build {deploy_dir}')
 
     assert context.exit_code == 0, \
-        "Command failed with error:\n%s" % context.log
+        f"Command failed with error:\n{context.log}"

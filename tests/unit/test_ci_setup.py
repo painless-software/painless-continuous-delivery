@@ -59,8 +59,8 @@ class TestCISetup:
                 '      - *cleanup-resources',
                 '      oc tag "${SOURCE}/myproject:${BITBUCKET_COMMIT}"',
                 '             "${TARGET}/myproject:${IMAGE_TAG}"',
-                '      pushd deployment/application/base &&',
-                '      pushd deployment/application/overlays/'
+                '      pushd manifests/application/base &&',
+                '      pushd manifests/application/overlays/'
                 '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
                 '      popd',
                 '      kustomize edit set image IMAGE="docker-registry.'
@@ -89,7 +89,7 @@ class TestCISetup:
                 '        --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}',
                 '        --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}',  # noqa
                 '    - &cloud-apply-db',
-                '      pushd deployment/database/overlays/'
+                '      pushd manifests/database/overlays/'
                 '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
                 '      popd',
                 '      - *generate-secrets-db',
@@ -142,8 +142,8 @@ class TestCISetup:
                 '      - *cleanup-resources',
                 '      oc tag "${SOURCE}/myproject:${BITBUCKET_COMMIT}"',
                 '             "${TARGET}/myproject:${IMAGE_TAG}"',
-                '      pushd deployment/application/base &&',
-                '      pushd deployment/application/overlays/'
+                '      pushd manifests/application/base &&',
+                '      pushd manifests/application/overlays/'
                 '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
                 '      popd',
                 '      kustomize edit set image IMAGE="docker-registry.'
@@ -174,7 +174,7 @@ class TestCISetup:
                 '        --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}',
                 '        --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}',  # noqa
                 '    - &cloud-apply-db',
-                '      pushd deployment/database/overlays/'
+                '      pushd manifests/database/overlays/'
                 '${BITBUCKET_DEPLOYMENT_ENVIRONMENT} &&',
                 '      - *generate-secrets-db',
                 '      - *cloud-apply-db',
@@ -253,9 +253,9 @@ class TestCISetup:
                 '  - seiso secrets -l app=${LABEL} --delete',
                 '  - seiso image history myproject --delete',
                 '  - seiso image orphans myproject --delete',
-                '  - pushd deployment/application/base &&',
-                '  - pushd deployment/application/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
-                '  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
+                '  - pushd manifests/application/base &&',
+                '  - pushd manifests/application/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
+                '  - pushd manifests/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
                 '    kustomize edit set image IMAGE="docker-registry.'
                 'default.svc:5000/${TARGET}/myproject:${IMAGE_TAG}" &&',
                 '    kustomize edit set namesuffix -- "${SUFFIX}" &&',
@@ -279,7 +279,7 @@ class TestCISetup:
                 '      --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}',
                 '      --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}',
                 '      --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}',  # noqa
-                '  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
+                '  - pushd manifests/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
             ],
             'absent_content': [],
         }),
@@ -318,8 +318,8 @@ class TestCISetup:
                 '  - seiso secrets -l app=${LABEL} --delete',
                 '  - seiso image history myproject --delete',
                 '  - seiso image orphans myproject --delete',
-                '  - pushd deployment/application/base &&',
-                '  - pushd deployment/application/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
+                '  - pushd manifests/application/base &&',
+                '  - pushd manifests/application/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
                 '    kustomize edit set image IMAGE="docker-registry.'
                 'default.svc:5000/${TARGET}/myproject:${IMAGE_TAG}" &&',
                 '    kustomize edit set namesuffix -- "${SUFFIX}" &&',
@@ -343,7 +343,7 @@ class TestCISetup:
                 '      --from-literal=POSTGRESQL_DATABASE=${DATABASE_NAME}',
                 '      --from-literal=POSTGRESQL_USERNAME=${DATABASE_USER}',
                 '      --from-literal=POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}',  # noqa
-                '  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
+                '  - pushd manifests/database/overlays/${CI_ENVIRONMENT_NAME} &&',  # noqa
             ],
             'absent_content': [],
         }),

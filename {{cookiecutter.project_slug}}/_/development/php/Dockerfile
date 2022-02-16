@@ -3,7 +3,7 @@ WORKDIR /var/www/html
 COPY . .
 RUN bash -c "source .envrc && inside_docker-moduser www-data && rm .envrc"
 RUN docker-php-ext-install mysqli
-RUN mv deployment/000-default.conf /etc/apache2/sites-available/ \
- && mv deployment/php.ini /usr/local/etc/php/ \
+RUN mv manifests/000-default.conf /etc/apache2/sites-available/ \
+ && mv manifests/php.ini /usr/local/etc/php/ \
  && rm -r deployment \
  && chown -R www-data: .
