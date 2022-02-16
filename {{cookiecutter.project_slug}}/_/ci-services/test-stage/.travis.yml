@@ -1,9 +1,0 @@
-{%- for env in cookiecutter.tests.split(",")|reject("in",["py38","py39","pypy","pypy3"]) %}
-  {%- if cookiecutter.framework in ['Django', 'Flask'] %}
-  - { stage: test, python: 3.8, env: TOXENV={{ env }} }
-  {%- elif cookiecutter.framework in ['Symfony', 'TYPO3'] %}
-  - { stage: test, script: echo "This should run {{ env }}" }
-  {%- elif cookiecutter.framework in ['SpringBoot'] %}
-  - { stage: test, script: echo "This should run {{ env }}" }
-  {%- endif %}
-{%- endfor -%}

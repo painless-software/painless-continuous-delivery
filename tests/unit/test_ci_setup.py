@@ -364,38 +364,6 @@ class TestCISetup:
                 'database',
             ],
         }),
-        ('shippable', {
-            'project_slug': 'myproject',
-            'vcs_account': 'painless-software',
-            'vcs_platform': 'Bitbucket.org',
-            'ci_service': 'shippable.yml',
-            'framework': 'Django',
-            'database': 'Postgres',
-            'checks': 'flake8,pylint,bandit',
-            'tests': 'py38,pypy3,behave',
-            'cloud_platform': 'APPUiO',
-            'environment_strategy': 'shared',
-            'required_lines': [
-                '  - tox',
-            ],
-            'absent_content': [],
-        }),
-        ('travis', {
-            'project_slug': 'myproject',
-            'vcs_account': 'painless-software',
-            'vcs_platform': 'GitHub.com',
-            'ci_service': '.travis.yml',
-            'framework': 'Django',
-            'database': 'Postgres',
-            'checks': 'flake8,pylint,bandit',
-            'tests': 'py38,pypy3,behave',
-            'cloud_platform': 'APPUiO',
-            'environment_strategy': 'shared',
-            'required_lines': [
-                'script: tox',
-            ],
-            'absent_content': [],
-        }),
     ]
 
     # pylint: disable=too-many-arguments,too-many-locals,no-self-use

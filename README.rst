@@ -29,8 +29,6 @@ Supported Technologies and Services
 **CI Services**      Bitbucket  - |bitbucket|
 ..                   Codeship   - |codeship|
 ..                   GitLab CI  - |gitlab-ci|
-..                   Shippable  - |shippable|
-..                   Travis CI  - |travis-ci|
 **App Platforms**    APPUiO (OpenShift)
 ..                   Rancher (Kubernetes)
 ==================== =========================================================
@@ -45,12 +43,6 @@ Supported Technologies and Services
 .. |gitlab-ci| image:: https://img.shields.io/gitlab/pipeline/painless-software/painless-continuous-delivery/main.svg
    :target: https://gitlab.com/painless-software/painless-continuous-delivery/pipelines
    :alt: GitLab CI
-.. |shippable| image:: https://img.shields.io/shippable/5b3e90d82e388a070068d4bf/main.svg
-   :target: https://app.shippable.com/projects/5b3e90d82e388a070068d4bf/
-   :alt: Shippable
-.. |travis-ci| image:: https://img.shields.io/travis/painless-software/painless-continuous-delivery/main.svg
-   :target: https://travis-ci.org/painless-software/painless-continuous-delivery
-   :alt: Travis CI
 
 Demos
 =====

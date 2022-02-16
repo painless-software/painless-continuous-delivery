@@ -23,9 +23,7 @@
     "ci_service": [
         ".gitlab-ci.yml",
         "bitbucket-pipelines.yml",
-        ".travis.yml",
-        "codeship-steps.yml",
-        "shippable.yml"
+        "codeship-steps.yml"
     ],
     "cloud_platform": [
         "(none)",
@@ -45,8 +43,8 @@
     "gitops_project": "{% if cookiecutter.deployment_strategy == 'gitops' %}{{ cookiecutter.project_slug }}-gitops{% else %}(none){% endif %}",
     "docker_registry": "{% if cookiecutter.cloud_platform == 'APPUiO' %}registry.appuio.ch{% elif cookiecutter.vcs_platform == 'GitLab.com' %}registry.gitlab.com{% elif cookiecutter.vcs_platform == 'Bitbucket.org' %}hub.docker.com{% elif cookiecutter.vcs_platform == 'GitHub.com' %}quay.io{% else %}nexus.example.com{% endif %}",
     "docker_image": "{{ cookiecutter.project_slug }}",
-    "registry_user": "{{ cookiecutter.ci_service.replace('.yml', '').replace('.', '').replace('-steps', '').replace('travis', 'travis-ci') }}",
-    "automation_user": "{{ cookiecutter.ci_service.replace('.yml', '').replace('.', '').replace('-steps', '').replace('travis', 'travis-ci') }}",
+    "registry_user": "{{ cookiecutter.ci_service.replace('.yml', '').replace('.', '').replace('-steps', '') }}",
+    "automation_user": "{{ cookiecutter.ci_service.replace('.yml', '').replace('.', '').replace('-steps', '') }}",
     "framework": [
         "(none)",
         "Django",
