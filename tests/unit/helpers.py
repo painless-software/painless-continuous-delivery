@@ -1,13 +1,10 @@
 """
 Common helper functions and values for running tests with py.test.
 """
+
 from difflib import context_diff
 from pathlib import Path
 from textwrap import dedent, indent
-
-from py._path.local import LocalPath
-
-REPO_ROOT_PATH = LocalPath(Path(__file__).parent.parent.parent)
 
 
 def pytest_generate_tests(metafunc):
@@ -115,14 +112,21 @@ def verify_file_matches_repo_root(result, *file, max_compare_bytes=-1):
     Assert that a generated file matches the one with the identical name in
     the project repository root.
     """
-    mother_file = REPO_ROOT_PATH.join(*file).strpath
-    generated_file = result.project.join(*file).strpath
-    with open(mother_file, encoding='utf-8') as mother, \
-            open(generated_file, encoding='utf-8') as generated:
-        diff = ''.join(context_diff(mother.readlines(max_compare_bytes),
-                                    generated.readlines(max_compare_bytes),
-                                    fromfile=mother_file,
-                                    tofile=generated_file))
+    repo_root_path = Path(__file__).parent.parent.parent
+    mother_file = repo_root_path.joinpath(*file)
+    mother_content = mother_file.read_text()[:max_compare_bytes]
+
+    generated_file = result.project_path.joinpath(*file)
+    generated_content = generated_file.read_text()[:max_compare_bytes]
+
+    diff = ''.join(
+        context_diff(
+            mother_content.splitlines(),
+            generated_content.splitlines(),
+            fromfile=str(mother_file),
+            tofile=str(generated_file),
+        )
+    )
     assert not diff, \
         f"Mother project '{Path(*file)}' not matching template.\n" \
         f"{diff}"

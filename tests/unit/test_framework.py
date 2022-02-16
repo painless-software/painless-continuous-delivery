@@ -1,7 +1,8 @@
 """
 Tests for generating a Web framework project.
 """
-from os import system
+
+from cli_test_helpers import shell
 
 from .helpers import (  # noqa, pylint: disable=unused-import
     dedent,
@@ -258,12 +259,12 @@ class TestFramework:
         assert result.exception is None
 
         for filename in required_files:
-            thefile = result.project.join(filename)
-            assert thefile.isfile(), \
+            thefile = result.project_path / filename
+            assert thefile.is_file(), \
                 f'File {filename} missing in generated project.'
 
         for filename, chunks in required_content:
-            file_content = result.project.join(filename).read()
+            file_content = (result.project_path / filename).read_text()
             for chunk in chunks:
                 assert chunk in file_content, \
                     f'Not found in generated file {filename}:\n' \
@@ -272,8 +273,10 @@ class TestFramework:
                     f'{file_content}'
 
         for cmd_pattern, project_file in install_commands:
-            input_file = result.project.join(project_file)
+            input_file = result.project_path / project_file
             command = cmd_pattern % input_file
-            assert input_file.isfile()
-            exit_code = system(command)
-            assert exit_code == 0, f'Command fails: {command}'
+            assert input_file.is_file()
+
+            run = shell(command)
+            # pylint: disable=no-member
+            assert run.exit_code == 0, f'Command fails: {command}'
