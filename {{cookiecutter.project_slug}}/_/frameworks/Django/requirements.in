@@ -11,7 +11,7 @@ mysql-connector
 newrelic
 {%- endif %}
 {%- if cookiecutter.database == 'Postgres' %}
-psycopg
+psycopg2
 {%- endif %}
 {%- if cookiecutter.monitoring == 'Sentry' %}
 sentry-sdk
