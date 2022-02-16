@@ -305,9 +305,9 @@ def deploy_field_test_for(local_project):
     shell = Shell(repo_path)
 
     if '{{ cookiecutter.push }}' == 'automatic':
-        shell.run('git push origin master')
+        shell.run('git push origin main')
     elif '{{ cookiecutter.push }}' == 'force':
-        shell.run('git push origin master --force')
+        shell.run('git push origin main --force')
 
 
 if __name__ == "__main__":

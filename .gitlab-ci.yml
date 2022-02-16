@@ -12,7 +12,7 @@ image: painless/tox:multi
   - git config --global user.name "Cookiecutter"
   - git config --global user.email "cookiecutter@painless.software"
   only:
-  - master
+  - main
 
 .test:
   stage: test

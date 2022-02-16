@@ -15,7 +15,7 @@ integration:
   variables:
     IMAGE_TAG: latest
   only:
-  - master
+  - main
 
 production:
   extends: .tag-image
@@ -69,7 +69,7 @@ integration:
 {%- endif %}
     IMAGE_TAG: ${CI_COMMIT_SHA}
   only:
-  - master
+  - main
 
 production:
   extends: .deploy

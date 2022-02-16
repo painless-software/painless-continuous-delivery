@@ -19,7 +19,7 @@ stages:
     GIT_DEPTH: 7
   only:
   - merge_requests
-  - master
+  - main
 
 .test:
   stage: test
@@ -38,7 +38,7 @@ stages:
     GIT_DEPTH: 7
   only:
   - merge_requests
-  - master
+  - main
 
 .build:
   stage: build

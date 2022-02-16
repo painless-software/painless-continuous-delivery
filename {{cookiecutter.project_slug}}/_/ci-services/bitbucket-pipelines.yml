@@ -20,7 +20,7 @@ pipelines:
     {%- endif %}
 
   branches:
-    master:
+    main:
     {%- if cookiecutter.checks %}
     - parallel: *checks
     {%- endif %}

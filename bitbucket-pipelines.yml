@@ -50,7 +50,7 @@ pipelines:
     - parallel: *tests
 
   branches:
-    master:
+    main:
     - parallel: *checks
     - parallel: *tests
     - step: *field-test

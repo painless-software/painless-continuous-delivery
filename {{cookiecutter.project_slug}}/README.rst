@@ -238,10 +238,10 @@ which will typically roll out our updated image immediately.
 - Any merge request automatically builds and pushes a review app image tagged
   ``{{ review_tag }}`` to the image registry.
 - Any change on the main branch, e.g. when a merge request is merged into
-  ``master``, builds and pushes an image tagged ``latest`` to the image
+  ``main``, builds and pushes an image tagged ``latest`` to the image
   registry, which is targeted for use on *integration*.
 - To mark an image "ready" for use on *production* push a Git tag on
-  the ``master`` branch, e.g.
+  the ``main`` branch, e.g.
 {%- else -%}
 {% if cookiecutter.environment_strategy == 'dedicated' -%}
 We have 3 environments corresponding to 3 namespaces on our container
@@ -255,13 +255,13 @@ on our container platform: *development*, *integration*, *production*
   When a merge request is merged or closed the review app will automatically
   be removed.
 - Any change on the main branch, e.g. when a merge request is merged into
-  ``master``, triggers a deployment on *integration*.
+  ``main``, triggers a deployment on *integration*.
 - To trigger a deployment on *production* push a Git tag, e.g.
 {%- endif %}
 
   .. code-block:: console
 
-    git checkout master
+    git checkout main
     git tag 1.0.0
     git push --tags
 

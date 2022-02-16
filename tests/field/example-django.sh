@@ -122,7 +122,7 @@ git push -u origin feature/welcome-page --force
 log 5 'Create merge request'
 gitlab POST merge_requests \
     --form "source_branch=feature/welcome-page" \
-    --form "target_branch=master" \
+    --form "target_branch=main" \
     --form "title=Add friendly welcome page" \
     --form "description=A minimal Django application that shows some text. Tests are included." \
     > /dev/null
@@ -134,6 +134,6 @@ for minutes in $(seq 13 -1 1); do
 done
 
 log 7 'Trigger production release'
-git checkout master
+git checkout main
 git tag 1.0.0
 git push --tags --force

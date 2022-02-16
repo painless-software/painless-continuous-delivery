@@ -62,6 +62,6 @@ for minutes in $(seq 13 -1 1); do
 done
 
 log 7 'Trigger production release'
-git checkout master
+git checkout main
 git tag 1.0.0
 git push --tags --force
