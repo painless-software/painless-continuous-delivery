@@ -7,6 +7,8 @@ This project adheres to `Semantic Versioning <https://semver.org>`__.
 0.7.0 (unreleased)
 ------------------
 
+- Drop Python 3.6 from Tox configurations
+- Upgrade Django to 3.2 LTS and 4.0 (both use pathlib in settings)
 - Migrate Python setup to 3.8 on Alpine (from 3.7 on Debian)
 
 0.6.0 (2021-01-08)
@@ -14,7 +16,7 @@ This project adheres to `Semantic Versioning <https://semver.org>`__.
 
 - Rename whitelist to allowlist in Tox configuration (Black Lives Matter)
 - Deploy more field tests (Flask/Bitbucket, Spring+GitOps)
-- Restructure directory layout to accomodate GitOps (generation of two repos)
+- Restructure directory layout to accommodate GitOps (generation of two repos)
 - Use pathlib in unit tests more consistently
 - Refactor code in tests.unit into tests.unit.helpers (keep ``__init__`` clean)
 - Add Java Spring Framework project skeleton

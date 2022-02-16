@@ -16,8 +16,6 @@
   type: parallel
   service: app
   steps:
-  - name: Python 3.6
-    command: tox -e py36
   - name: Python 3.7
     command: tox -e py37
   - name: Python 3.8

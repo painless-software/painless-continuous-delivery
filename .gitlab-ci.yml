@@ -38,10 +38,6 @@ bandit:
   script: tox -e bandit
   allow_failure: true
 
-py36:
-  extends: .test
-  script: tox -e py36
-
 py37:
   extends: .test
   script: tox -e py37

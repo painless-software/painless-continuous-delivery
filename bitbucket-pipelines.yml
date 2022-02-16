@@ -25,10 +25,6 @@ definitions:
 
   - parallel: &tests
     - step:
-        name: Python 3.6
-        script:
-        - tox -e py36
-    - step:
         name: Python 3.7
         script:
         - tox -e py37
