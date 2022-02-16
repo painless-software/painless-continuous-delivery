@@ -390,17 +390,18 @@ class TestCISetup:
         assert result.exit_code == 0
         assert result.exception is None
 
-        assert result.project.basename == project_slug
-        assert result.project.isdir()
-        readme_file = result.project.join('README.rst')
-        assert readme_file.isfile()
+        assert result.project_path.name == project_slug
+        assert result.project_path.is_dir()
+        readme_file = result.project_path / 'README.rst'
+        assert readme_file.is_file()
 
-        readme_content = '\n'.join(readme_file.readlines(cr=False))
+        readme_content = '\n'.join(readme_file.read_text().splitlines())
         assert '\n\n\n' not in readme_content, \
             f"Excessive newlines in README: {readme_file}\n" \
             f"-------------\n{readme_content}"
 
-        ci_service_conf = result.project.join(ci_service).readlines(cr=False)
+        ci_service_conf = \
+            (result.project_path / ci_service).read_text().splitlines()
         ci_service_content = '\n'.join(ci_service_conf)
         assert '\n\n\n' not in ci_service_content, \
             "Excessive newlines in CI configuration."
@@ -415,13 +416,13 @@ class TestCISetup:
                 f"Found in CI config: '{chunk}'\n" \
                 f"{ci_service_content}"
 
-        codeship_services = result.project.join('codeship-services.yml')
+        codeship_services = result.project_path / 'codeship-services.yml'
         assert (ci_service == 'codeship-steps.yml' and
-                codeship_services.isfile()) or not codeship_services.exists()
+                codeship_services.is_file()) or not codeship_services.exists()
 
         files_absent = ['gitops', f"../{project_slug}-gitops"]
         for filename in files_absent:
-            thefile = result.project.join(filename)
+            thefile = result.project_path / filename
             assert not thefile.exists(), \
                 f'File {filename} found in generated project.'
 

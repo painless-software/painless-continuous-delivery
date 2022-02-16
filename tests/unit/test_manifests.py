@@ -374,17 +374,17 @@ class TestManifests:
         assert result.exit_code == 0
         assert result.exception is None
 
-        assert result.project.basename == 'myproject'
-        assert result.project.isdir()
-        self.manifests = result.project.join('manifests')
-        assert self.manifests.isdir()
+        assert result.project_path.name == 'myproject'
+        assert result.project_path.is_dir()
+        self.manifests = result.project_path / 'manifests'
+        assert self.manifests.is_dir()
 
         for filename in files_present:
-            assert self.manifests.join(filename).exists(), \
+            assert (self.manifests / filename).exists(), \
                 f"File or folder {filename} not found in manifests."
 
         for filename in files_absent:
-            assert not self.manifests.join(filename).exists(), \
+            assert not (self.manifests / filename).exists(), \
                 f"File or folder {filename} in manifests should be absent."
 
         self.verify_app_folders_exist()
@@ -394,7 +394,7 @@ class TestManifests:
 
         for filename, chunks in required_content:
             file_content = \
-                result.project.join('manifests').join(filename).read()
+                (result.project_path / 'manifests' / filename).read_text()
             for chunk in chunks:
                 assert chunk in file_content, \
                     f'Not found in generated file {filename}:\n' \
@@ -404,7 +404,7 @@ class TestManifests:
 
         for filename, chunks in absent_content:
             file_content = \
-                result.project.join('manifests').join(filename).read()
+                (result.project_path / 'manifests' / filename).read_text()
             for chunk in chunks:
                 assert chunk not in file_content, \
                     f'Found in file {filename}, but should not be present:\n' \
@@ -416,35 +416,35 @@ class TestManifests:
         """
         Set instance variables while checking on directories.
         """
-        self.app_config = self.manifests.join('application')
-        self.app_base = self.app_config.join('base')
-        self.app_overlays = self.app_config.join('overlays')
-        self.app_development = self.app_overlays.join('development')
-        self.app_integration = self.app_overlays.join('integration')
-        self.app_production = self.app_overlays.join('production')
+        self.app_config = self.manifests / 'application'
+        self.app_base = self.app_config / 'base'
+        self.app_overlays = self.app_config / 'overlays'
+        self.app_development = self.app_overlays / 'development'
+        self.app_integration = self.app_overlays / 'integration'
+        self.app_production = self.app_overlays / 'production'
 
-        assert self.app_base.isdir()
-        assert self.app_overlays.isdir()
-        assert self.app_development.isdir()
-        assert self.app_integration.isdir()
-        assert self.app_production.isdir()
+        assert self.app_base.is_dir()
+        assert self.app_overlays.is_dir()
+        assert self.app_development.is_dir()
+        assert self.app_integration.is_dir()
+        assert self.app_production.is_dir()
 
     def verify_db_folders_exist(self):
         """
         Set instance variables while checking on directories.
         """
-        self.db_config = self.manifests.join('database')
-        self.db_base = self.db_config.join('base')
-        self.db_overlays = self.db_config.join('overlays')
-        self.db_development = self.db_overlays.join('development')
-        self.db_integration = self.db_overlays.join('integration')
-        self.db_production = self.db_overlays.join('production')
+        self.db_config = self.manifests / 'database'
+        self.db_base = self.db_config / 'base'
+        self.db_overlays = self.db_config / 'overlays'
+        self.db_development = self.db_overlays / 'development'
+        self.db_integration = self.db_overlays / 'integration'
+        self.db_production = self.db_overlays / 'production'
 
-        assert self.db_base.isdir()
-        assert self.db_overlays.isdir()
-        assert self.db_development.isdir()
-        assert self.db_integration.isdir()
-        assert self.db_production.isdir()
+        assert self.db_base.is_dir()
+        assert self.db_overlays.is_dir()
+        assert self.db_development.is_dir()
+        assert self.db_integration.is_dir()
+        assert self.db_production.is_dir()
 
     def read_app_deployment_manifests(self):
         """
@@ -453,13 +453,13 @@ class TestManifests:
         self.verify_app_folders_exist()
 
         self.app_base_kustomize = \
-            self.app_base.join('kustomization.yaml').readlines(cr=False)
+            (self.app_base / 'kustomization.yaml').read_text().splitlines()
         self.app_development_kustomize = \
-            self.app_development.join('kustomization.yaml').readlines(cr=False)
+            (self.app_development / 'kustomization.yaml').read_text().splitlines()
         self.app_integration_kustomize = \
-            self.app_integration.join('kustomization.yaml').readlines(cr=False)
+            (self.app_integration / 'kustomization.yaml').read_text().splitlines()
         self.app_production_kustomize = \
-            self.app_production.join('kustomization.yaml').readlines(cr=False)
+            (self.app_production / 'kustomization.yaml').read_text().splitlines()
 
     def read_db_deployment_manifests(self):
         """
@@ -468,13 +468,13 @@ class TestManifests:
         self.verify_db_folders_exist()
 
         self.db_base_kustomize = \
-            self.db_base.join('kustomization.yaml').readlines(cr=False)
+            (self.db_base / 'kustomization.yaml').read_text().splitlines()
         self.db_development_kustomize = \
-            self.db_development.join('kustomization.yaml').readlines(cr=False)
+            (self.db_development / 'kustomization.yaml').read_text().splitlines()
         self.db_integration_kustomize = \
-            self.db_integration.join('kustomization.yaml').readlines(cr=False)
+            (self.db_integration / 'kustomization.yaml').read_text().splitlines()
         self.db_production_kustomize = \
-            self.db_production.join('kustomization.yaml').readlines(cr=False)
+            (self.db_production / 'kustomization.yaml').read_text().splitlines()
 
     def ensure_db_app_stay_aligned(self):
         """

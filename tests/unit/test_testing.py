@@ -130,7 +130,7 @@ class TestTestingSetup:
         assert result.exception is None
 
         for filename, expected_content in test_configuration:
-            config_file = result.project.join(filename).read()
+            config_file = (result.project_path / filename).read_text()
             for config_value in expected_content:
                 assert config_value in config_file, \
                     f'Config value missing in {filename}: {config_value}\n' \

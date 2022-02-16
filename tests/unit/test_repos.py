@@ -62,11 +62,12 @@ class TestRepos:
         assert result.exit_code == 0
         assert result.exception is None
 
-        assert result.project.basename == project_slug
-        assert result.project.isdir()
+        assert result.project_path.name == project_slug
+        assert result.project_path.is_dir()
 
-        assert result.project.join('.git').isdir()
-        git_config = result.project.join('.git', 'config').readlines(cr=False)
+        assert (result.project_path / '.git').is_dir()
+        git_config = \
+            (result.project_path / '.git' / 'config').read_text().splitlines()
         remote_section = '[remote "origin"]'
         remote_url = f'\turl = {vcs_remote}'
 
@@ -83,9 +84,10 @@ class TestRepos:
             f'{haystack}'
 
         image = f'image: {docker_registry}/{project_slug}'
+        docker_compose_final = result.project_path / 'docker-compose.final.yml'
         deploy_conf = [
-            line.strip() for line in result.project.join(
-                'docker-compose.final.yml').readlines(cr=False)
+            line.strip()
+            for line in docker_compose_final.read_text().splitlines()
             if line.strip()
         ]
 

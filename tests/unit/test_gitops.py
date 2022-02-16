@@ -375,37 +375,38 @@ application/base/*.yaml application/overlays/*/*.yaml
         assert result.exception is None
 
         for filename in files_present:
-            thefile = result.project.join("..", filename)
+            thefile = result.project_path.parent / filename
             assert thefile.exists(), \
                 f'File {filename} missing in generated project.'
 
         for filename in files_absent:
-            thefile = result.project.join('..').join(filename)
+            thefile = result.project_path.parent / filename
             assert not thefile.exists(), \
                 f'File {filename} found in generated project.'
 
-        app_readme_file = result.project.join("README.rst")
-        gitops_readme_file = result.project.join(
-            "..", f"{project_slug}-gitops", "README.rst")
+        app_readme_file = result.project_path / "README.rst"
+        gitops_readme_file = \
+            result.project_path.parent / f"{project_slug}-gitops" / "README.rst"
 
         for readme_file in [app_readme_file, gitops_readme_file]:
-            assert readme_file.isfile()
-            readme_content = '\n'.join(gitops_readme_file.readlines(cr=False))
+            assert readme_file.is_file()
+            readme_content = '\n'.join(gitops_readme_file.read_text().splitlines())
             assert '\n\n\n' not in readme_content, \
                 f"Excessive newlines in README: {readme_file}\n" \
                 f"-------------\n{readme_content}"
 
-        ci_service_conf = result.project.join(ci_service).readlines(cr=False)
+        ci_service_conf = (result.project_path / ci_service).read_text().splitlines()
         assert '\n\n\n' not in '\n'.join(ci_service_conf), \
             "Excessive newlines in micro-service CI config."
 
-        gitops_ci_conf = result.project.join(
-            "..", f"{project_slug}-gitops", ci_service).readlines(cr=False)
+        gitops_ci_conf = (
+            result.project_path.parent / f"{project_slug}-gitops" / ci_service
+        ).read_text().splitlines()
         assert '\n\n\n' not in '\n'.join(gitops_ci_conf), \
             "Excessive newlines in GitOps CI config."
 
         for filename, chunks in required_content:
-            file_content = result.project.join("..", filename).read()
+            file_content = (result.project_path.parent / filename).read_text()
             for chunk in chunks:
                 assert chunk in file_content, \
                     f'Not found in generated file {filename}:\n' \

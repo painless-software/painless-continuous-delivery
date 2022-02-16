@@ -63,7 +63,7 @@
         "simple",
         "complex"
     ],
-    "checks": "{% if cookiecutter.framework in ['Django','Flask'] %}flake8,pylint,bandit,safety,kubernetes{% elif cookiecutter.framework in ['Symfony','TYPO3'] %}phpcs,twig,kubernetes{% elif cookiecutter.framework in ['SpringBoot'] %}kubernetes{% endif %}",
+    "checks": "{% if cookiecutter.framework in ['Django','Flask'] %}flake8,pylint,isort,bandit,safety,kubernetes{% elif cookiecutter.framework in ['Symfony','TYPO3'] %}phpcs,twig,kubernetes{% elif cookiecutter.framework in ['SpringBoot'] %}kubernetes{% endif %}",
     "tests": "{% if cookiecutter.framework in ['Django','Flask'] %}py38,behave{% elif cookiecutter.framework in ['Symfony','TYPO3'] %}phpunit{% elif cookiecutter.framework in ['SpringBoot'] %}test,verify{% endif %}",
     "monitoring": [
         "(none)",

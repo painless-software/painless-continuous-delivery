@@ -1,7 +1,8 @@
 """
 Tests for correctly generated database configurations.
 """
-from os import system
+
+from cli_test_helpers import shell
 
 from .helpers import (  # noqa, pylint: disable=unused-import
     FunctionCall,
@@ -87,17 +88,21 @@ class TestDatabase:
         assert result.exit_code == 0
         assert result.exception is None
 
-        settings = result.project.join(
-            'application', 'settings.py').readlines(cr=False)
+        settings = (
+            result.project_path / 'application' / 'settings.py'
+        ).read_text().splitlines()
         verify_required_settings(required_settings, settings)
 
-        requirements_txt = result.project.join(
-            'requirements.in').readlines(cr=False)
+        requirements_txt = (
+            result.project_path / 'requirements.in'
+        ).read_text().splitlines()
         for req in required_packages:
             assert req in requirements_txt
 
-        assert result.project.join('tox.ini').isfile()
-        with result.project.as_cwd():
-            exit_code = system('flake8')
-            assert exit_code == 0, 'PEP8 violation or syntax error.' \
-                                   ' (flake8 failed; see captured stdout call)'
+        assert (result.project_path / 'tox.ini').is_file()
+
+        run = shell('flake8', cwd=result.project_path)
+        # pylint: disable=no-member
+        assert run.exit_code == 0, \
+            'PEP8 violation or syntax error. ' \
+            '(flake8 failed; see captured stdout call)'

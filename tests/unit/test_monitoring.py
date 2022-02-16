@@ -1,7 +1,8 @@
 """
 Tests for correctly generated monitoring configurations.
 """
-from os import system
+
+from cli_test_helpers import shell
 
 from .helpers import (  # noqa, pylint: disable=unused-import
     dedent,
@@ -206,26 +207,27 @@ class TestMonitoring:
 
         assert result.exit_code == 0
         assert result.exception is None
-        readme_file = result.project.join('README.rst')
-        assert readme_file.isfile()
+        readme_file = result.project_path / 'README.rst'
+        assert readme_file.is_file()
 
-        readme_content = '\n'.join(readme_file.readlines(cr=False))
+        readme_content = '\n'.join(readme_file.read_text().splitlines())
         assert '\n\n\n' not in readme_content, \
             f"Excessive newlines in README: {readme_file}\n" \
             f"-------------\n{readme_content}"
 
         if required_settings:
-            settings = result.project.join(
-                'application', 'settings.py').readlines(cr=False)
+            settings = (
+                result.project_path / 'application' / 'settings.py'
+            ).read_text().splitlines()
             verify_required_settings(required_settings, settings)
 
-        requirements_txt = result.project.join(
-            'requirements.in').readlines(cr=False)
+        requirements_txt = \
+            (result.project_path / 'requirements.in').read_text().splitlines()
         for req in required_packages:
             assert req in requirements_txt
 
         for filename, chunks in required_content:
-            file_content = result.project.join(filename).read()
+            file_content = (result.project_path / filename).read_text()
             for chunk in chunks:
                 assert chunk in file_content, \
                     f'Not found in generated file {filename}:\n' \
@@ -233,8 +235,10 @@ class TestMonitoring:
                     '-----------\n' \
                     f'{file_content}'
 
-        assert result.project.join('tox.ini').isfile()
-        with result.project.as_cwd():
-            exit_code = system('flake8')
-            assert exit_code == 0, 'PEP8 violation or syntax error.' \
-                                   ' (flake8 failed; see captured stdout call)'
+        assert (result.project_path / 'tox.ini').is_file()
+
+        run = shell('flake8', cwd=result.project_path)
+        # pylint: disable=no-member
+        assert run.exit_code == 0, \
+            'PEP8 violation or syntax error. ' \
+            '(flake8 failed; see captured stdout call)'
