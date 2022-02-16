@@ -45,8 +45,8 @@ Initial Setup
 
    .. code-block:: console
 
-        grep -A2 limits deployment/*/*/*yaml
-        grep -A2 requests deployment/*/*/*yaml
+        grep -A2 limits manifests/*/*/*yaml
+        grep -A2 requests manifests/*/*/*yaml
 {% if cookiecutter.cloud_platform in ['APPUiO'] %}
 #. With the commands below, create a service account from your terminal
    (logging in to your cluster first), grant permissions to push images

@@ -121,24 +121,24 @@ stages:
     url: "${KUBE_URL}/console/project/{{ cookiecutter.cloud_project }}{% if cookiecutter.environment_strategy == 'dedicated' %}-${CI_ENVIRONMENT_NAME}{% endif %}/overview"
   image: docker.io/appuio/oc:v3.11
   script:
-  - echo "ENVIRONMENT=${CI_ENVIRONMENT_NAME}" >> deployment/application/base/application.env
-  - echo "REVISION=${CI_COMMIT_SHORT_SHA}" >> deployment/application/base/application.env
+  - echo "ENVIRONMENT=${CI_ENVIRONMENT_NAME}" >> manifests/application/base/application.env
+  - echo "REVISION=${CI_COMMIT_SHORT_SHA}" >> manifests/application/base/application.env
   - seiso configmaps -l app=${LABEL} --delete
   - seiso secrets -l app=${LABEL} --delete
   - seiso image history {{ cookiecutter.docker_image }} --delete
   - seiso image orphans {{ cookiecutter.docker_image }} --delete
   - oc tag "${SOURCE}/{{ cookiecutter.docker_image }}:${CI_COMMIT_SHA}"
            "${TARGET}/{{ cookiecutter.docker_image }}:${IMAGE_TAG}"
-  - pushd deployment/application/base &&
+  - pushd manifests/application/base &&
     kustomize edit set image IMAGE="docker-registry.default.svc:5000/${TARGET}/{{ cookiecutter.docker_image }}:${IMAGE_TAG}" &&
     popd
-  - pushd deployment/application/overlays/${CI_ENVIRONMENT_NAME} &&
+  - pushd manifests/application/overlays/${CI_ENVIRONMENT_NAME} &&
     kustomize edit set namesuffix -- "${SUFFIX}" &&
     kustomize edit add label "app:${LABEL}" &&
     kustomize build | oc apply -f - &&
     popd
   {%- if cookiecutter.database != '(none)' %}
-  - pushd deployment/database/overlays/${CI_ENVIRONMENT_NAME} &&
+  - pushd manifests/database/overlays/${CI_ENVIRONMENT_NAME} &&
     kustomize edit set namesuffix -- "${SUFFIX}" &&
     kustomize edit add label "app:${LABEL}" &&
     kustomize build | oc apply -f - &&
