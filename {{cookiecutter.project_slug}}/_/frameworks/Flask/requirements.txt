@@ -7,31 +7,31 @@
 {%- if cookiecutter.monitoring == 'Sentry' %}
 blinker==1.4
     # via sentry-sdk
-certifi==2020.12.5
+certifi==2021.10.8
     # via sentry-sdk
 {%- endif %}
-click==7.1.2
+click==8.0.1
     # via flask
-flask==1.1.2
+flask==2.0.3
     # via
     #   -r requirements.in
     #   sentry-sdk
-itsdangerous==1.1.0
+itsdangerous==2.0.1
     # via flask
-jinja2==2.11.3
+jinja2==3.0.3
     # via flask
-markupsafe==1.1.1
+markupsafe==2.0.1
     # via jinja2
 {%- if cookiecutter.monitoring == 'NewRelic' %}
-newrelic==6.2.0.156
+newrelic==7.4.0.172
     # via -r requirements.in
 {%- elif cookiecutter.monitoring == 'Sentry' %}
-sentry-sdk[flask]==1.0.0
+sentry-sdk[flask]==1.5.5
     # via -r requirements.in
-urllib3==1.26.4
+urllib3==1.26.8
     # via sentry-sdk
 {%- endif %}
-uwsgi==2.0.19.1
+uwsgi==2.0.20
     # via -r requirements.in
-werkzeug==1.0.1
+werkzeug==2.0.3
     # via flask

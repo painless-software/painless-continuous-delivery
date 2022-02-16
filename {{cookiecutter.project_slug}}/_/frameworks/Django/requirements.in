@@ -1,4 +1,4 @@
-Django>=3.2,<4.0
+Django>=3.2.12,<4.0
 {%- if cookiecutter.monitoring == 'Datadog' %}
 django-datadog
 {%- endif %}
@@ -11,7 +11,7 @@ mysql-connector
 newrelic
 {%- endif %}
 {%- if cookiecutter.database == 'Postgres' %}
-psycopg2
+psycopg
 {%- endif %}
 {%- if cookiecutter.monitoring == 'Sentry' %}
 sentry-sdk
