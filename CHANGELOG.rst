@@ -4,7 +4,7 @@ Change Log
 All notable changes to this project are documented in this file.
 This project adheres to `Semantic Versioning <https://semver.org>`__.
 
-0.7.0 (unreleased)
+0.7.0 (2022-02-19)
 ------------------
 
 - Drop Shippable and Travis CI (ceased public service after being acquired)
