@@ -2,8 +2,7 @@ FROM docker.io/library/python:3.8-alpine
 
 ARG REQUIREMENTS=requirements.txt
 
-ENV LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8 \
+ENV PYTHONIOENCODING=UTF-8 \
     PYTHONUNBUFFERED=1
 
 WORKDIR /app
