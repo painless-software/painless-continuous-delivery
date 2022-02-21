@@ -205,8 +205,8 @@ class TestMonitoring:
             'docker_registry': docker_registry,
         })
 
-        assert result.exit_code == 0
         assert result.exception is None
+        assert result.exit_code == 0
         readme_file = result.project_path / 'README.rst'
         assert readme_file.is_file()
 

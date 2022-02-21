@@ -387,8 +387,8 @@ class TestCISetup:
             'environment_strategy': environment_strategy,
         })
 
-        assert result.exit_code == 0
         assert result.exception is None
+        assert result.exit_code == 0
 
         assert result.project_path.name == project_slug
         assert result.project_path.is_dir()

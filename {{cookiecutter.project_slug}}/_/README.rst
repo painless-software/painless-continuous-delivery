@@ -3,7 +3,9 @@ What is this?
 
 This folder contains data that serves as input for generating the project
 template.  After project generation the generated version of this folder
-is removed by the ``post_gen_project`` hook.
+is removed by the `post_gen_project`_ hook.
+
+.. `post_gen_project`: ../hooks/post_gen_project.py
 
 Examples of files using this folder
 -----------------------------------

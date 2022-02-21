@@ -85,8 +85,8 @@ class TestDatabase:
             'database': database,
         })
 
-        assert result.exit_code == 0
         assert result.exception is None
+        assert result.exit_code == 0
 
         settings = (
             result.project_path / 'application' / 'settings.py'

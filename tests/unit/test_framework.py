@@ -185,8 +185,8 @@ class TestFramework:
             'tests': tests,
         })
 
-        assert result.exit_code == 0
         assert result.exception is None
+        assert result.exit_code == 0
 
         for filename in required_files:
             thefile = result.project_path / filename

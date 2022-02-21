@@ -1,11 +1,10 @@
 """Post-generate hook for cookiecutter."""
 
-from pathlib import Path
-from subprocess import CalledProcessError, check_call, check_output, STDOUT
-
 import logging
 import shutil
 import sys
+from pathlib import Path
+from subprocess import STDOUT, CalledProcessError, check_call, check_output
 
 
 class Shell:  # pylint: disable=too-few-public-methods)

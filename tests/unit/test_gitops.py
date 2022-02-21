@@ -371,8 +371,8 @@ application/base/*.yaml application/overlays/*/*.yaml
             'tests': 'test',
         })
 
-        assert result.exit_code == 0
         assert result.exception is None
+        assert result.exit_code == 0
 
         for filename in files_present:
             thefile = result.project_path.parent / filename
