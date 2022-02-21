@@ -1,9 +1,8 @@
 """
 Tests for generating a local Git repository and Docker registry setup.
 """
-from .helpers import (  # noqa, pylint: disable=unused-import
-    pytest_generate_tests,
-)
+
+from .helpers import pytest_generate_tests  # noqa, pylint: disable=unused-import
 
 
 # pylint: disable=too-few-public-methods
@@ -58,8 +57,8 @@ class TestRepos:
             'docker_registry': docker_registry,
         })
 
-        assert result.exit_code == 0
         assert result.exception is None
+        assert result.exit_code == 0
 
         assert result.project_path.name == project_slug
         assert result.project_path.is_dir()
