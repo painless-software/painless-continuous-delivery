@@ -56,7 +56,6 @@ class TestRepos:
             'vcs_account': vcs_account,
             'ci_service': ci_service,
             'docker_registry': docker_registry,
-            'framework': 'Symfony',  # remove once docker-compose.final is gone
         })
 
         assert result.exit_code == 0
@@ -82,16 +81,3 @@ class TestRepos:
         assert remote_url in git_config, \
             f'Remote URL not found in .git/config: {needle}\n' \
             f'{haystack}'
-
-        image = f'image: {docker_registry}/{project_slug}'
-        docker_compose_final = result.project_path / 'docker-compose.final.yml'
-        deploy_conf = [
-            line.strip()
-            for line in docker_compose_final.read_text().splitlines()
-            if line.strip()
-        ]
-
-        config = '\n'.join(deploy_conf)
-        assert image in deploy_conf, \
-            f'Container image missing in deployment configuration: {image}\n' \
-            f'{config}'

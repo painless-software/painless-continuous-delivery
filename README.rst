@@ -20,7 +20,6 @@ Supported Technologies and Services
 ==================== =========================================================
 **Languages**        Python (generic, Django, Flask)
 ..                   Frontend Web technologies (JavaScript, CSS, Sass/SCSS)
-..                   PHP (Symfony, TYPO3, Magento)
 ..                   Java (Spring Boot)
 **Version Control**  Git
 **Repo Services**    Bitbucket

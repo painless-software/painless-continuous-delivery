@@ -1,6 +1,7 @@
 """
 'Then' step implementations for acceptance tests.  Powered by behave.
 """
+
 import requests
 
 

@@ -9,12 +9,8 @@ Getting Started
 To start developing on this project simply bring up the Docker setup:
 
 .. code-block:: console
-{% if cookiecutter.framework in ['Symfony', 'TYPO3'] %}
-    composer install
+
     docker-compose up
-{%- else %}
-    docker-compose up
-{%- endif %}
 {%- if cookiecutter.framework == 'Django' %}
 
 Migrations will run automatically at startup (via the container entrypoint).
@@ -191,39 +187,6 @@ See the `docker-compose CLI reference`_ for other commands.
 
 .. _docker-compose CLI reference: https://docs.docker.com/compose/reference/overview/
 
-{% if cookiecutter.framework in ['Symfony', 'TYPO3'] -%}
-Docker Run Commands
-^^^^^^^^^^^^^^^^^^^
-
-Development tools supported out-of-the-box: (see `docker-compose.override.yml`_)
-
-- composer
-- npm
-
-Source `.envrc`_ to activate natural aliases for those commands:
-
-.. code-block:: console
-
-    . .envrc  # or `source .envrc` in bash
-
-.. note::
-
-    **Optional but recommended:**
-
-    Install and configure `direnv`_ to make this automatic for all projects
-    you work on.  See `.envrc`_ for setup instructions.
-
-Alternatively, you can run those commands the classic way, i.e.
-
-.. code-block:: console
-
-    docker-compose run <toolname>
-
-.. _docker-compose.override.yml: docker-compose.override.yml
-.. _direnv: https://direnv.net/
-.. _.envrc: .envrc
-
-{% endif -%}
 CI/CD Process
 ^^^^^^^^^^^^^
 

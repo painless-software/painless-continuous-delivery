@@ -1,8 +1,0 @@
-# Painless development and deployment with Docker. Final deployment.
-# Visit the docs at https://docs.docker.com/compose/extends/
-
-version: '3'
-
-services:
-  application:
-    image: {{ cookiecutter.docker_registry }}/{{ cookiecutter.project_slug }}

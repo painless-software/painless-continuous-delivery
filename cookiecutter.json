@@ -49,9 +49,7 @@
         "(none)",
         "Django",
         "Flask",
-        "SpringBoot",
-        "Symfony",
-        "TYPO3"
+        "SpringBoot"
     ],
     "database": [
         "(none)",
@@ -63,8 +61,8 @@
         "simple",
         "complex"
     ],
-    "checks": "{% if cookiecutter.framework in ['Django','Flask'] %}flake8,pylint,isort,bandit,safety,kubernetes{% elif cookiecutter.framework in ['Symfony','TYPO3'] %}phpcs,twig,kubernetes{% elif cookiecutter.framework in ['SpringBoot'] %}kubernetes{% endif %}",
-    "tests": "{% if cookiecutter.framework in ['Django','Flask'] %}py38,behave{% elif cookiecutter.framework in ['Symfony','TYPO3'] %}phpunit{% elif cookiecutter.framework in ['SpringBoot'] %}test,verify{% endif %}",
+    "checks": "{% if cookiecutter.framework in ['Django','Flask'] %}flake8,pylint,isort,bandit,safety,kubernetes{% elif cookiecutter.framework in ['SpringBoot'] %}kubernetes{% endif %}",
+    "tests": "{% if cookiecutter.framework in ['Django','Flask'] %}py38,behave{% elif cookiecutter.framework in ['SpringBoot'] %}test,verify{% endif %}",
     "monitoring": [
         "(none)",
         "Datadog",
@@ -77,8 +75,6 @@
         "force"
     ],
     "_copy_without_render": [
-        "_/frameworks/Flask/application/templates",
-        "_/frameworks/Symfony",
-        "_/frameworks/TYPO3"
+        "_/frameworks/Flask/application/templates"
     ]
 }
