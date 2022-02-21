@@ -1,6 +1,5 @@
 {% if cookiecutter.framework not in ["SpringBoot"] -%}
 .*
-!.env*
 !.ssh
 
 {% endif -%}
@@ -10,9 +9,6 @@ docker-compose*.yml
 README.rst
 tests/
 tox.ini
-{%- elif cookiecutter.framework in ["Symfony", "TYPO3"] %}
-README.rst
-tests/
 {%- elif cookiecutter.framework in ["SpringBoot"] %}
 README.rst
 test/

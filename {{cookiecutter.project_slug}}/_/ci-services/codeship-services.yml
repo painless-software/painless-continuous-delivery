@@ -7,8 +7,6 @@ services:
   app:
     image: {% if cookiecutter.framework in ['Django', 'Flask'] -%}
       painless/tox:multi
-        {%- elif cookiecutter.framework in ['Symfony', 'TYPO3'] -%}
-      painless/composer
         {%- elif cookiecutter.framework in ['SpringBoot'] -%}
       openjdk:8-jdk-alpine
         {%- endif %}

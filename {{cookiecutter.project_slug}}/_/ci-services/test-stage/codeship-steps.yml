@@ -7,8 +7,6 @@
   - name: {{ env|replace('py38','Python 3.8')|replace('py39','Python 3.9')|replace('pypy3','PyPy 3')|replace('behave','Behave') }}
     command: {% if cookiecutter.framework in ['Django', 'Flask'] -%}
       tox -e {{ env }}
-        {%- elif cookiecutter.framework in ['Symfony', 'TYPO3'] -%}
-      echo "This should run {{ env }}"
         {%- elif cookiecutter.framework in ['SpringBoot'] -%}
       echo "This should run {{ env }}"
         {%- endif %}

@@ -23,7 +23,6 @@ class TestFramework:
             'checks': 'flake8,pylint',
             'tests': 'py38,pypy3,behave',
             'required_files': [
-                '.envrc',
                 '.gitignore',
                 'requirements.in',
                 'requirements.txt',
@@ -84,7 +83,6 @@ class TestFramework:
             'checks': 'flake8,pylint',
             'tests': 'py38,pypy3,behave',
             'required_files': [
-                '.envrc',
                 '.gitignore',
                 'requirements.in',
                 'requirements.txt',
@@ -133,7 +131,6 @@ class TestFramework:
             'checks': 'lint',
             'tests': 'test',
             'required_files': [
-                '.envrc',
                 '.gitignore',
                 'build.gradle',
                 'Dockerfile',
@@ -168,73 +165,6 @@ class TestFramework:
                 ]),
                 ('README.rst', [
                     'Open your web browser at http://localhost:8080 to see',
-                ]),
-            ],
-            'install_commands': [
-            ],
-        }),
-        ('symfony', {
-            'project_slug': 'symfony-project',
-            'framework': 'Symfony',
-            'checks': 'phpcs,twig',
-            'tests': 'phpunit',
-            'required_files': [
-                '.envrc',
-                '.gitignore',
-                'composer.json',
-                'composer.lock',
-                'Dockerfile',
-                'manifests/000-default.conf',
-                'manifests/php.ini',
-                'docker-compose.yml',
-                'docker-compose.override.yml',
-                'docker-compose.final.yml',
-                'src/.htaccess',
-                'src/AppBundle/AppBundle.php',
-                'web/.htaccess',
-                'web/app.php',
-            ],
-            'required_content': [
-                ('Dockerfile', [
-                    'FROM php:7.0-apache',
-                    ' && mv manifests/php.ini /usr/local/etc/php/ \\',
-                ]),
-                ('docker-compose.override.yml', [
-                    '    build: .',
-                ]),
-                ('README.rst', [
-                    'Open your web browser at http://localhost to see',
-                ]),
-            ],
-            'install_commands': [
-            ],
-        }),
-        ('typo3', {
-            'project_slug': 'typo3-project',
-            'framework': 'TYPO3',
-            'checks': 'phpcs',
-            'tests': 'phpunit',
-            'required_files': [
-                '.envrc',
-                '.gitignore',
-                'composer.json',
-                'composer.lock',
-                'Dockerfile',
-                'manifests/000-default.conf',
-                'manifests/php.ini',
-                'docker-compose.yml',
-                'docker-compose.override.yml',
-                'docker-compose.final.yml',
-                'web/typo3conf/ext/typo3_console/ext_emconf.php',
-                'web/typo3conf/ext/typo3_console/ext_icon.png',
-            ],
-            'required_content': [
-                ('Dockerfile', [
-                    'FROM php:7.0-apache',
-                    ' && mv manifests/php.ini /usr/local/etc/php/ \\',
-                ]),
-                ('README.rst', [
-                    'Open your web browser at http://localhost to see',
                 ]),
             ],
             'install_commands': [

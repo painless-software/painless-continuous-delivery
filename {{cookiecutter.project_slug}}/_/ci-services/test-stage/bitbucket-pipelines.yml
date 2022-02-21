@@ -6,8 +6,6 @@
         script:
         {%- if cookiecutter.framework in ['Django', 'Flask'] %}
         - tox -e {{ env }}
-        {%- elif cookiecutter.framework in ['Symfony', 'TYPO3'] %}
-        - echo "This should run {{ env }}"
         {%- elif cookiecutter.framework in ['SpringBoot'] %}
         - mvn {{ env }}
         {%- endif %}

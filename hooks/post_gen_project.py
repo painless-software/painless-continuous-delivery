@@ -1,4 +1,5 @@
 """Post-generate hook for cookiecutter."""
+
 from pathlib import Path
 from subprocess import CalledProcessError, check_call, check_output, STDOUT
 
@@ -41,8 +42,6 @@ def get_framework_and_technology():
         'Django': 'python',
         'Flask': 'python',
         'SpringBoot': 'java',
-        'Symfony': 'php',
-        'TYPO3': 'php',
     }
     framework = '{{ cookiecutter.framework }}'
 
@@ -182,11 +181,11 @@ def remove_temporary_files():
     """
     LOG.info('Removing input data folder ...')
     shutil.rmtree('_')
-    shutil.rmtree('gitops/_')
+    shutil.rmtree(Path('gitops') / '_')
 
     if '{{ cookiecutter.database }}' == '(none)':
-        shutil.rmtree('manifests/database')
-        shutil.rmtree('gitops/database')
+        shutil.rmtree(Path('manifests') / 'database', ignore_errors=True)
+        shutil.rmtree(Path('gitops') / 'database')
 
 
 def merge_folder_into(src_dir, dest_dir):

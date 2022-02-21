@@ -81,7 +81,7 @@ class TestManifests:
             'absent_content': [],
         }),
         ('shared', {
-            'framework': 'Symfony',
+            'framework': 'Flask',
             'database': 'MySQL',
             'vcs_platform': 'Bitbucket.org',
             'cloud_platform': '(none)',
