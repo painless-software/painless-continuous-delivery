@@ -4,7 +4,7 @@ import logging
 import shutil
 import sys
 from pathlib import Path
-from subprocess import STDOUT, CalledProcessError, check_call, check_output
+from subprocess import CalledProcessError, run
 
 
 class Shell:  # pylint: disable=too-few-public-methods)
@@ -21,12 +21,14 @@ class Shell:  # pylint: disable=too-few-public-methods)
     def run(self, command):
         """Portable system call that aborts generation in case of failure."""
         try:
-            if self.capture:
-                stdout = check_output(command, shell=True, stderr=STDOUT,
-                                      cwd=self.cwd, universal_newlines=True)
-                return str(stdout)
-
-            return check_call(command, cwd=self.cwd, shell=True)
+            return run(
+                command,
+                capture_output=self.capture,
+                check=True,
+                cwd=self.cwd,
+                shell=True,
+                text=True,
+            )
         except CalledProcessError as err:
             LOG.error('Project generation failed.')
             sys.exit(err.returncode)
@@ -267,7 +269,7 @@ def init_version_control_for(local_project, remote_project):
     shell.run('git init --quiet')
     shell.run('git add .')
 
-    output = silent_shell.run('git config --list')
+    output = silent_shell.run('git config --list').stdout
     if 'user.email=' not in output:
         LOG.warning('I need to add user.email. BEWARE! Check with:'
                     ' git config --list')
@@ -311,6 +313,9 @@ def deploy_field_test_for(local_project):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(message)s')
     LOG = logging.getLogger('post_gen_project')
+
+    if sys.version_info < (3, 7):
+        raise SystemExit("Python 3.7+ required. ABORTING.")
 
     set_up_ci_service()
     set_up_framework_and_tests()
