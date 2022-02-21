@@ -37,7 +37,7 @@ stages:
   - main
 
 checks:
-  extemds: .check
+  extends: .check
   parallel:
     matrix:
     - TOXENV:
