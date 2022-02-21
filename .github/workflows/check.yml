@@ -21,7 +21,6 @@ jobs:
         - flake8
         - isort
         - pylint
-        - bandit
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2

@@ -1,7 +1,29 @@
 # Painless deployment with GitLab CI.
 # Visit the docs at https://docs.gitlab.com/ce/ci/
 
-image: painless/tox:multi
+image: painless/tox
+
+stages:
+- check
+- test
+- deploy
+
+.check:
+  stage: check
+  script: tox
+  only:
+  - merge_requests
+  - main
+
+.test:
+  stage: test
+  script: tox
+  only:
+  - merge_requests
+  - main
+  artifacts:
+    reports:
+      junit: tests/*-report.xml
 
 .cookiecutter:
   stage: deploy
@@ -14,41 +36,28 @@ image: painless/tox:multi
   only:
   - main
 
-.test:
-  stage: test
-  artifacts:
-    reports:
-      junit: tests/*-report.xml
+checks:
+  extemds: .check
+  parallel:
+    matrix:
+    - TOXENV:
+      - flake8
+      - isort
+      - pylint
 
-stages:
-- check
-- test
-- deploy
-
-flake8:
-  stage: check
-  script: tox -e flake8
-
-pylint:
-  stage: check
-  script: tox -e pylint
-
-bandit:
-  stage: check
-  script: tox -e bandit
-  allow_failure: true
-
-py38:
+tests:
   extends: .test
-  script: tox -e py38
-
-pypy3:
-  extends: .test
-  script: tox -e pypy3
+  parallel:
+    matrix:
+    - TOXENV:
+      - py38
+      - py39
+      - pypy3
 
 behave:
   extends: .test
-  script: tox -e behave
+  variables:
+    TOXENV: behave
 
 example-django:
   extends: .cookiecutter

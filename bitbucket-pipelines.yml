@@ -15,19 +15,23 @@ definitions:
         script:
         - tox -e flake8
     - step:
+        name: isort
+        script:
+        - tox -e isort
+    - step:
         name: Pylint
         script:
         - tox -e pylint
-    - step:
-        name: Bandit
-        script:
-        - tox -e bandit || true
 
   - parallel: &tests
     - step:
         name: Python 3.8
         script:
         - tox -e py38
+    - step:
+        name: Python 3.9
+        script:
+        - tox -e py39
     - step:
         name: PyPy 3
         script:
