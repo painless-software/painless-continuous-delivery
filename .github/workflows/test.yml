@@ -1,0 +1,54 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+    - main
+  push:
+    branches:
+    - main
+
+env:
+  PY_COLORS: "1"
+
+jobs:
+  unit:
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+        - ubuntu-18.04
+        - macos-latest
+        - windows-latest
+        python-version:
+        - '3.8'
+        - '3.9'
+        - pypy-3.7
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install prerequisites
+      run: python -m pip install --upgrade setuptools pip wheel tox-gh-actions
+    - name: Run tests
+      run: tox
+  behave:
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+        - ubuntu-18.04
+        - macos-latest
+        - windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    - name: Install prerequisites
+      run: python -m pip install --upgrade setuptools pip wheel tox
+    - name: Run behave
+      run: tox -e behave
