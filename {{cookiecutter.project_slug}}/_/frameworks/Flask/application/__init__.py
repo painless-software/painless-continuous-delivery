@@ -2,10 +2,12 @@
 """
 The Flask application.
 
-Taken from https://flask.palletsprojects.com/en/1.1.x/patterns/packages/
+Taken from https://flask.palletsprojects.com/en/2.0.x/patterns/packages/
 """
+
 {%- if cookiecutter.monitoring == 'Sentry' %}
 import os
+
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 

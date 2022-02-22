@@ -2,6 +2,7 @@
 Views of the Flask application.
 """
 # pylint: skip-file
+
 from flask import render_template
 
 from application import app

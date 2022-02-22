@@ -155,6 +155,7 @@ class TestMonitoring:
                 ('application/__init__.py', [
                     dedent("""
                     import os
+
                     import sentry_sdk
                     from sentry_sdk.integrations.flask import FlaskIntegration
 

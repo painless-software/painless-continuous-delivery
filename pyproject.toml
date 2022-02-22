@@ -7,6 +7,7 @@ color = true
 [tool.isort]
 color_output = true
 profile = "black"
+extend_skip_glob = ["*/Flask/application/views.py"]
 
 [tool.pylint.master]
 output-format = "colorized"
