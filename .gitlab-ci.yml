@@ -8,24 +8,12 @@ stages:
 - test
 - deploy
 
-.check:
-  stage: check
+.tox:
   script: tox
   needs: []
   only:
   - merge_requests
   - main
-
-.test:
-  stage: test
-  script: tox
-  needs: []
-  only:
-  - merge_requests
-  - main
-  artifacts:
-    reports:
-      junit: tests/*-report.xml
 
 .cookiecutter:
   stage: deploy
@@ -39,7 +27,8 @@ stages:
   - main
 
 checks:
-  extends: .check
+  extends: .tox
+  stage: check
   parallel:
     matrix:
     - TOXENV:
@@ -48,18 +37,26 @@ checks:
       - pylint
 
 tests:
-  extends: .test
+  extends: .tox
+  stage: test
   parallel:
     matrix:
     - TOXENV:
       - py38
       - py39
       - pypy3
+  artifacts:
+    reports:
+      junit: tests/*-report.xml
 
 behave:
-  extends: .test
+  extends: .tox
+  stage: test
   variables:
     TOXENV: behave
+  artifacts:
+    reports:
+      junit: tests/TESTS-features.*.xml
 
 example-django:
   extends: .cookiecutter
