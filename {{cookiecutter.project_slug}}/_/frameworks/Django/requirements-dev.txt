@@ -1,5 +1,4 @@
 -r requirements.in
 
 django-debug-toolbar
-tox-pipenv
 werkzeug
