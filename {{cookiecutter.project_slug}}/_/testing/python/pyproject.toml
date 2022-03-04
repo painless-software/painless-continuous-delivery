@@ -22,3 +22,8 @@ disable = []
 
 [tool.pytest.ini_options]
 addopts = "--color=yes --doctest-modules {% if cookiecutter.framework == 'Django' %}--ignore=application/urls.py --ignore=application/wsgi.py {% endif %}--ignore=tests/acceptance/steps --junitxml=tests/unittests-report.xml --verbose"
+{%- if cookiecutter.framework == 'Django' %}
+DJANGO_SETTINGS_MODULE = "application.settings"
+FAIL_INVALID_TEMPLATE_VARS = true
+python_files = ["tests.py","test_*.py","*_tests.py"]
+{%- endif %}
