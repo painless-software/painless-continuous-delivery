@@ -20,7 +20,7 @@ itsdangerous==2.1.0
     # via flask
 jinja2==3.0.3
     # via flask
-markupsafe==2.1.0
+markupsafe==2.1.1
     # via jinja2
 {%- if cookiecutter.monitoring == 'NewRelic' %}
 newrelic==7.6.0.173
