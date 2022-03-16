@@ -28,7 +28,7 @@ newrelic==7.6.0.173
 {%- elif cookiecutter.monitoring == 'Sentry' %}
 sentry-sdk[flask]==1.5.8
     # via -r requirements.in
-urllib3==1.26.8
+urllib3==1.26.9
     # via sentry-sdk
 {%- endif %}
 uwsgi==2.0.20
