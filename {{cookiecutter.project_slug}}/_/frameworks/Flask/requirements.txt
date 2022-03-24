@@ -16,7 +16,7 @@ flask==2.1.2
     # via
     #   -r requirements.in
     #   sentry-sdk
-itsdangerous==2.1.1
+itsdangerous==2.1.2
     # via flask
 jinja2==3.1.2
     # via flask
