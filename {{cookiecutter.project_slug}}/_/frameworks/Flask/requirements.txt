@@ -12,7 +12,7 @@ certifi==2021.10.8
 {%- endif %}
 click==8.0.4
     # via flask
-flask==2.0.3
+flask==2.1.2
     # via
     #   -r requirements.in
     #   sentry-sdk
