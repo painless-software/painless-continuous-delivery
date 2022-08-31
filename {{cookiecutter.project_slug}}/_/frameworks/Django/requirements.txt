@@ -32,7 +32,7 @@ newrelic==7.6.0.173
 psycopg2==2.9.3
     # via -r requirements.in
 {%- endif %}
-pytz==2021.3
+pytz==2022.2.1
     # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
 sentry-sdk==1.5.8
