@@ -16,7 +16,7 @@ certifi==2021.10.8
 django-datadog==1.0.1
     # via -r requirements.in
 {%- endif %}
-django-environ==0.8.1
+django-environ==0.9.0
     # via -r requirements.in
 django-probes==1.6.0
     # via -r requirements.in
