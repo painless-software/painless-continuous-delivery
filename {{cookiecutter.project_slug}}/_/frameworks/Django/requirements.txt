@@ -6,7 +6,7 @@
 #
 asgiref==3.5.0
     # via django
-django==3.2.12
+django==3.2.14
     # via -r requirements.in
 {%- if cookiecutter.monitoring == 'Sentry' %}
 certifi==2021.10.8
