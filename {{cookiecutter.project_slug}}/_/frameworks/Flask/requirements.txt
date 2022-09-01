@@ -7,7 +7,7 @@
 {%- if cookiecutter.monitoring == 'Sentry' %}
 blinker==1.5
     # via sentry-sdk
-certifi==2021.10.8
+certifi==2022.6.15
     # via sentry-sdk
 {%- endif %}
 click==8.1.3
