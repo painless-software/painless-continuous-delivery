@@ -9,7 +9,7 @@ asgiref==3.5.2
 django==3.2.15
     # via -r requirements.in
 {%- if cookiecutter.monitoring == 'Sentry' %}
-certifi==2022.6.15
+certifi==2022.6.15.1
     # via sentry-sdk
 {%- endif %}
 {%- if cookiecutter.monitoring == 'Datadog' %}
