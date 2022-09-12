@@ -25,7 +25,7 @@ mysql-connector==2.2.9
     # via -r requirements.in
 {%- endif %}
 {%- if cookiecutter.monitoring == 'NewRelic' %}
-newrelic==8.0.0.179
+newrelic==8.1.0.180
     # via -r requirements.in
 {%- endif %}
 {%- if cookiecutter.database == 'Postgres' %}
