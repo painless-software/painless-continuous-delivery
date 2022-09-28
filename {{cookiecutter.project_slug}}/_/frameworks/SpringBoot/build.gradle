@@ -28,7 +28,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
     compile("org.springframework.boot:spring-boot-devtools")
 
-    compile 'org.slf4j:slf4j-api:2.0.2'
+    compile 'org.slf4j:slf4j-api:2.0.3'
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("junit:junit:4.13.2")
