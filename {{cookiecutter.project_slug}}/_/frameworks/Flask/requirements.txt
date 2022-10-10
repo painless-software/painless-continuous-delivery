@@ -23,7 +23,7 @@ jinja2==3.1.2
 markupsafe==2.1.1
     # via jinja2
 {%- if cookiecutter.monitoring == 'NewRelic' %}
-newrelic==8.2.0.181
+newrelic==8.2.1
     # via -r requirements.in
 {%- elif cookiecutter.monitoring == 'Sentry' %}
 sentry-sdk[flask]==1.9.10
