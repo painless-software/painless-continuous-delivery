@@ -114,7 +114,7 @@ def verify_file_matches_repo_root(result, *file, max_compare_bytes=-1):
     """
     repo_root_path = Path(__file__).parent.parent.parent
     mother_file = repo_root_path.joinpath(*file)
-    mother_content = mother_file.read_text()[:max_compare_bytes]
+    mother_content = mother_file.read_text(encoding="utf-8")[:max_compare_bytes]
 
     generated_file = result.project_path.joinpath(*file)
     generated_content = generated_file.read_text()[:max_compare_bytes]

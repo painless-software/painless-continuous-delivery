@@ -41,7 +41,7 @@ class TestRepos:
         }),
     ]
 
-    # pylint: disable=too-many-arguments,too-many-locals,no-self-use
+    # pylint: disable=too-many-arguments,too-many-locals
     def test_repos(self, cookies, project_slug, vcs_project, vcs_account,
                    vcs_platform, vcs_remote, ci_service, docker_registry):
         """
