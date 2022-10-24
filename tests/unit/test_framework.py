@@ -172,7 +172,7 @@ class TestFramework:
         }),
     ]
 
-    # pylint: disable=too-many-arguments,too-many-locals,no-self-use
+    # pylint: disable=too-many-arguments,too-many-locals
     def test_framework(self, cookies, project_slug, framework, checks, tests,
                        required_files, required_content, install_commands):
         """

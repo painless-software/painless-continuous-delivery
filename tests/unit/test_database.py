@@ -73,7 +73,7 @@ class TestDatabase:
         }),
     ]
 
-    # pylint: disable=too-many-arguments,too-many-locals,no-self-use
+    # pylint: disable=too-many-arguments,too-many-locals
     def test_database(self, cookies, project_slug, framework, database,
                       required_settings, required_packages):
         """

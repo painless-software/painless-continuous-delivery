@@ -191,7 +191,7 @@ class TestMonitoring:
         }),
     ]
 
-    # pylint: disable=too-many-arguments,too-many-locals,no-self-use
+    # pylint: disable=too-many-arguments,too-many-locals
     def test_monitoring(self, cookies, project_slug, framework, monitoring,
                         cloud_platform, docker_registry, required_settings,
                         required_packages, required_content):

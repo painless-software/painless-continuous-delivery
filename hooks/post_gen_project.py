@@ -1,3 +1,4 @@
+# pylint: disable=comparison-of-constants
 """Post-generate hook for cookiecutter."""
 
 import logging
@@ -7,7 +8,7 @@ from pathlib import Path
 from subprocess import CalledProcessError, run
 
 
-class Shell:  # pylint: disable=too-few-public-methods)
+class Shell:  # pylint: disable=too-few-public-methods
     """
     Command execution shell as a class to allow preserving behavior across
     execution calls.

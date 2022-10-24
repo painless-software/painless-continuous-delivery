@@ -352,7 +352,7 @@ application/base/*.yaml application/overlays/*/*.yaml
         }),
     ]
 
-    # pylint: disable=no-self-use,too-many-arguments,too-many-locals
+    # pylint: disable=too-many-arguments,too-many-locals
     def test_gitops(self, cookies, project_slug, framework, ci_service,
                     cloud_platform, docker_registry, files_present,
                     files_absent, required_content):

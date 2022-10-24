@@ -366,7 +366,7 @@ class TestCISetup:
         }),
     ]
 
-    # pylint: disable=too-many-arguments,too-many-locals,no-self-use
+    # pylint: disable=too-many-arguments,too-many-locals
     def test_ci_setup(self, cookies, project_slug, vcs_account, vcs_platform,
                       ci_service, framework, database, checks, tests,
                       cloud_platform, environment_strategy, required_lines,
