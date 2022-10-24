@@ -4,6 +4,12 @@ exclude = [".cache",".git",".idea",".tox",".vscode","build","dist","docs","tests
 [tool.black]
 color = true
 
+[tool.coverage.report]
+show_missing = true
+
+[tool.coverage.run]
+source = ["application"]
+
 [tool.coverage.xml]
 output = "tests/coverage-report.xml"
 
