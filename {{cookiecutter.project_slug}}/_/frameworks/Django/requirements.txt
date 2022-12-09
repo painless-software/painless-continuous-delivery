@@ -7,7 +7,7 @@
 asgiref==3.5.2
     # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
-certifi==2022.9.24
+certifi==2022.12.7
     # via sentry-sdk
 {%- endif %}
 django==3.2.16
