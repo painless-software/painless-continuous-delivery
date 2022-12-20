@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
-asgiref==3.5.2
+asgiref==3.6.0
     # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
 certifi==2022.9.24
