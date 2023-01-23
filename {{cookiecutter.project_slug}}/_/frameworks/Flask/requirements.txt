@@ -26,7 +26,7 @@ markupsafe==2.1.1
 newrelic==8.4.0
     # via -r requirements.in
 {%- elif cookiecutter.monitoring == 'Sentry' %}
-sentry-sdk[flask]==1.11.1
+sentry-sdk[flask]==1.14.0
     # via -r requirements.in
 urllib3==1.26.13
     # via sentry-sdk
