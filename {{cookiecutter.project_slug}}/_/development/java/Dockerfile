@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine as build
+FROM openjdk:17-jdk-alpine as build
 
 WORKDIR /workspace/app
 
@@ -10,7 +10,7 @@ RUN chmod +x mvnw \
  && cd target/dependency \
  && jar -xf ../*.jar
 
-FROM openjdk:8-jdk-alpine
+FROM openjdk:17-jdk-alpine
 
 VOLUME /tmp
 
