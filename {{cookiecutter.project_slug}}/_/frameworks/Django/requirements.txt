@@ -41,7 +41,7 @@ sentry-sdk==1.14.0
 sqlparse==0.4.3
     # via django
 {%- if cookiecutter.monitoring == 'Sentry' %}
-urllib3==1.26.13
+urllib3==1.26.14
     # via sentry-sdk
 {%- endif %}
 uwsgi==2.0.21
