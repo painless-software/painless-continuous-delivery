@@ -33,5 +33,5 @@ urllib3==1.26.14
 {%- endif %}
 uwsgi==2.0.21
     # via -r requirements.in
-werkzeug==2.2.2
+werkzeug==2.2.3
     # via flask
