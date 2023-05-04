@@ -1,24 +1,25 @@
-[tool.bandit]
-exclude = [".cache",".git",".idea",".tox",".vscode","build","dist","docs","tests"]
+[tool.behave]
+# default_format = progress
+default_tags = ["-@not_implemented", "-@xfail"]
+junit = true
+junit_directory = "tests"
+paths = ["tests/acceptance"]
+show_skipped = false
+summary = false
 
 [tool.black]
 color = true
 
-[tool.isort]
-color_output = true
-profile = "black"
-extend_skip_glob = ["*/Flask/application/views.py"]
-
-[tool.pylint.master]
-output-format = "colorized"
-
-[tool.pylint.messages_control]
-disable = [
-    # "duplicate-code",
-]
-
-[tool.pylint.similarities]
-min-similarity-lines = 6
-
 [tool.pytest.ini_options]
 addopts = "--color=yes --doctest-modules --ignore=tests/acceptance/steps --junitxml=tests/unittests-report.xml --verbose tests"
+
+[tool.ruff]
+extend-exclude = ["??cookiecutter.project_slug??"]
+extend-select = ["B", "BLE", "C4", "C90", "COM", "DJ", "DTZ", "EM", "G", "I", "N", "PIE", "PL", "PT", "PTH", "R", "S", "SIM", "T10", "T20", "TID", "W", "YTT"]
+extend-ignore = ["COM", "PTH", "SIM"]
+
+[tool.ruff.per-file-ignores]
+"hooks/post_gen_project.py" = ["PLR0133", "S604"]
+"tests/acceptance/environment.py" = ["S605"]
+"tests/acceptance/steps/*.py" = ["F811", "PLR2004", "PT018"]
+"tests/**/*.py" = ["PLR0913", "S101"]

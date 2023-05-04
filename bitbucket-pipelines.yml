@@ -11,40 +11,50 @@ definitions:
   steps:
   - parallel: &checks
     - step:
-        name: Flake8
+        name: Ruff
+        image: docker.io/library/python:3.10
         script:
-        - tox -e flake8
-    - step:
-        name: isort
-        script:
-        - tox -e isort
-    - step:
-        name: Pylint
-        script:
-        - tox -e pylint
+        - pip install tox
+        - tox -e ruff
 
   - parallel: &tests
     - step:
-        name: Python 3.8
+        name: PyPy 3.9
+        image: docker.io/library/python:3.9
         script:
-        - tox -e py38
+        - pip install tox
+        - tox -e py
     - step:
         name: Python 3.9
+        image: docker.io/library/python:3.9
         script:
-        - tox -e py39
+        - pip install tox
+        - tox -e py
     - step:
-        name: PyPy 3
+        name: Python 3.10
+        image: docker.io/library/python:3.10
         script:
-        - tox -e pypy3
+        - pip install tox
+        - tox -e py
+    - step:
+        name: Python 3.11
+        image: docker.io/library/python:3.11
+        script:
+        - pip install tox
+        - tox -e py
     - step:
         name: Behave
+        image: docker.io/library/python:3.10
         script:
+        - pip install tox
         - tox -e behave
 
   - step: &field-test
       name: Deploy example-flask
       deployment: Production
+      image: docker.io/library/python:3.10
       script:
+      - pip install tox
       - tests/field/example-flask.sh
 
 pipelines:

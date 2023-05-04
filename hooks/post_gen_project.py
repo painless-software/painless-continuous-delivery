@@ -316,7 +316,8 @@ if __name__ == "__main__":
     LOG = logging.getLogger('post_gen_project')
 
     if sys.version_info < (3, 7):
-        raise SystemExit("Python 3.7+ required. ABORTING.")
+        msg = "Python 3.7+ required. ABORTING."
+        raise SystemExit(msg)
 
     set_up_ci_service()
     set_up_framework_and_tests()
