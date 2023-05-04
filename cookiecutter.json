@@ -23,7 +23,7 @@
     "ci_service": [
         ".gitlab-ci.yml",
         "bitbucket-pipelines.yml",
-        "codeship-steps.yml"
+        "(none)"
     ],
     "cloud_platform": [
         "(none)",

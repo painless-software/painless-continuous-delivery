@@ -172,67 +172,6 @@ application/base/*.yaml application/overlays/*/*.yaml
                 ]),  # noqa
             ],
         }),
-        ('Codeship', {
-            'project_slug': 'codeship',
-            'framework': 'SpringBoot',
-            'ci_service': 'codeship-steps.yml',
-            'cloud_platform': 'Rancher',
-            'docker_registry': 'registry.rancher.example',
-            'files_present': [
-                'codeship/.git/config',
-                'codeship/.gitignore',
-                'codeship/.dockerignore',
-                'codeship/codeship-services.yml',
-                'codeship/codeship-steps.yml',
-                'codeship/README.rst',
-                'codeship/docker-compose.yml',
-                'codeship/Dockerfile',
-                'codeship-gitops/.git/config',
-                'codeship-gitops/.gitignore',
-                'codeship-gitops/codeship-services.yml',
-                'codeship-gitops/codeship-steps.yml',
-                'codeship-gitops/application/base/kustomization.yaml',
-                'codeship-gitops/bootstrap.sh',
-                'codeship-gitops/README.rst',
-            ],
-            'files_absent': [
-                'codeship/gitops/',
-                'codeship-gitops/_/',
-                'codeship-gitops/database/',
-                'codeship-gitops/docker-compose.yml',
-                'codeship-gitops/Dockerfile',
-            ],
-            'required_content': [
-                ('codeship/README.rst', [
-                    dedent("""
-                    Integrate External Tools
-                    ^^^^^^^^^^^^^^^^^^^^^^^^
-
-                    Nothing to do here.
-
-                    """),
-                ]),
-                ('codeship-gitops/codeship-steps.yml', [
-                    dedent("""
-            - name: Checks
-              type: parallel
-              service: app
-              steps:
-              - name: Lint manifests
-                command: /kubeval --strict --ignore-missing-schemas \
-application/base/*.yaml application/overlays/*/*.yaml
-                    """),
-                ]),
-                ('codeship-gitops/application/overlays/development/'
-                    'kustomization.yaml', [
-                        dedent("""
-                images:
-                - name: IMAGE
-                  newName: registry.rancher.example/codeship/codeship:latest
-                """),
-                ]),  # noqa
-            ],
-        }),
         ('GitLab', {
             'project_slug': 'gitlab',
             'framework': 'SpringBoot',

@@ -1,1 +1,1 @@
-{%- include 'gitops/_/%s' % cookiecutter.ci_service -%}
+{%- if cookiecutter.ci_service != '(none)' %}{% include 'gitops/_/%s' % cookiecutter.ci_service %}{% endif -%}

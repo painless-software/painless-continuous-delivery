@@ -7,10 +7,10 @@ Painless Continuous Delivery
 A cookiecutter for projects with continuous delivery baked in.
 
 
-.. |gha-checks| image:: https://img.shields.io/github/workflow/status/painless-software/painless-continuous-delivery/Checks/main?label=Checks&logo=github
+.. |gha-checks| image:: https://github.com/painless-software/painless-continuous-delivery/actions/workflows/check.yml/badge.svg
    :target: https://github.com/painless-software/painless-continuous-delivery/actions/workflows/check.yml
    :alt: GitHub Workflow Status
-.. |gha-tests| image:: https://img.shields.io/github/workflow/status/painless-software/painless-continuous-delivery/Tests/main?label=Tests&logo=github
+.. |gha-tests| image:: https://github.com/painless-software/painless-continuous-delivery/actions/workflows/test.yml/badge.svg
    :target: https://github.com/painless-software/painless-continuous-delivery/actions/workflows/test.yml
    :alt: GitHub Workflow Status
 .. |health| image:: https://img.shields.io/codacy/grade/a1695afba0254a8a987e85f9ae35fae1/main.svg
@@ -32,7 +32,6 @@ Supported Technologies and Services
 ..                   GitHub
 ..                   GitLab
 **CI Services**      Bitbucket  - |bitbucket|
-..                   Codeship   - |codeship|
 ..                   GitLab CI  - |gitlab-ci|
 **App Platforms**    APPUiO (OpenShift)
 ..                   Rancher (Kubernetes)
@@ -42,9 +41,6 @@ Supported Technologies and Services
 .. |bitbucket| image:: https://img.shields.io/bitbucket/pipelines/painless-software/painless-continuous-delivery/main.svg
    :target: https://bitbucket.org/painless-software/painless-continuous-delivery/addon/pipelines/home
    :alt: Bitbucket Pipelines
-.. |codeship| image:: https://img.shields.io/codeship/5543c1f0-706e-0137-4541-72c064fff696/main.svg
-   :target: https://app.codeship.com/projects/5543c1f0-706e-0137-4541-72c064fff696
-   :alt: Codeship
 .. |gitlab-ci| image:: https://img.shields.io/gitlab/pipeline/painless-software/painless-continuous-delivery/main.svg
    :target: https://gitlab.com/painless-software/painless-continuous-delivery/pipelines
    :alt: GitLab CI
