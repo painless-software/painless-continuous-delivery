@@ -48,7 +48,7 @@ def step_impl(context):
 
 @then('the application is available at {appurl} showing {appcontent}')  # noqa
 def step_impl(context, appurl, appcontent):
-    resp = requests.get(appurl, appcontent)
+    resp = requests.get(appurl, appcontent, timeout=60)
     assert resp.status_code == 200, \
         'Application returns status code %s' % resp.status_code
 

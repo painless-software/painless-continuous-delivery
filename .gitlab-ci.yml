@@ -1,15 +1,21 @@
 # Painless deployment with GitLab CI.
 # Visit the docs at https://docs.gitlab.com/ce/ci/
 
-image: painless/tox
-
 stages:
 - check
 - test
 - deploy
 
 .tox:
-  script: tox
+  image: docker.io/library/{PYTHON_FLAVOR}:${PYTHON_VERSION}
+  before_script:
+  - pip install tox --disable-pip-version-check
+  script:
+  - tox
+  variables:
+    PY_COLORS: '1'
+    PYTHON_FLAVOR: python
+    PYTHON_VERSION: '3.10'
   needs: []
   only:
   - merge_requests
@@ -29,25 +35,25 @@ stages:
 checks:
   extends: .tox
   stage: check
-  parallel:
-    matrix:
-    - TOXENV:
-      - flake8
-      - isort
-      - pylint
+  variables:
+    TOXENV:
+    - ruff
 
 tests:
   extends: .tox
   stage: test
   parallel:
     matrix:
-    - TOXENV:
-      - py38
-      - py39
-      - pypy3
-  artifacts:
-    reports:
-      junit: tests/*-report.xml
+    - PYTHON_FLAVOR: pypy
+      PYTHON_VERSION:
+      - '3.9'
+    - PYTHON_FLAVOR: python
+      PYTHON_VERSION:
+      - '3.9'
+      - '3.10'
+      - '3.11'
+  script:
+  - tox -e py
 
 behave:
   extends: .tox

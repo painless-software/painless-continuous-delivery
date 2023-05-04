@@ -7,6 +7,8 @@ This project adheres to `Semantic Versioning <https://semver.org>`__.
 0.8.0 (unreleased)
 ------------------
 
+- Use ruff for linting (instead of Flake8, isort, Pylint, etc.)
+- Drop Python 3.8
 - Drop direnv support (.envrc configuration file)
 - Drop PHP project support (Symfony and TYPO3 Web frameworks)
 
