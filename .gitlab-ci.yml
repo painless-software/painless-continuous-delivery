@@ -32,7 +32,7 @@ stages:
   only:
   - main
 
-checks:
+ruff:
   extends: .tox
   stage: check
   variables:
