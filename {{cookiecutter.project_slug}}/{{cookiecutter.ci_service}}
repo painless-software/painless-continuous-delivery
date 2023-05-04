@@ -1,1 +1,1 @@
-{%- include '_/ci-services/%s' % cookiecutter.ci_service -%}
+{%- if cookiecutter.ci_service != '(none)' %}{% include '_/ci-services/%s' % cookiecutter.ci_service %}{% endif -%}

@@ -27,7 +27,7 @@ class TestRepos:
             'vcs_account': 'painless-software',
             'vcs_platform': 'GitHub.com',
             'vcs_remote': 'git@github.com:painless-software/myproject.git',
-            'ci_service': 'codeship-steps.yml',
+            'ci_service': '(none)',
             'docker_registry': 'quay.io/painless-software',
         }),
         ('GitLab/Registry', {

@@ -50,22 +50,6 @@ def get_framework_and_technology():
     return framework, framework_technology[framework]
 
 
-def set_up_ci_service():
-    """
-    Handle special case for CI services having more than one config file.
-    """
-    ci_service = '{{ cookiecutter.ci_service }}'
-
-    if ci_service == 'codeship-steps.yml':
-        LOG.info('Adding additional files for this CI setup ...')
-
-        codeship_conf = Path('_') / 'ci-services' / 'codeship-services.yml'
-        shutil.move(str(codeship_conf), '.')
-
-        codeship_conf_gitops = Path('gitops') / '_' / 'codeship-services.yml'
-        shutil.move(str(codeship_conf_gitops), 'gitops')
-
-
 def set_up_framework_and_tests():
     """
     If a framework project was created move it to project root.
@@ -319,7 +303,6 @@ if __name__ == "__main__":
         msg = "Python 3.7+ required. ABORTING."
         raise SystemExit(msg)
 
-    set_up_ci_service()
     set_up_framework_and_tests()
     set_up_manifests()
     set_up_dev_tooling()

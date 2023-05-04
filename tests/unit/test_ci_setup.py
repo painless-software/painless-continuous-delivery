@@ -200,22 +200,6 @@ class TestCISetup:
                 'database',
             ],
         }),
-        ('codeship', {
-            'project_slug': 'myproject',
-            'vcs_account': 'painless-software',
-            'vcs_platform': 'GitHub.com',
-            'ci_service': 'codeship-steps.yml',
-            'framework': 'Django',
-            'database': 'Postgres',
-            'checks': 'flake8,pylint,bandit',
-            'tests': 'py38,pypy3,behave',
-            'cloud_platform': 'APPUiO',
-            'environment_strategy': 'shared',
-            'required_lines': [
-                '  service: app',
-            ],
-            'absent_content': [],
-        }),
         ('gitlab-shared', {
             'project_slug': 'myproject',
             'vcs_account': 'painless-software',
@@ -415,10 +399,6 @@ class TestCISetup:
             assert chunk not in ci_service_content, \
                 f"Found in CI config: '{chunk}'\n" \
                 f"{ci_service_content}"
-
-        codeship_services = result.project_path / 'codeship-services.yml'
-        assert (ci_service == 'codeship-steps.yml' and
-                codeship_services.is_file()) or not codeship_services.exists()
 
         files_absent = ['gitops', f"../{project_slug}-gitops"]
         for filename in files_absent:

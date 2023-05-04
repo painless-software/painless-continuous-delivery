@@ -2,6 +2,7 @@
 # Visit the docs at https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
 # Validator: https://bitbucket-pipelines.prod.public.atl-paas.net/validator
 
+{% if cookiecutter.ci_service != '(none)' -%}
 {% include '_/ci-services/definitions/%s' % cookiecutter.ci_service %}
 pipelines:
   pull-requests:
@@ -41,3 +42,4 @@ pipelines:
     {%- else %}
     - step: *deploy-production
     {%- endif %}
+{% endif -%}
