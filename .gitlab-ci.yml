@@ -6,22 +6,26 @@ stages:
 - test
 - deploy
 
-.tox:
+.python:
   image: docker.io/library/${PYTHON_FLAVOR}:${PYTHON_VERSION}
-  before_script:
-  - pip install tox --disable-pip-version-check
-  script:
-  - tox
   variables:
     PY_COLORS: '1'
     PYTHON_FLAVOR: python
     PYTHON_VERSION: '3.10'
+
+.tox:
+  extends: .python
+  before_script:
+  - pip install tox --disable-pip-version-check
+  script:
+  - tox
   needs: []
   only:
   - merge_requests
   - main
 
 .cookiecutter:
+  extends: .python
   stage: deploy
   before_script:
   - eval $(ssh-agent -s)
@@ -29,6 +33,7 @@ stages:
   - mkdir -p -m 700 ~/.ssh && echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
   - git config --global user.name "Cookiecutter"
   - git config --global user.email "cookiecutter@painless.software"
+  - pip install tox --disable-pip-version-check
   only:
   - main
 
