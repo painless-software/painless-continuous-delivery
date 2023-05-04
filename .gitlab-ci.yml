@@ -7,7 +7,7 @@ stages:
 - deploy
 
 .tox:
-  image: docker.io/library/{PYTHON_FLAVOR}:${PYTHON_VERSION}
+  image: docker.io/library/${PYTHON_FLAVOR}:${PYTHON_VERSION}
   before_script:
   - pip install tox --disable-pip-version-check
   script:
