@@ -44,5 +44,5 @@ sqlparse==0.4.4
 urllib3==1.26.15
     # via sentry-sdk
 {%- endif %}
-uwsgi==2.0.21
+uwsgi==2.0.22
     # via -r requirements.in
