@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.8-alpine
+FROM docker.io/library/python:3.13-alpine
 
 ARG REQUIREMENTS=requirements.txt
 
