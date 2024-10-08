@@ -12,7 +12,7 @@ definitions:
   - parallel: &checks
     - step:
         name: Ruff
-        image: docker.io/library/python:3.10
+        image: docker.io/library/python:3.13
         script:
         - pip install tox
         - tox -e ruff
@@ -20,31 +20,31 @@ definitions:
   - parallel: &tests
     - step:
         name: PyPy 3.9
-        image: docker.io/library/python:3.9
+        image: docker.io/library/python:3.13
         script:
         - pip install tox
         - tox -e py
     - step:
         name: Python 3.9
-        image: docker.io/library/python:3.9
+        image: docker.io/library/python:3.13
         script:
         - pip install tox
         - tox -e py
     - step:
         name: Python 3.10
-        image: docker.io/library/python:3.10
+        image: docker.io/library/python:3.13
         script:
         - pip install tox
         - tox -e py
     - step:
         name: Python 3.11
-        image: docker.io/library/python:3.11
+        image: docker.io/library/python:3.13
         script:
         - pip install tox
         - tox -e py
     - step:
         name: Behave
-        image: docker.io/library/python:3.10
+        image: docker.io/library/python:3.13
         script:
         - pip install tox
         - tox -e behave
@@ -52,7 +52,7 @@ definitions:
   - step: &field-test
       name: Deploy example-flask
       deployment: Production
-      image: docker.io/library/python:3.10
+      image: docker.io/library/python:3.13
       script:
       - pip install tox
       - tests/field/example-flask.sh
