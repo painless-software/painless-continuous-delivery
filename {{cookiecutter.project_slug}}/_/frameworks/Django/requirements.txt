@@ -10,7 +10,7 @@ asgiref==3.6.0
 certifi==2022.12.7
     # via sentry-sdk
 {%- endif %}
-django==3.2.19
+django==4.2.16
     # via -r requirements.in
 {%- if cookiecutter.monitoring == 'Datadog' %}
 django-datadog==1.0.1
